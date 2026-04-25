@@ -1,55 +1,81 @@
 import os
 import json
 import importlib.util
+import sys
 
-def load_node(node_name):
+# ==========================================
+# STANDARDIZED WORK: NODE RUNNER UTILITY
+# ==========================================
+def run_node(node_name, arguments):
+    """
+    Standardized path to execute a Skill node.
+    """
     node_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "Skills", node_name, "node.py"))
-    spec = importlib.util.spec_from_file_location(f"{node_name}_node", node_path)
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-    return module.execute_node
-
-def run_vague_task_decomposition(vague_task):
-    print(f"Workflow: Starting Vague Task Decomposition for: '{vague_task}'")
     
-    # Principle: Kaizen (改善) - breaking the process into its simplest atomic components
-    extraction_node = load_node("LLM-Extract-Action-Items")
-    create_task_node = load_node("Google-Tasks-Create-Task")
+    if not os.path.exists(node_path):
+        return {"status": "error", "message": f"Node {node_name} not found at {node_path}"}
+        
+    try:
+        spec = importlib.util.spec_from_file_location(f"{node_name}_node", node_path)
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        
+        # Every node now strictly takes a JSON string
+        result = module.execute_node(json.dumps(arguments))
+        return result
+    except Exception as e:
+        return {"status": "error", "message": f"Execution of {node_name} failed: {str(e)}"}
 
-    # 1. Extract Action Items
-    # Principle: Standardized Work (Hyojun Sagyo) - most efficient path for decomposition
-    print("Step 1: Decomposing task into actionable subtasks via LLM...")
-    extraction_args = json.dumps({
+# ==========================================
+# JIDOKA: WORKFLOW EXECUTION (ATOMIC STEPS)
+# ==========================================
+def run_vague_task_decomposition(vague_task):
+    print(f"--- Starting Lean Vague Task Decomposition Workflow ---")
+    
+    # Step 1: Atomic Extraction
+    print("[Step 1/2] Decomposing into subtasks...")
+    extraction_args = {
         "text": vague_task,
         "schema": "A JSON array of strings, where each string is a clear, actionable subtask starting with a verb."
-    })
-    subtasks = extraction_node(extraction_args)
+    }
     
-    if not subtasks:
-        print("No subtasks extracted.")
-        return []
+    subtasks = run_node("LLM-Extract-Action-Items", extraction_args)
+    
+    # Jidoka: Stop if defect detected
+    if isinstance(subtasks, dict) and subtasks.get("status") == "error":
+        print(f"!!! Jidoka Stop: Extraction Failed: {subtasks.get('message')}")
+        return subtasks
+        
+    if not isinstance(subtasks, list) or len(subtasks) == 0:
+        print("!!! Jidoka Stop: Extraction Failed: No subtasks were returned.")
+        return {"status": "error", "message": "No subtasks extracted."}
 
     print(f"Decomposed into {len(subtasks)} subtasks: {subtasks}")
 
     results = []
-    # 2. Create tasks in Google Tasks
+    # Step 2: Atomic Task Creation
+    print("[Step 2/2] Creating Tasks...")
     for task_title in subtasks:
-        print(f"Step 2: Creating Google Task: '{task_title}'...")
-        try:
-            create_args = json.dumps({"title": task_title})
-            res = create_task_node(create_args)
-            results.append(res)
-        except Exception as e:
-            # Principle: Jidoka (自働化) - autonomous defect detection and halting
-            print(f"Defect detected in creation step for '{task_title}': {e}")
-            raise e
+        print(f" -> Creating Google Task: '{task_title}'...")
+        create_args = {"title": task_title}
+        
+        res = run_node("Google-Tasks-Create-Task", create_args)
+        
+        # Jidoka: Validation on individual subtask
+        if isinstance(res, dict) and res.get("status") == "error":
+            print(f"!!! Jidoka Defect: Task Creation Failed for '{task_title}': {res.get('message')}")
+            # Depending on policy, we might continue or fail entirely.
+            # Lean Jidoka means stopping the line to fix the defect.
+            return {"status": "error", "message": f"Creation failed for task: {task_title}", "details": res}
             
-    print("Workflow Complete.")
-    return results
+        results.append(res)
+            
+    print("--- Workflow Success ---")
+    return {"status": "success", "tasks_created": len(results), "data": results}
 
 if __name__ == "__main__":
-    import sys
     if len(sys.argv) > 1:
-        run_vague_task_decomposition(sys.argv[1])
+        result = run_vague_task_decomposition(sys.argv[1])
+        print(json.dumps(result, indent=2))
     else:
         print("Usage: python vague_task_decomposition.py '<vague_task_description>'")

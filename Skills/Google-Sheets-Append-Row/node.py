@@ -15,27 +15,9 @@ try:
 except ImportError:
     Composio = None
 
-# ==========================================
-# JIDOKA: EVALUATOR & VALIDATION
-# ==========================================
-def evaluate_tool_output(result_obj, tool_name):
-    """
-    Evaluator Pattern: Checks if the tool actually succeeded in its objective.
-    Returns (is_valid, data_or_error)
-    """
-    if not result_obj:
-        return False, f"{tool_name} returned empty response."
-    
-    # Check for common Google API error indicators in the response
-    error_msg = result_obj.get("error", {}).get("message", "")
-    if error_msg:
-        return False, f"Google API Error: {error_msg}"
-    
-    # Success check: Sheets API usually returns spreadsheetId and updatedRows
-    if "spreadsheetId" in result_obj or "updates" in result_obj:
-        return True, result_obj
-        
-    return False, f"{tool_name} response lacks success markers."
+# Add parent directory to sys.path to import Shared modules
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
+from Shared.utils import evaluate_tool_output
 
 # ==========================================
 # EXECUTION LOGIC (ATOMIC)

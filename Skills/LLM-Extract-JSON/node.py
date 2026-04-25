@@ -10,31 +10,9 @@ import os
 MAX_RETRIES = 3
 DEFAULT_SCHEMA_HINT = "A valid JSON object mapping keys to extracted entities."
 
-# ==========================================
-# JIDOKA: EVALUATOR & VALIDATION
-# ==========================================
-def validate_output(output_str):
-    """
-    Evaluator Pattern: Deterministic validation of LLM output.
-    Returns (is_valid, data_or_error_message)
-    """
-    try:
-        # Strip potential markdown artifacts if they slipped through
-        clean = output_str.strip()
-        if clean.startswith("```"):
-            lines = clean.splitlines()
-            if lines[0].startswith("```"): lines = lines[1:]
-            if lines[-1].startswith("```"): lines = lines[:-1]
-            clean = "\n".join(lines).strip()
-        
-        data = json.loads(clean)
-        if not isinstance(data, dict):
-            return False, "Output must be a JSON object ({...})."
-        return True, data
-    except json.JSONDecodeError as e:
-        return False, f"JSON Decode Error: {str(e)}"
-    except Exception as e:
-        return False, f"Unexpected validation failure: {str(e)}"
+# Add parent directory to sys.path to import Shared modules
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
+from Shared.utils import validate_json_output as validate_output
 
 # ==========================================
 # EXECUTION LOGIC (ATOMIC)

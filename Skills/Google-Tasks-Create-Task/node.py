@@ -4,56 +4,81 @@ import time
 import subprocess
 import os
 
+# Add parent directory to sys.path to import Shared modules
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
+from Shared.utils import evaluate_tool_output
+
+# ==========================================
+# STANDARDIZED WORK: CONFIGURATION
+# ==========================================
+MAX_RETRIES = 3
+
 try:
     from composio import Composio
 except ImportError:
     Composio = None
 
-def validate_output(output_str):
-    try:
-        data = json.loads(output_str) if isinstance(output_str, str) else output_str
-        return isinstance(data, dict)
-    except:
-        return False
-
-def execute_node(arguments_json_str, max_retries=3):
+# ==========================================
+# EXECUTION LOGIC (ATOMIC)
+# ==========================================
+def execute_node(arguments_json_str):
+    # 1. Standardized Input
     try:
         arguments = json.loads(arguments_json_str)
     except:
-        arguments = {"query": arguments_json_str} # Fallback if passed raw string
+        arguments = {"title": arguments_json_str}
 
-    composio_api_key = os.environ.get("COMPOSIO_API_KEY")
-    for attempt in range(1, max_retries + 1):
-        print(f"Attempt {attempt}: Executing Google Tasks Create Task...")
-        
-        # Try native gog
+    if not arguments.get("title"):
+        return {"status": "error", "message": "Missing 'title' for Google Task."}
+
+    last_error = ""
+
+    # 2. Jidoka: Andon Loop
+    for attempt in range(1, MAX_RETRIES + 1):
+        # Path A: Native 'gog' execution (Efficient, No-Shell Pattern)
         try:
-            # Flatten args for basic CLI
-            cli_args = " ".join([f"--{k}='{v}'" for k, v in arguments.items()])
-            cmd = ["wsl", "--", "bash", "-c", f"gog tasks create {cli_args} --json"]
-            result = subprocess.run(cmd, capture_output=True, text=True, check=True)
-            if validate_output(result.stdout):
-                return json.loads(result.stdout)
-        except Exception as e:
-            print(f"gog tool failed on attempt {attempt}: {e}")
+            cmd = ["wsl", "gog", "tasks", "create", "--json"]
+            for k, v in arguments.items():
+                cmd.extend([f"--{k}", str(v)])
+                
+            result = subprocess.run(cmd, capture_output=True, text=True, timeout=15)
             
-        # Try fallback composio
-        try:
-            if Composio:
-                client = Composio(api_key=composio_api_key)
+            if result.returncode == 0:
+                is_valid, data = evaluate_tool_output(json.loads(result.stdout), "gog")
+                if is_valid: return data
+                last_error = data
+            else:
+                last_error = result.stderr or "Unknown tool execution error."
+                
+        except Exception as e:
+            last_error = f"Execution Exception: {str(e)}"
+
+        # Path B: Composio Fallback
+        if Composio and os.environ.get("COMPOSIO_API_KEY"):
+            try:
+                client = Composio()
                 res = client.tools.execute("GOOGLETASKS_CREATE_TASK", arguments=arguments)
-                if res.successful and validate_output(res.data):
-                    return res.data
-        except Exception as e:
-            print(f"Fallback composio failed on attempt {attempt}: {e}")
-            
-        print("Validation failed or tools errored. Retrying...")
-        time.sleep(2)
-        
-    raise Exception("Failed to achieve expected outcome after max retries.")
+                if res.successful:
+                    is_valid, data = evaluate_tool_output(res.data, "Composio")
+                    if is_valid: return data
+                    last_error = data
+                else:
+                    last_error = res.error or "Composio execution failed."
+            except Exception as e:
+                last_error = f"Composio Exception: {str(e)}"
+
+        time.sleep(1)
+
+    # 3. Deterministic Exit
+    return {
+        "status": "error",
+        "message": f"Failed to create Google Task after {MAX_RETRIES} attempts.",
+        "last_error": last_error
+    }
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print("Usage: python node.py '<json_arguments>'")
+        print(json.dumps({"status": "error", "message": "Missing arguments."}))
         sys.exit(1)
+    
     print(json.dumps(execute_node(sys.argv[1]), indent=2))

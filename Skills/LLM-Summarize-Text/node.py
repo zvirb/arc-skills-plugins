@@ -14,26 +14,9 @@ DEFAULT_SCHEMA = {
     "sentiment": "string"
 }
 
-# ==========================================
-# JIDOKA: EVALUATOR & VALIDATION
-# ==========================================
-def validate_output(output_str, expected_schema=None):
-    """
-    Evaluator Pattern: Deterministic validation of LLM output.
-    Returns (is_valid, data_or_error_message)
-    """
-    try:
-        data = json.loads(output_str)
-        # Basic structural check - ensure it's a dict
-        if not isinstance(data, dict):
-            return False, "Output must be a JSON object, not a list or primitive."
-        
-        # If a schema was provided, we could do deeper validation here
-        return True, data
-    except json.JSONDecodeError as e:
-        return False, f"Invalid JSON format: {str(e)}"
-    except Exception as e:
-        return False, f"Unexpected validation error: {str(e)}"
+# Add parent directory to sys.path to import Shared modules
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
+from Shared.utils import validate_json_output as validate_output
 
 # ==========================================
 # EXECUTION LOGIC (ATOMIC)
