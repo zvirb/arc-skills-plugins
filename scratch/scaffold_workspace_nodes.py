@@ -222,6 +222,145 @@ def generate():
         with open(os.path.join(skill_dir, "node.py"), "w") as f:
             f.write(node_content)
             
+CROSS_SERVICE_NODES = [
+    {
+        "name": "Workspace Audit Missing Meetings", 
+        "dir": "Workspace-Audit-Missing-Meetings", 
+        "desc": "Cross-references emails for 'let's meet' with Google Calendar to find missing events.",
+        "system_prompt": "Search Gmail for recent emails discussing scheduling a meeting. Then search Google Calendar for those timeframes. If a meeting was discussed but not scheduled, list it as missing.",
+        "skills": "Gmail-Search-Emails,Google-Calendar-Find-Event,summarize"
+    },
+    {
+        "name": "Workspace Generate Project Brief", 
+        "dir": "Workspace-Generate-Project-Brief", 
+        "desc": "Searches Gmail and Drive for a project, synthesizes it, and creates a Docs summary.",
+        "system_prompt": "Search Gmail and Google Drive for the specified project. Summarize the findings. Create a new Google Document containing this comprehensive project brief.",
+        "skills": "Gmail-Search-Emails,Google-Drive-Search-Files,Google-Docs-Create-Document,summarize"
+    },
+    {
+        "name": "Workspace Triage Action Items", 
+        "dir": "Workspace-Triage-Action-Items", 
+        "desc": "Reads unread emails, extracts actionable tasks, and adds them to Google Tasks.",
+        "system_prompt": "Search for recent unread priority emails. Extract actionable items from them. For each actionable item, create a new task in Google Tasks.",
+        "skills": "Gmail-Search-Emails,Gmail-Retrieve-Email,Google-Tasks-Create-Task"
+    },
+    {
+        "name": "Workspace Invoice Extraction", 
+        "dir": "Workspace-Invoice-Extraction", 
+        "desc": "Searches emails for invoices, extracts monetary values, and appends them to a Sheet.",
+        "system_prompt": "Search emails for invoices or receipts. Extract the Vendor, Date, and Amount. Append these as a new row into the specified Google Sheet.",
+        "skills": "Gmail-Search-Emails,Gmail-Retrieve-Email,Google-Sheets-Append-Row,summarize"
+    },
+    {
+        "name": "Workspace Meeting Preparation", 
+        "dir": "Workspace-Meeting-Preparation", 
+        "desc": "Searches Drive/Gmail for meeting context and creates a briefing document.",
+        "system_prompt": "Given the meeting title and attendees, search Drive and Gmail for relevant recent context. Summarize it and create a new Google Doc briefing.",
+        "skills": "Gmail-Search-Emails,Google-Drive-Search-Files,Google-Docs-Create-Document,summarize"
+    },
+    {
+        "name": "Workspace Contact Enrichment", 
+        "dir": "Workspace-Contact-Enrichment", 
+        "desc": "Searches emails for new signatures and creates new Google Contacts.",
+        "system_prompt": "Search recent emails for email signatures. Extract Names, Roles, and Phone numbers. Check if they exist in Google Contacts, and if not, create them.",
+        "skills": "Gmail-Search-Emails,Gmail-Retrieve-Email,Google-Contacts-Search,Google-Contacts-Create"
+    },
+    {
+        "name": "Workspace Daily Digest", 
+        "dir": "Workspace-Daily-Digest", 
+        "desc": "Pulls today's calendar, tasks, and unread emails into a generated Google Doc.",
+        "system_prompt": "Retrieve today's calendar events, today's active tasks, and recent unread emails. Synthesize a comprehensive morning briefing and write it to a new Google Doc.",
+        "skills": "Google-Calendar-Find-Event,Google-Tasks-Find-Tasks,Gmail-Search-Emails,Google-Docs-Create-Document,summarize"
+    },
+    {
+        "name": "Workspace Draft Meeting Followup", 
+        "dir": "Workspace-Draft-Meeting-Followup", 
+        "desc": "Analyzes a recent meeting and drafts a follow-up email to attendees.",
+        "system_prompt": "Find the most recently concluded calendar event. Search Drive/Gmail for notes from that timeframe. Draft a follow-up email to the attendees summarizing next steps.",
+        "skills": "Google-Calendar-Find-Event,Google-Drive-Search-Files,Gmail-Draft-Email,summarize"
+    },
+    {
+        "name": "Workspace Find Inbox Zero Anomalies", 
+        "dir": "Workspace-Find-Inbox-Zero-Anomalies", 
+        "desc": "Finds emails that are older than X days, not replied to, and still unread/unarchived.",
+        "system_prompt": "Search Gmail for unread emails older than the specified timeframe. Identify which ones require immediate attention versus archiving.",
+        "skills": "Gmail-Search-Emails,Gmail-Modify-Labels,summarize"
+    },
+    {
+        "name": "Workspace Proactive Rescheduler", 
+        "dir": "Workspace-Proactive-Rescheduler", 
+        "desc": "Finds calendar conflicts and automatically drafts emails proposing new times.",
+        "system_prompt": "Check the calendar for conflicting events today. For any overlaps, find free slots later in the week, and draft an email to the attendees proposing the new times.",
+        "skills": "Google-Calendar-Find-Event,Gmail-Draft-Email,summarize"
+    }
+]
+
+CROSS_SERVICE_NODE_TEMPLATE = """import sys
+import subprocess
+import time
+import json
+import os
+
+def execute_cross_service(arguments_json_str):
+    try:
+        arguments = json.loads(arguments_json_str)
+        prompt_args = " ".join([f"{{k}}: {{v}}" for k, v in arguments.items()])
+    except:
+        prompt_args = arguments_json_str
+
+    prompt = f\"\"\"{system_prompt}
+    
+Context/Arguments: {{prompt_args}}
+
+You MUST use the provided skills to execute this multi-step workflow. Do not mock the actions.
+\"\"\"
+    print(f"Executing Cross-Service Workflow: {name}...")
+    
+    # We rely on OpenClaw's autonomous loop to handle the tool orchestration
+    cmd = ["wsl", "--", "bash", "-c", f"openclaw infer '{{prompt}}' --skills {skills}"]
+    
+    try:
+        result = subprocess.run(cmd, capture_output=True, text=True, check=True)
+        return result.stdout
+    except subprocess.CalledProcessError as e:
+        print(f"Workflow failed: {{e.stderr}}")
+        raise Exception("Cross-service workflow execution failed.")
+
+if __name__ == "__main__":
+    if len(sys.argv) < 2:
+        print("Usage: python node.py '<json_arguments>'")
+        sys.exit(1)
+    print(execute_cross_service(sys.argv[1]))
+"""
+
+def generate():
+    base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../Skills"))
+    
+    # Generate Base Nodes
+    for node in NODES:
+        skill_dir = os.path.join(base_dir, node["dir"])
+        os.makedirs(skill_dir, exist_ok=True)
+        
+        desc_lower = node["desc"].lower()
+        if not desc_lower.endswith("."): desc_lower += "."
+        
+        skill_content = SKILL_TEMPLATE.format(
+            name=node["name"],
+            desc_lower=desc_lower,
+            output_type="array" if node["validation"] == "list" else "object"
+        )
+        with open(os.path.join(skill_dir, "SKILL.md"), "w") as f:
+            f.write(skill_content)
+            
+        node_content = NODE_TEMPLATE.format(
+            name=node["name"],
+            validation_type=node["validation"],
+            gog_cmd=node["gog_cmd"],
+            composio_tool=node["composio_tool"]
+        )
+        with open(os.path.join(skill_dir, "node.py"), "w") as f:
+            f.write(node_content)
+            
     # Generate Composite Nodes
     for node in COMPOSITE_NODES:
         skill_dir = os.path.join(base_dir, node["dir"])
@@ -248,8 +387,32 @@ def generate():
         with open(os.path.join(skill_dir, "node.py"), "w") as f:
             f.write(node_content)
 
-    total = len(NODES) + len(COMPOSITE_NODES)
-    print(f"Successfully generated {total} atomic and composite nodes in Skills directory.")
+    # Generate Cross-Service Nodes
+    for node in CROSS_SERVICE_NODES:
+        skill_dir = os.path.join(base_dir, node["dir"])
+        os.makedirs(skill_dir, exist_ok=True)
+        
+        desc_lower = node["desc"].lower()
+        if not desc_lower.endswith("."): desc_lower += "."
+        
+        skill_content = SKILL_TEMPLATE.format(
+            name=node["name"],
+            desc_lower=desc_lower,
+            output_type="string"
+        )
+        with open(os.path.join(skill_dir, "SKILL.md"), "w") as f:
+            f.write(skill_content)
+            
+        node_content = CROSS_SERVICE_NODE_TEMPLATE.format(
+            name=node["name"],
+            system_prompt=node["system_prompt"],
+            skills=node["skills"]
+        )
+        with open(os.path.join(skill_dir, "node.py"), "w") as f:
+            f.write(node_content)
+
+    total = len(NODES) + len(COMPOSITE_NODES) + len(CROSS_SERVICE_NODES)
+    print(f"Successfully generated {total} atomic, composite, and cross-service nodes in Skills directory.")
 
 if __name__ == "__main__":
     generate()

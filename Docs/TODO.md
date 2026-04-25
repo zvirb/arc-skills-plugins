@@ -20,7 +20,7 @@ This document tracks the status of Skills and Plugins across the ecosystem.
 
 ## ⏳ In Progress
 *(Move items here when development begins)*
-- **Node-based Atomic Skills (Google Workspace):** Decomposed monolithic orchestration into 24 tiny, single-purpose components spanning Gmail, Calendar, Drive, Docs, Sheets, Tasks, and Contacts. Each contains an internal retry loop for output validation.
+- **Node-based Atomic Skills (Google Workspace):** Decomposed into 39 atomic, composite, and cross-service orchestration nodes (e.g. Workspace-Meeting-Preparation, Workspace-Proactive-Rescheduler) spanning all Workspace products.
 
 ---
 
