@@ -33,3 +33,11 @@ This document tracks the status of Skills and Plugins across the ecosystem.
 - [x] **Calendar Guard:** Engineer a custom script that injects "Recovery Block" events to protect the schedule dynamically via Google Calendar.
 - [x] **Flow State Monitoring:** Build a custom logic layer to analyze `CatchMe` application-switching frequencies and sync "In Flow" status to Google Workspace.
 - [x] **Micro-Suck Generation:** Write a custom `SKILL.md` that utilizes a randomized task matrix to issue minor resilience challenges to Google Tasks or Chat UI.
+
+## 🚀 Lean Retrofit (Kaizen)
+*Tracking the transition of all extensions to the Lead System Architect's Lean Standards (Jidoka/Andon loops).*
+
+- [x] **LLM-Summarize-Text**: Retrofitted with Jidoka Andon loop and standardized config.
+- [x] **LLM-Extract-JSON**: Retrofitted with Jidoka Andon loop and standardized config.
+- [x] **Google-Sheets-Append-Row**: Retrofitted with Jidoka evaluator for API response verification.
+- [x] **Workflow Normalization**: Refactored `crm_entity_extraction.py` into a standardized Runner.

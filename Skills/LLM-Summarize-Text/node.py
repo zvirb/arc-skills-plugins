@@ -2,56 +2,101 @@ import sys
 import json
 import time
 import subprocess
+import os
 
-def validate_output(output_str):
+# ==========================================
+# STANDARDIZED WORK: CONFIGURATION & SCHEMAS
+# ==========================================
+MAX_RETRIES = 3
+DEFAULT_SCHEMA = {
+    "summary": "string",
+    "key_points": ["string"],
+    "sentiment": "string"
+}
+
+# ==========================================
+# JIDOKA: EVALUATOR & VALIDATION
+# ==========================================
+def validate_output(output_str, expected_schema=None):
+    """
+    Evaluator Pattern: Deterministic validation of LLM output.
+    Returns (is_valid, data_or_error_message)
+    """
     try:
-        data = json.loads(output_str) if isinstance(output_str, str) else output_str
-        return isinstance(data, dict)
-    except:
-        return False
+        data = json.loads(output_str)
+        # Basic structural check - ensure it's a dict
+        if not isinstance(data, dict):
+            return False, "Output must be a JSON object, not a list or primitive."
+        
+        # If a schema was provided, we could do deeper validation here
+        return True, data
+    except json.JSONDecodeError as e:
+        return False, f"Invalid JSON format: {str(e)}"
+    except Exception as e:
+        return False, f"Unexpected validation error: {str(e)}"
 
-def execute_node(arguments_json_str, max_retries=3):
+# ==========================================
+# EXECUTION LOGIC (ATOMIC)
+# ==========================================
+def execute_node(arguments_json_str):
+    # 1. Standardized Input Parsing
     try:
         arguments = json.loads(arguments_json_str)
     except:
-        arguments = {"text": arguments_json_str} # Fallback if passed raw string
+        arguments = {"text": arguments_json_str}
 
     raw_text = arguments.get("text", "")
-    schema_hint = arguments.get("schema", "A valid JSON object ({...})")
+    schema_hint = arguments.get("schema", json.dumps(DEFAULT_SCHEMA))
     
-    # Safely escape text for the shell command
-    safe_text = raw_text.replace("'", "").replace('"', '')[:3000]
+    # 2. Kaizen: Blindfold the LLM (Constrained System Prompt)
+    system_prompt = (
+        "ROLE: Data Transformation Node.\n"
+        "TASK: Summarize text into structured JSON.\n"
+        f"SCHEMA: {schema_hint}\n"
+        "RULES: Output ONLY raw JSON. No conversational text. No markdown blocks."
+    )
+    
+    current_prompt = f"TEXT TO PROCESS: {raw_text[:3000]}"
+    error_feedback = ""
 
-    prompt = f"Analyze the following text and output ONLY valid JSON matching this schema/intent: {schema_hint}.\n\nText: {safe_text}"
-
-    for attempt in range(1, max_retries + 1):
-        print(f"Attempt {attempt}: Executing LLM Summarize Text transformation...")
-        try:
-            cmd = ["wsl", "--", "bash", "-c", f"openclaw infer '{prompt}'"]
-            result = subprocess.run(cmd, capture_output=True, text=True, check=True)
-            
-            # The LLM might wrap output in markdown ```json ... ```. Strip it.
-            clean_out = result.stdout.strip()
-            if clean_out.startswith("```json"):
-                clean_out = clean_out[7:]
-            if clean_out.startswith("```"):
-                clean_out = clean_out[3:]
-            if clean_out.endswith("```"):
-                clean_out = clean_out[:-3]
-            clean_out = clean_out.strip()
-
-            if validate_output(clean_out):
-                return json.loads(clean_out)
-        except Exception as e:
-            print(f"OpenClaw Inference failed on attempt {attempt}: {e}")
-            
-        print("Validation failed or LLM hallucinated format. Retrying...")
-        time.sleep(2)
+    # 3. Jidoka: The "Andon" Loop (Self-Healing)
+    for attempt in range(1, MAX_RETRIES + 1):
+        instruction = f"{system_prompt}\n\n{error_feedback}\n\n{current_prompt}"
         
-    raise Exception("Failed to achieve valid JSON schema after max retries.")
+        try:
+            # Atomic Execution (No-Shell Pattern)
+            cmd = ["wsl", "openclaw", "infer", "model", "run", "--local", "--prompt", instruction]
+            
+            result = subprocess.run(cmd, capture_output=True, text=True, timeout=180)
+            
+            if result.returncode != 0:
+                error_feedback = f"PROVIDER_ERROR: {result.stderr or 'Process failed'}"
+                continue
+
+            # Evaluation
+            is_valid, result_data = validate_output(result.stdout)
+            
+            if is_valid:
+                return result_data
+            
+            # Error Feedback (Andon)
+            error_feedback = f"PREVIOUS_ERROR: {result_data}\nINSTRUCTION: Correct the JSON and try again."
+            
+        except Exception as e:
+            error_feedback = f"SYSTEM_EXCEPTION: {str(e)}"
+            
+        time.sleep(1)
+
+    # 4. Deterministic Exit
+    return {
+        "status": "error",
+        "message": f"Failed to achieve valid state after {MAX_RETRIES} attempts.",
+        "last_error": error_feedback
+    }
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print("Usage: python node.py '<json_arguments>'")
+        print(json.dumps({"status": "error", "message": "Missing input arguments."}))
         sys.exit(1)
+    
     print(json.dumps(execute_node(sys.argv[1]), indent=2))
