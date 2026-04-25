@@ -1,0 +1,24 @@
+# Open Claw
+
+This repository contains Skills and Plugins for Open Claw.
+
+## Directory Structure
+
+- `Config/`: Contains non-secret configuration files (e.g., agent settings, prompt templates).
+- `Docs/`: Contains overarching project documentation, guidelines, and manuals.
+- `Logs/`: Contains execution traces and agent logs. **This folder is ignored by Git.**
+- `Memory/`: Persistent storage for the agent (e.g., vector databases, context logs). **Data files ignored by Git.**
+- `Plugins/`: Contains Open Claw plugins. Each new plugin should be created in its own sub-folder.
+- `Scripts/`: Contains globally useful utility scripts and repository automation.
+- `Secrets/`: Contains sensitive data, credentials, and API keys. **This folder is strictly ignored by Git.**
+- `Skills/`: Contains Open Claw skills. Each new skill should be created in its own sub-folder.
+- `Tests/`: Contains test suites and testing infrastructure.
+
+## Project Tidiness & Root Folder Rules
+
+To maintain a clean and manageable repository, please adhere to the following rules:
+
+1. **Minimize Root Files:** Do not clutter the root folder (`/`) with scripts, temporary files, configuration snippets, or notes. The root folder should strictly contain high-level configurations (e.g., `.gitignore`, `README.md`) and the primary directories.
+2. **Strict Sub-Folder Isolation:** All code, assets, and documentation for a specific skill or plugin MUST live entirely within its designated sub-folder (e.g., `Skills/MySkill/`). Do not leak skill-specific files into the root or parent directories.
+3. **Use the Docs Folder:** Any overarching documentation or project-wide notes must go into the `Docs/` directory, not the root directory.
+4. **Clean Up:** Regularly delete temporary files and test scripts. If a script is useful globally, consider making it a proper utility within a designated folder rather than leaving it in the root.
