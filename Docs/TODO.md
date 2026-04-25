@@ -20,7 +20,7 @@ This document tracks the status of Skills and Plugins across the ecosystem.
 
 ## ⏳ In Progress
 *(Move items here when development begins)*
-- *None currently*
+- **Google Workspace Orchestrator:** Specifically deals with Google Workspace using existing tools (gog with fallback to composio). Designs workflows for the agent to do everything from searching emails, retrieving/scheduling calendar tasks, sending emails, to finding Drive documents.
 
 ---
 
