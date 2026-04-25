@@ -27,7 +27,7 @@ This document tracks the status of Skills and Plugins across the ecosystem.
 ## ✅ Completed
 *(Move items here when fully tested and deployed)*
 - [x] **Vague Task Decomposition:** Combine existing Linear skill logic with a custom prompt tailored specifically for Google Tasks API manipulation via Composio.
-- [x] **CRM Entity Extraction:** Build an OpenProse pipeline to bridge Gmail data extraction logic to Google Sheets or Google Contacts via Composio.
+- [x] **CRM Entity Extraction:** Build an OpenProse pipeline to bridge Gmail data extraction logic to Google Sheets or Google Contacts via Composio. *(Refactored to pure orchestration workflow chaining LLM JSON extraction and Sheets Append).*
 - [x] **Capture Classification:** Build a semantic router skill utilizing the urgency heuristics to classify audio transcripts into Google Tasks or LanceDB.
 - [x] **Backlog Grooming:** Construct a custom chron-triggered `SKILL.md` to evaluate old items and groom Google Tasks.
 - [x] **Calendar Guard:** Engineer a custom script that injects "Recovery Block" events to protect the schedule dynamically via Google Calendar.
