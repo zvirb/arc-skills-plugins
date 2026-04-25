@@ -1,30 +1,36 @@
 ---
 name: capture-classification
-description: Route unstructured audio transcripts or quick notes to Google Tasks or LanceDB based on urgency.
-version: 1.0.0
-os:
-  - windows
-  - linux
-  - darwin
+description: Workflow-driven skill that routes unstructured audio transcripts or quick notes to Google Tasks or LanceDB based on urgency.
+os: windows
 requires:
   bins:
     - python
   env:
     - COMPOSIO_API_KEY
     - LANCE_DB_PATH
-metadata:
-  orchestrator: OpenProse
-  security: None
-  type: pipeline
 ---
+## Lean Philosophy (Principles)
+- **Kaizen (改善):** This skill is an atomic node, broken down into its simplest, smallest component to eliminate waste and ensure perfection.
+- **Standardized Work (Hyojun Sagyo):** This node represents the most efficient, standardized path for this specific task before automation.
+- **Jidoka (自働化):** This node includes autonomous defect detection. It will stop immediately and report if it cannot achieve the expected outcome.
+
+
 
 # Capture Classification
 
-This skill acts as a semantic router. It evaluates inbound text against urgency heuristics.
-If the engine determines the capture is an actionable item ("call the supplier today"), it pushes it directly to the default Google Tasks list via Composio.
-If it is a conceptual design thought or reference material, it routes it to the local memory-lancedb instance to be embedded into the open-source vector database for future recall.
+This skill orchestrates a workflow to act as a semantic router for inbound text. It evaluates intent and urgency before routing to the appropriate destination.
 
-## Directives
-- **Input:** Unstructured audio transcript or note text.
-- **Process:** Classify intent and urgency using LLM prompt. Route to Google Tasks (Composio) or local LanceDB.
-- **Output:** JSON confirming the routed destination and action taken.
+## Workflow Orchestration
+This skill delegates its execution to `d:\openClaw\Workflows\capture_classification.py`, which chains the following atomic nodes:
+1. **LLM-Classify-Intent**: Evaluates the text against urgency heuristics and intent (Actionable vs Informational).
+2. **Google-Tasks-Create-Task**: Used if the item is actionable.
+3. **Vector-Store-Upsert-Memory**: Used if the item is informational/reference material.
+
+## Role
+You are a semantic router. You should process all inbound captures through this workflow to ensure they are stored or acted upon correctly.
+
+## Input
+Unstructured audio transcript or note text.
+
+## Expected Output
+A JSON log confirming the routed destination and action taken.

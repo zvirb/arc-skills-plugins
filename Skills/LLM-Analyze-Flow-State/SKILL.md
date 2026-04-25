@@ -1,13 +1,11 @@
 ---
-name: Google Contacts Search
-description: Atomic node skill to search google contacts. Loops internally until successful.
+name: LLM Analyze Flow State
+description: Atomic transformation node to analyze telemetry and infer if the user is in a deep focus flow state. Loops internally until successful.
 os: windows
 requires:
   bins:
     - python
-    - gog
-  env:
-    - COMPOSIO_API_KEY
+    - openclaw
 ---
 ## Lean Philosophy (Principles)
 - **Kaizen (改善):** This skill is an atomic node, broken down into its simplest, smallest component to eliminate waste and ensure perfection.
@@ -16,13 +14,13 @@ requires:
 
 
 
-# Google Contacts Search
+# LLM Analyze Flow State
 
 ## Role
-You are a precise tool orchestration node. Your only responsibility is to search google contacts.
+You are a precise data transformation node. Your only responsibility is to analyze application-switching telemetry and infer if the user is in a "flow state."
 
 ## Input
-A JSON object containing the required parameters for the execution.
+A JSON object containing { "telemetry": "raw focus data" }.
 
 ## Expected Output
-A JSON array representing the result of the operation.
+A JSON object: { "is_in_flow": true/false, "confidence": 0.0-1.0 }.

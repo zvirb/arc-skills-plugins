@@ -7,9 +7,15 @@ description: Best-practice workflow for scaffolding a new OpenClaw Skill or Plug
 
 This workflow guides the agent through creating a new OpenClaw extension (Skill or Plugin) according to the latest architectural standards.
 
+## Core Principles
+All development MUST adhere to the following Lean principles:
+- **Kaizen (改善):** Always break processes apart into their simplest, smallest components (Atomic Nodes) before building. Investigate and perfect each tiny step.
+- **Standardized Work (Hyojun Sagyo):** Before automating, find the absolute most efficient, simplest way to execute the task. Optimize the node's internal logic (e.g., using `gog` before `Composio`) to eliminate waste.
+- **Jidoka (自働化):** Build "autonomation" into every node. Every node must have the "intelligence" to stop immediately (via validation loops) if it detects a defect, rather than blindly continuing.
+
 ## Steps
-1. **Architectural Decision:** 
-   - Identify the user's goal.
+1. **Architectural Decision (Kaizen):** 
+   - Identify the user's goal and decompose it into the smallest possible atomic units.
    - If it involves orchestrating existing tools (e.g., curl, browser, Python scripts), default to a **Skill**.
    - If it requires complex application state, new API endpoints, database bridges, or native hooks, default to a **Plugin**.
 2. **Scaffold Directory:**

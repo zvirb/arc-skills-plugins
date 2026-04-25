@@ -1,6 +1,6 @@
 ---
 name: Vague Task Decomposition
-description: Combine existing Linear skill logic with a custom prompt tailored specifically for Google Tasks API manipulation via Composio.
+description: Workflow-driven skill that decomposes vague task strings into actionable subtasks and dispatches them to Google Tasks.
 os: windows
 requires:
   bins:
@@ -8,32 +8,27 @@ requires:
   env:
     - COMPOSIO_API_KEY
 ---
+## Lean Philosophy (Principles)
+- **Kaizen (改善):** This skill is an atomic node, broken down into its simplest, smallest component to eliminate waste and ensure perfection.
+- **Standardized Work (Hyojun Sagyo):** This node represents the most efficient, standardized path for this specific task before automation.
+- **Jidoka (自働化):** This node includes autonomous defect detection. It will stop immediately and report if it cannot achieve the expected outcome.
 
-# Vague Task Decomposition Skill
 
-This skill uses an LLM prompt to decompose a vague task string into actionable, distinct subtasks and then dispatches them to Google Tasks using Composio.
 
-## Instructions
-1. Accept a vague task description.
-2. Formulate a prompt requesting a JSON array of actionable subtasks.
-3. Call a local LLM or API to get the decomposition.
-4. Iterate over the subtasks and use Composio's Google Tasks integration to create entries.
+# Vague Task Decomposition
 
-## Installation & Persistent WSL Setup
-Since this skill relies on the `composio` Python SDK, you must install it in a virtual environment within WSL. To ensure OpenClaw and your scripts have persistent access to this environment, follow these steps:
+This skill orchestrates a workflow to decompose vague task descriptions into actionable items using an LLM and then creates those items as tasks in Google Tasks.
 
-1. **Create the Virtual Environment:**
-   Run this inside your OpenClaw repository (or your home directory):
-   `python3 -m venv .venv`
+## Workflow Orchestration
+This skill delegates its execution to `d:\openClaw\Workflows\vague_task_decomposition.py`, which chains the following atomic nodes:
+1. **LLM-Extract-Action-Items**: Transforms the vague string into a JSON array of subtasks.
+2. **Google-Tasks-Create-Task**: Iterates through the array and creates each task via `gog` or `composio`.
 
-2. **Install Composio:**
-   Activate the environment and install the required packages:
-   `source .venv/bin/activate`
-   `pip install composio-core composio`
+## Role
+You are an orchestrator. When a user provides a vague task, you should trigger the decomposition workflow to ensure the resulting tasks are granular and actionable.
 
-3. **Allow Persistent Access (Auto-Activation):**
-   To ensure the virtual environment is always active when you open a WSL terminal (and when OpenClaw runs shell commands), add the activation script to your `~/.bashrc` or `~/.zshrc`:
-   `echo 'source /mnt/d/openClaw/.venv/bin/activate' >> ~/.bashrc`
-   `source ~/.bashrc`
+## Input
+A string representing a vague or complex task.
 
-Now, whenever you or OpenClaw run `python`, it will automatically use the environment where `composio` is installed!
+## Expected Output
+A summary of the created Google Tasks.

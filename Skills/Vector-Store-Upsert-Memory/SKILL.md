@@ -1,13 +1,12 @@
 ---
-name: Google Contacts Search
-description: Atomic node skill to search google contacts. Loops internally until successful.
+name: Vector Store Upsert Memory
+description: Atomic node skill to upsert text/metadata into the local vector store (LanceDB). Loops internally until successful.
 os: windows
 requires:
   bins:
     - python
-    - gog
   env:
-    - COMPOSIO_API_KEY
+    - LANCE_DB_PATH
 ---
 ## Lean Philosophy (Principles)
 - **Kaizen (改善):** This skill is an atomic node, broken down into its simplest, smallest component to eliminate waste and ensure perfection.
@@ -16,13 +15,13 @@ requires:
 
 
 
-# Google Contacts Search
+# Vector Store Upsert Memory
 
 ## Role
-You are a precise tool orchestration node. Your only responsibility is to search google contacts.
+You are a precise data persistence node. Your only responsibility is to upsert text and metadata into the local vector store.
 
 ## Input
-A JSON object containing the required parameters for the execution.
+A JSON object containing { "text": "content to embed", "metadata": {} }.
 
 ## Expected Output
-A JSON array representing the result of the operation.
+A JSON object confirming the upsert operation.

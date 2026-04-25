@@ -1,13 +1,11 @@
 ---
-name: Google Contacts Search
-description: Atomic node skill to search google contacts. Loops internally until successful.
+name: LLM Classify Intent
+description: Atomic transformation node to classify the intent of a text snippet (e.g., Actionable vs. Informational). Loops internally until successful.
 os: windows
 requires:
   bins:
     - python
-    - gog
-  env:
-    - COMPOSIO_API_KEY
+    - openclaw
 ---
 ## Lean Philosophy (Principles)
 - **Kaizen (改善):** This skill is an atomic node, broken down into its simplest, smallest component to eliminate waste and ensure perfection.
@@ -16,13 +14,13 @@ requires:
 
 
 
-# Google Contacts Search
+# LLM Classify Intent
 
 ## Role
-You are a precise tool orchestration node. Your only responsibility is to search google contacts.
+You are a precise data transformation node. Your only responsibility is to classify the intent and urgency of a text snippet.
 
 ## Input
-A JSON object containing the required parameters for the execution.
+A JSON object containing { "text": "raw content to process" }.
 
 ## Expected Output
-A JSON array representing the result of the operation.
+A JSON object: { "intent": "actionable/informational", "urgency": "high/medium/low", "reasoning": "string" }.

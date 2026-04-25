@@ -7,6 +7,12 @@ description: Workflow for resuming development on an existing Skill or Plugin.
 
 Use this workflow to resume work on an incomplete extension, ensuring no context is lost and state is properly restored.
 
+## Core Principles
+Maintain adherence to the following Lean principles during execution:
+- **Kaizen (改善):** Incremental improvement by perfecting the smallest components.
+- **Standardized Work (Hyojun Sagyo):** Use the most efficient execution path identified during scaffolding.
+- **Jidoka (自働化):** Utilize the built-in validation loops to detect and halt on defects.
+
 ## Steps
 1. **Context Restoration:**
    - Read the relevant `SKILL.md` or Plugin source files.

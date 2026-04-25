@@ -12,12 +12,14 @@ def load_node(node_name):
 def run_invoice_workflow(query="invoice", sheet_id="default_sheet"):
     print("Workflow: Starting Invoice Extraction...")
     
+    # Principle: Kaizen (改善) - decomposing the multi-service flow into atomic node edges
     search_node = load_node("Gmail-Search-Emails")
     retrieve_node = load_node("Gmail-Retrieve-Email")
     llm_json_node = load_node("LLM-Extract-JSON")
     append_node = load_node("Google-Sheets-Append-Row")
 
     # 1. Search Emails
+    # Principle: Standardized Work (Hyojun Sagyo) - using efficient gog CLI before heavy SDKs
     print(f"Step 1: Searching for '{query}'...")
     search_args = json.dumps({"query": query})
     email_list = search_node(search_args)
@@ -52,7 +54,9 @@ def run_invoice_workflow(query="invoice", sheet_id="default_sheet"):
             append_node(append_args)
             results.append(invoice_data)
         except Exception as e:
-            print(f"Failed to process email {email_id}: {e}")
+            # Principle: Jidoka (自働化) - stop immediately on detected defects
+            print(f"Defect detected in invoice processing for email {email_id}: {e}")
+            raise e
             
     print("Workflow Complete.")
     return results

@@ -7,6 +7,12 @@ description: Workflow for retrofitting and upgrading completed extensions to the
 
 Use this workflow to audit and refactor existing OpenClaw extensions to meet new architectural standards and SDK updates.
 
+## Core Principles
+All updates MUST enforce the following Lean principles:
+- **Kaizen (改善):** Continuously break monolithic processes into smaller, perfectible components.
+- **Standardized Work (Hyojun Sagyo):** Prerequisite to automation. Ensure the underlying manual/CLI process is the most efficient path available.
+- **Jidoka (自働化):** Ensure all nodes have self-healing validation loops that halt execution if a defect (invalid output/error) is detected.
+
 ## Steps
 1. **Audit Phase:**
    - Review the extension's codebase against current global directives (`GEMINI.md`, `AGENTS.md`).

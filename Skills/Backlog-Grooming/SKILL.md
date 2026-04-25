@@ -1,28 +1,35 @@
 ---
 name: backlog-grooming
-description: Autonomously manage stale items in Google Tasks.
-version: 1.0.0
-os:
-  - windows
-  - linux
-  - darwin
+description: Workflow-driven skill that autonomously manages stale items in Google Tasks.
+os: windows
 requires:
   bins:
     - python
   env:
     - COMPOSIO_API_KEY
-metadata:
-  orchestrator: Cron
-  security: None
-  type: script
 ---
+## Lean Philosophy (Principles)
+- **Kaizen (改善):** This skill is an atomic node, broken down into its simplest, smallest component to eliminate waste and ensure perfection.
+- **Standardized Work (Hyojun Sagyo):** This node represents the most efficient, standardized path for this specific task before automation.
+- **Jidoka (自働化):** This node includes autonomous defect detection. It will stop immediately and report if it cannot achieve the expected outcome.
+
+
 
 # Backlog Grooming
 
-A chron-triggered skill that wakes up on a defined schedule and queries the Google Tasks API for incomplete items older than 30 days via Composio.
-The LLM reads the stale tasks, generates a one-sentence summary of the blocked intent, prepends [STALE/ARCHIVED] to the title, and either moves it to a designated "Archive" task list or marks it as completed to keep the active workspace clean.
+This skill orchestrates a workflow to identify and archive stale Google Tasks (items older than 30 days) to maintain a clean workspace.
 
-## Directives
-- **Input:** None (Triggered by Cron).
-- **Process:** Query Google Tasks. Identify tasks older than 30 days. Re-summarize and prefix with [STALE/ARCHIVED]. Move or complete.
-- **Output:** JSON summary of groomed tasks.
+## Workflow Orchestration
+This skill delegates its execution to `d:\openClaw\Workflows\backlog_grooming.py`, which chains the following atomic nodes:
+1. **Google-Tasks-Find-Tasks**: Retrieves all active tasks.
+2. **LLM-Summarize-Text**: Generates a concise summary of the task's intent for archiving.
+3. **Google-Tasks-Update-Task**: Prepends `[STALE/ARCHIVED]` and marks the task as completed.
+
+## Role
+You are a maintenance agent. You should periodically trigger this workflow to prevent the user's task list from becoming cluttered with stale items.
+
+## Input
+None (Triggered by schedule/cron).
+
+## Expected Output
+A JSON summary of groomed tasks.

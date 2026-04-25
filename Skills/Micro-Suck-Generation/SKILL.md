@@ -1,28 +1,34 @@
 ---
 name: micro-suck-generation
-description: Issue minor resilience challenges to build task-initiation momentum.
-version: 1.0.0
-os:
-  - windows
-  - linux
-  - darwin
+description: Workflow-driven skill that issues minor resilience challenges to build task-initiation momentum.
+os: windows
 requires:
   bins:
     - python
   env:
     - COMPOSIO_API_KEY
-metadata:
-  orchestrator: Cron
-  security: None
-  type: script
 ---
+## Lean Philosophy (Principles)
+- **Kaizen (改善):** This skill is an atomic node, broken down into its simplest, smallest component to eliminate waste and ensure perfection.
+- **Standardized Work (Hyojun Sagyo):** This node represents the most efficient, standardized path for this specific task before automation.
+- **Jidoka (自働化):** This node includes autonomous defect detection. It will stop immediately and report if it cannot achieve the expected outcome.
+
+
 
 # Micro-Suck Generation
 
-A custom skill pulls from a randomized matrix of minor, two-minute tasks (e.g., "clear the physical desktop").
-When a lull in energy is detected (or triggered randomly), the system formulates the task and either presents it dynamically in the chat interface or injects it as an immediate, high-priority item at the top of today's Google Tasks list to kickstart executive function.
+This skill orchestrates a workflow to select a random minor task (a "micro-suck") and inject it into your Google Tasks list to kickstart executive function.
 
-## Directives
-- **Input:** Energy lull detection or cron trigger.
-- **Process:** Select random micro-task. Inject to Google Tasks or Chat.
-- **Output:** Notification of micro-task.
+## Workflow Orchestration
+This skill delegates its execution to `d:\openClaw\Workflows\micro_suck_generation.py`, which chains the following atomic nodes:
+1. **LLM-Select-Random-Item**: Randomly selects a task from a predefined resilience matrix.
+2. **Google-Tasks-Create-Task**: Injects the selected task into Google Tasks with high priority.
+
+## Role
+You are a coach. When you detect the user is stuck or procrastinating, you should trigger this workflow to help them build momentum.
+
+## Input
+None (Triggered by energy lull detection or schedule).
+
+## Expected Output
+A confirmation of the injected micro-task.

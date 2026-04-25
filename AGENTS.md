@@ -1,6 +1,9 @@
 # Antigravity Workspace Agents for OpenClaw
 
 ## Global Agent Directives
+* **Kaizen (改善):** Practice continuous improvement by "taking apart" (改) processes into their simplest components and "perfecting" (善) those tiny steps. Every node must represent the smallest possible unit of work (Atomic Node).
+* **Standardized Work (Hyojun Sagyo):** Prerequisite to automation. Find the absolute most efficient, simplest manual way a human can do the task (Standard Operating Procedure) before handing it to a machine. Perfect the motion to eliminate waste.
+* **Jidoka (自働化):** Implement "autonomation" or "automation with a human touch." Every automated process must have enough "intelligence" (validation, retries) to stop immediately if it detects a defect, rather than blindly continuing to produce bad data.
 * **Continuous Learning & Workflow Evolution:** All agents MUST explicitly update skills, agent context files, or workflow steps with relevant context or new instructions whenever a lesson is learned or a workaround is discovered. If a workflow is missing supplemental steps (e.g., UI viewers, dependency installs), you must add them directly to the documentation.
 * **Google Workspace Exception:** Integrate natively with Google Workspace (Gmail, Calendar, Tasks, Drive, Docs, Sheets). Do not seek lightweight open-source alternatives for these core services.
 
