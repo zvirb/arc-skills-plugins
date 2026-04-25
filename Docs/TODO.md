@@ -20,7 +20,7 @@ This document tracks the status of Skills and Plugins across the ecosystem.
 
 ## ⏳ In Progress
 *(Move items here when development begins)*
-- **Node-based Atomic Skills (Google Workspace):** Decomposed into 39 atomic, composite, and cross-service orchestration nodes (e.g. Workspace-Meeting-Preparation, Workspace-Proactive-Rescheduler) spanning all Workspace products.
+- **Node-based Atomic Skills (Google Workspace):** Decomposed into 29 strictly atomic, testable sub-nodes (24 API executors and 5 LLM-Transformers for discrete data mutation loops). Monolithic workflows are delegated to standard orchestration.
 
 ---
 
