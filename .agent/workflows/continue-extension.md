@@ -17,6 +17,7 @@ Use this workflow to resume work on an incomplete extension, ensuring no context
    - Rely on "Artifacts" (e.g., code diffs, test results) to visually or programmatically verify each step before moving to the next.
 3. **Validation & Testing:**
    - Write and run incremental tests in the `Tests/` directory.
+   - **Critical Workflow Rule:** You MUST physically test the extension. All nodes and workflow chains must be tested end-to-end to ensure they actually work. Use native OpenClaw execution or a local `ollama` setup (like `gemma4`) to definitively prove the workflow logic.
    - Log any errors or verbose traces to the `Logs/` directory (which is safely Git-ignored).
    - If OpenClaw is running in WSL2, you MUST sync the updated skills to its workspace first (e.g., `wsl cp -r /mnt/d/openClaw/Skills/* ~/.openclaw/workspace/skills/`) before running any native `openclaw` validations.
 4. **Knowledge Preservation:**

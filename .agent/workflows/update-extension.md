@@ -16,8 +16,10 @@ Use this workflow to audit and refactor existing OpenClaw extensions to meet new
    - Apply necessary updates. Break apart monolithic skills into smaller modular skills if needed.
    - Transition any long-running, blocking plugin tasks to asynchronous operations.
    - Ensure all secrets are gated behind environment variables and are never hardcoded.
-3. **Validation:**
+3. **Validation & Testing:**
    - Run existing tests and add new tests covering the refactored logic in `Tests/`.
+   - **Critical Workflow Rule:** You MUST physically test the extension. All nodes and workflow chains must be tested end-to-end to ensure they actually work. 
+   - Test LLM-driven nodes directly using native OpenClaw or by wiring in a local `ollama` model (e.g., `gemma4`) to ensure true integration resilience.
    - If OpenClaw is running in WSL2, you MUST sync the updated skills to its workspace first (e.g., `wsl cp -r /mnt/d/openClaw/Skills/* ~/.openclaw/workspace/skills/`).
    - Execute `wsl openclaw skills check` or `openclaw plugins list --verbose`.
 4. **State Tracking:**
