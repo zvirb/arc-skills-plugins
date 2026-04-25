@@ -1,6 +1,7 @@
 import sys
 import os
 import unittest
+import json
 import importlib.util
 from unittest.mock import patch, MagicMock
 
@@ -13,9 +14,18 @@ def load_node_module(module_name, path):
 refine_tool_use_node = load_node_module('refine_tool_use_node', os.path.abspath(os.path.join(os.path.dirname(__file__), '../Skills/LLM-Refine-Tool-Use/node.py')))
 
 class TestLLMRefineToolUse(unittest.TestCase):
-    
+
+    def setUp(self):
+        # Ensure we have a clean history file for tests or use a temp file
+        if os.path.exists(refine_tool_use_node.HISTORY_FILE):
+            os.remove(refine_tool_use_node.HISTORY_FILE)
+
+    def tearDown(self):
+        if os.path.exists(refine_tool_use_node.HISTORY_FILE):
+            os.remove(refine_tool_use_node.HISTORY_FILE)
+
     @patch.object(refine_tool_use_node.subprocess, 'run')
-    def test_refine_tool_use_validation_loop(self, mock_subprocess):
+    def test_plan_action_validation_loop(self, mock_subprocess):
         # First call fails validation (returns non-dict string), second succeeds
         mock_subprocess.side_effect = [
             MagicMock(stdout='{"error": "not a valid dictionary"}', returncode=0),
@@ -24,13 +34,33 @@ class TestLLMRefineToolUse(unittest.TestCase):
         
         # Mock time.sleep to avoid waiting during tests
         with patch.object(refine_tool_use_node.time, 'sleep', return_value=None):
-            result = refine_tool_use_node.refine_tool_use("Find instances of MockKException in the codebase.")
+            result = refine_tool_use_node.refine_tool_use(json.dumps({
+                "action": "plan",
+                "task_description": "Find instances of MockKException in the codebase."
+            }))
             
         self.assertIn("refined_strategy", result)
         self.assertIn("recommended_tools", result)
         self.assertIn("anti_patterns_to_avoid", result)
         self.assertEqual(result["recommended_tools"], ["grep_search"])
         self.assertEqual(mock_subprocess.call_count, 2)
+        
+    def test_record_action_updates_ledger(self):
+        result = refine_tool_use_node.refine_tool_use(json.dumps({
+            "action": "record",
+            "use_case": "kotlin_debugging",
+            "successful_tools": ["gradle_test_runner"],
+            "anti_patterns": ["manual javac"],
+            "notes": "Always use gradle to test kotlin."
+        }))
+        
+        self.assertEqual(result["status"], "success")
+        
+        # Verify the file was created and contains the data
+        history = refine_tool_use_node.load_history()
+        self.assertIn("kotlin_debugging", history)
+        self.assertIn("gradle_test_runner", history["kotlin_debugging"]["successful_tools"])
+        self.assertIn("manual javac", history["kotlin_debugging"]["anti_patterns"])
 
 if __name__ == '__main__':
     unittest.main()
