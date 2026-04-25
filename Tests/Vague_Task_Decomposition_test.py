@@ -1,12 +1,19 @@
 import sys
 import os
 import unittest
+from unittest.mock import patch, MagicMock
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../Skills/Vague-Task-Decomposition')))
 import decompose
 
 class TestVagueTaskDecomposition(unittest.TestCase):
-    def test_decompose_task(self):
+    @patch('subprocess.run')
+    def test_decompose_task(self, mock_subprocess):
+        # Mock the OpenClaw CLI response
+        mock_subprocess.return_value = MagicMock(
+            stdout='{"response": "[\\"Draft implementation plan\\", \\"Execute and test\\", \\"Review code\\"]"}'
+        )
+        
         vague_task = "Complete the TPS report"
         subtasks = decompose.decompose_task(vague_task)
         self.assertEqual(len(subtasks), 3)

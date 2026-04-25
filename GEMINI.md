@@ -17,3 +17,4 @@
 ## 4. Continuous Learning & Workflow Evolution
 * Whenever a lesson is learned, a bug is fixed, or a new pattern is established during attempted work, you MUST immediately update the relevant skills, agent context files (`context.md`, `AGENTS.md`), or workflow steps to encode this new knowledge. 
 * **Supplemental Tooling:** If you identify that a workflow requires supplemental tooling or missing steps to function correctly (e.g., viewing a DB, installing a missing local binary), you MUST add those explicitly to the workflow or skill documentation. Do not rely on conversation memory.
+* **Online Research for Mocks:** Always perform online research to replace any mock functions. Ensure you are operating with the latest and best practices to supplement your knowledge when you lack specific implementation details.
