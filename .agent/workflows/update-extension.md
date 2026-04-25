@@ -18,7 +18,8 @@ Use this workflow to audit and refactor existing OpenClaw extensions to meet new
    - Ensure all secrets are gated behind environment variables and are never hardcoded.
 3. **Validation:**
    - Run existing tests and add new tests covering the refactored logic in `Tests/`.
-   - Execute `openclaw skills check` or `openclaw plugins list --verbose`.
+   - If OpenClaw is running in WSL2, you MUST sync the updated skills to its workspace first (e.g., `wsl cp -r /mnt/d/openClaw/Skills/* ~/.openclaw/workspace/skills/`).
+   - Execute `wsl openclaw skills check` or `openclaw plugins list --verbose`.
 4. **State Tracking:**
    - Document the update in the extension's `README.md` or `SKILL.md` changelog.
    - If the update resolves an outstanding issue, update `Docs/TODO.md`.

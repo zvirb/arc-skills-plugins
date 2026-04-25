@@ -18,6 +18,7 @@ Use this workflow to resume work on an incomplete extension, ensuring no context
 3. **Validation & Testing:**
    - Write and run incremental tests in the `Tests/` directory.
    - Log any errors or verbose traces to the `Logs/` directory (which is safely Git-ignored).
+   - If OpenClaw is running in WSL2, you MUST sync the updated skills to its workspace first (e.g., `wsl cp -r /mnt/d/openClaw/Skills/* ~/.openclaw/workspace/skills/`) before running any native `openclaw` validations.
 4. **Knowledge Preservation:**
    - If a new lesson, workaround, or bug fix is discovered during the session, immediately update the extension's documentation, `Docs/context.md`, or the `SKILL.md` file (Continuous Learning directive).
 5. **Next Steps:**

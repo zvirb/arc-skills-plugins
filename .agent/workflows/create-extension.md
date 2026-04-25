@@ -19,7 +19,7 @@ This workflow guides the agent through creating a new OpenClaw extension (Skill 
    - **For Plugins:** Initialize `package.json` with the `openclaw` object and strict `compat` versioning. Scaffold TypeScript files using the official SDK (`openclaw/plugin-sdk/plugin-entry`) and `register(api)`. Ensure the plugin fails gracefully.
 4. **Validation:**
    - Generate unit tests in the global `Tests/` directory.
-   - For Skills, note that `openclaw skills check` (run via WSL if openclaw is only in WSL) takes no arguments. You may run it globally, but rely primarily on your Python unit tests to verify logic.
+   - For Skills, note that `openclaw skills check` takes no arguments and runs against the configured workspace. If OpenClaw is running in WSL2, you MUST sync the new skills to its workspace first (e.g., `wsl cp -r /mnt/d/openClaw/Skills/* ~/.openclaw/workspace/skills/`) before running `wsl openclaw skills check` to verify syntax and dependency eligibility.
    - Run `openclaw plugins list --verbose` (for Plugins).
 5. **State Tracking:**
    - Update `Docs/TODO.md` to list the new extension under "In Progress".
