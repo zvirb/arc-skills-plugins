@@ -126,13 +126,82 @@ if __name__ == "__main__":
     print(json.dumps(execute_node(sys.argv[1]), indent=2))
 """
 
+COMPOSITE_NODES = [
+    {"name": "Gmail Summarize Email", "dir": "Gmail-Summarize-Email", "desc": "Retrieve an email and summarize its content.", "gog_cmd": "gmail get", "composio_tool": "GMAIL_GET_MESSAGE", "prompt_template": "Summarize this email thoroughly", "skills_to_use": "summarize"},
+    {"name": "Google Drive Research Files", "dir": "Google-Drive-Research-Files", "desc": "Search Drive and extract deep research insights.", "gog_cmd": "drive search", "composio_tool": "GOOGLEDRIVE_SEARCH", "prompt_template": "Analyze and research these files using Tavily if external context is needed", "skills_to_use": "tavily,summarize"},
+    {"name": "Google Contacts Find Duplicates", "dir": "Google-Contacts-Find-Duplicates", "desc": "Analyze contacts to identify duplicates.", "gog_cmd": "contacts search", "composio_tool": "GOOGLECONTACTS_SEARCH_CONTACTS", "prompt_template": "Identify duplicate contacts in this list based on similar names or emails", "skills_to_use": "summarize"},
+    {"name": "Google Drive Find Duplicates", "dir": "Google-Drive-Find-Duplicates", "desc": "Find duplicate files in Google Drive.", "gog_cmd": "drive search", "composio_tool": "GOOGLEDRIVE_SEARCH", "prompt_template": "List all identical or duplicate files from this payload based on name/size", "skills_to_use": "summarize"},
+    {"name": "Google Calendar Find Conflicts", "dir": "Google-Calendar-Find-Conflicts", "desc": "Analyze calendar events and report conflicts.", "gog_cmd": "calendar list", "composio_tool": "GOOGLECALENDAR_FIND_EVENT", "prompt_template": "Analyze these calendar events and identify any overlapping times or conflicts", "skills_to_use": "summarize"}
+]
+
+COMPOSITE_NODE_TEMPLATE = """import sys
+import json
+import time
+import subprocess
+import os
+
+try:
+    from composio import Composio
+except ImportError:
+    Composio = None
+
+def execute_composite(arguments_json_str, max_retries=3):
+    try:
+        arguments = json.loads(arguments_json_str)
+    except:
+        arguments = {{"query": arguments_json_str}} # Fallback
+
+    composio_api_key = os.environ.get("COMPOSIO_API_KEY")
+    
+    print(f"Step 1: Fetching raw data for {name}...")
+    raw_data = None
+    try:
+        cli_args = " ".join([f"--{{k}}='{{v}}'" for k, v in arguments.items()])
+        cmd = ["wsl", "--", "bash", "-c", f"gog {gog_cmd} {{cli_args}} --json"]
+        result = subprocess.run(cmd, capture_output=True, text=True)
+        raw_data = result.stdout
+    except Exception as e:
+        print(f"gog fetch failed: {{e}}")
+        if Composio:
+            client = Composio(api_key=composio_api_key)
+            res = client.tools.execute("{composio_tool}", arguments=arguments)
+            if res.successful:
+                raw_data = json.dumps(res.data)
+
+    if not raw_data:
+        raise Exception("Failed to fetch prerequisite data for composite action.")
+
+    print(f"Step 2: Processing data through OpenClaw skills ({skills_to_use})...")
+    for attempt in range(1, max_retries + 1):
+        try:
+            # We pass the raw data as a string to openclaw infer (safely truncated to avoid arg too long)
+            safe_data = raw_data.replace("'", "").replace('"', '')[:2000]
+            prompt = f"{prompt_template}: {{safe_data}}"
+            
+            infer_cmd = ["wsl", "--", "bash", "-c", f"openclaw infer '{{prompt}}' --skills {skills_to_use}"]
+            res = subprocess.run(infer_cmd, capture_output=True, text=True, check=True)
+            return res.stdout
+        except Exception as e:
+            print(f"OpenClaw Inference failed on attempt {{attempt}}: {{e}}")
+            time.sleep(2)
+            
+    raise Exception("Failed to achieve composite outcome after max retries.")
+
+if __name__ == "__main__":
+    if len(sys.argv) < 2:
+        print("Usage: python node.py '<json_arguments>'")
+        sys.exit(1)
+    print(execute_composite(sys.argv[1]))
+"""
+
 def generate():
     base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../Skills"))
+    
+    # Generate Base Nodes
     for node in NODES:
         skill_dir = os.path.join(base_dir, node["dir"])
         os.makedirs(skill_dir, exist_ok=True)
         
-        # Write SKILL.md
         desc_lower = node["desc"].lower()
         if not desc_lower.endswith("."): desc_lower += "."
         
@@ -144,7 +213,6 @@ def generate():
         with open(os.path.join(skill_dir, "SKILL.md"), "w") as f:
             f.write(skill_content)
             
-        # Write node.py
         node_content = NODE_TEMPLATE.format(
             name=node["name"],
             validation_type=node["validation"],
@@ -154,7 +222,34 @@ def generate():
         with open(os.path.join(skill_dir, "node.py"), "w") as f:
             f.write(node_content)
             
-    print(f"Successfully generated {len(NODES)} atomic nodes in Skills directory.")
+    # Generate Composite Nodes
+    for node in COMPOSITE_NODES:
+        skill_dir = os.path.join(base_dir, node["dir"])
+        os.makedirs(skill_dir, exist_ok=True)
+        
+        desc_lower = node["desc"].lower()
+        if not desc_lower.endswith("."): desc_lower += "."
+        
+        skill_content = SKILL_TEMPLATE.format(
+            name=node["name"],
+            desc_lower=desc_lower,
+            output_type="string"
+        )
+        with open(os.path.join(skill_dir, "SKILL.md"), "w") as f:
+            f.write(skill_content)
+            
+        node_content = COMPOSITE_NODE_TEMPLATE.format(
+            name=node["name"],
+            gog_cmd=node["gog_cmd"],
+            composio_tool=node["composio_tool"],
+            prompt_template=node["prompt_template"],
+            skills_to_use=node["skills_to_use"]
+        )
+        with open(os.path.join(skill_dir, "node.py"), "w") as f:
+            f.write(node_content)
+
+    total = len(NODES) + len(COMPOSITE_NODES)
+    print(f"Successfully generated {total} atomic and composite nodes in Skills directory.")
 
 if __name__ == "__main__":
     generate()
