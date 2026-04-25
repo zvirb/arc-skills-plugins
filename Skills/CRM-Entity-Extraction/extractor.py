@@ -19,13 +19,35 @@ def extract_entities(text):
     }
 
 def save_to_crm(text, entities):
-    # Simulating a Composio API call to push the entity data into Google Sheets or Contacts
-    print(f"--- Sending to Composio (Google Sheets/Contacts) ---")
-    print(f"Payload: {json.dumps(entities)}")
-    print(f"----------------------------------------------------")
-    # In a real environment, this would call the Composio SDK or API.
-    # Return a mocked transaction ID.
-    return "composio_txn_12345"
+    try:
+        from composio import Composio
+        composio = Composio(api_key=os.environ.get("COMPOSIO_API_KEY", "dummy"))
+    except ImportError:
+        print("Error: composio-core is not installed. Using mocked transaction.")
+        return "composio_txn_mocked_12345"
+
+    try:
+        # Assuming we have a Google Sheet setup with columns for Persons, Organizations, Dates, Emails
+        result = composio.tools.execute(
+            'GOOGLESHEETS_APPEND_VALUES',
+            user_id='default',
+            arguments={
+                'spreadsheetId': os.environ.get("GOOGLE_SHEET_ID", "default_spreadsheet_id"),
+                'range': 'Sheet1!A:E', # Columns A:E
+                'values': [
+                    [entities["persons"], entities["organizations"], entities["dates"], entities["emails"], text]
+                ]
+            }
+        )
+        if result.successful:
+            print(f"--- Successfully sent to Google Sheets ---")
+            return f"composio_txn_success"
+        else:
+            print(f"Failed to append to Google Sheets: {result.error}")
+            return f"composio_txn_failed"
+    except Exception as e:
+        print(f"Exception calling Composio: {e}")
+        return "composio_txn_error"
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:
