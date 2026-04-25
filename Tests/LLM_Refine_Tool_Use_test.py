@@ -29,7 +29,7 @@ class TestLLMRefineToolUse(unittest.TestCase):
         # First call fails validation (returns non-dict string), second succeeds
         mock_subprocess.side_effect = [
             MagicMock(stdout='{"error": "not a valid dictionary"}', returncode=0),
-            MagicMock(stdout='{"refined_strategy": "Use grep_search instead of grep.", "recommended_tools": ["grep_search"], "anti_patterns_to_avoid": ["grep in bash"]}', returncode=0)
+            MagicMock(stdout='{"refined_strategy": "Use grep_search.", "recommended_tools": ["grep_search"], "anti_patterns_to_avoid": ["grep in bash"], "argument_constraints": {"grep_search": "Needs Query and SearchPath"}}', returncode=0)
         ]
         
         # Mock time.sleep to avoid waiting during tests
@@ -42,6 +42,7 @@ class TestLLMRefineToolUse(unittest.TestCase):
         self.assertIn("refined_strategy", result)
         self.assertIn("recommended_tools", result)
         self.assertIn("anti_patterns_to_avoid", result)
+        self.assertIn("argument_constraints", result)
         self.assertEqual(result["recommended_tools"], ["grep_search"])
         self.assertEqual(mock_subprocess.call_count, 2)
         
@@ -51,16 +52,23 @@ class TestLLMRefineToolUse(unittest.TestCase):
             "use_case": "kotlin_debugging",
             "successful_tools": ["gradle_test_runner"],
             "anti_patterns": ["manual javac"],
-            "notes": "Always use gradle to test kotlin."
+            "notes": "Always use gradle to test kotlin.",
+            "tool_name": "gradle_test_runner",
+            "error_encountered": "Task not found error due to missing :app prefix",
+            "argument_rule": "Always prefix gradle tasks with :app module"
         }))
         
         self.assertEqual(result["status"], "success")
         
         # Verify the file was created and contains the data
         history = refine_tool_use_node.load_history()
-        self.assertIn("kotlin_debugging", history)
-        self.assertIn("gradle_test_runner", history["kotlin_debugging"]["successful_tools"])
-        self.assertIn("manual javac", history["kotlin_debugging"]["anti_patterns"])
+        self.assertIn("kotlin_debugging", history["use_cases"])
+        self.assertIn("gradle_test_runner", history["use_cases"]["kotlin_debugging"]["successful_tools"])
+        self.assertIn("manual javac", history["use_cases"]["kotlin_debugging"]["anti_patterns"])
+        
+        self.assertIn("gradle_test_runner", history["tool_constraints"])
+        self.assertIn("Always prefix gradle tasks with :app module", history["tool_constraints"]["gradle_test_runner"]["argument_rules"])
+        self.assertIn("Task not found error due to missing :app prefix", history["tool_constraints"]["gradle_test_runner"]["known_errors"])
 
 if __name__ == '__main__':
     unittest.main()

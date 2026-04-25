@@ -28,3 +28,4 @@ A strictly formatted JSON object with:
 - `refined_strategy` (string): The reasoning and approach for the task.
 - `recommended_tools` (list of strings): Tools prioritized based on historical success for this use case.
 - `anti_patterns_to_avoid` (list of strings): Tools or combinations to avoid, referencing past failures.
+- `argument_constraints` (object): Maps recommended tools to strict argument rules to prevent hallucination.
