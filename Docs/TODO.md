@@ -5,10 +5,9 @@ This document tracks the status of Skills and Plugins across the ecosystem.
 ## 📝 Not Started
 
 ### Communication & Triage
-- [ ] **CRM Entity Extraction:** Build an OpenProse pipeline (acting as a Turing-complete workflow orchestrator) to bridge Gmail data extraction logic to the Notion CRM skill using Regex and Named Entity Recognition (NER). *Constraint: Enforce immutable execution boundaries via Lobster to ensure auditability.*
+*(Moved to In Progress)*
 
 ### Task Management
-- [ ] **Vague Task Decomposition:** Combine existing Linear skill logic with a custom prompt tailored specifically for Google Tasks API manipulation via Composio.
 - [ ] **Capture Classification:** Build a semantic router skill utilizing the urgency heuristics of the `nxt-pulse-agent` to classify audio transcripts into discrete arrays. *Integration: Consider layering with LanceDB or memU deep memory plugins for long-term indexing.*
 - [ ] **Backlog Grooming:** Construct a custom chron-triggered `SKILL.md` to evaluate `last_modified` database metadata and execute auto-archiving logic. *Constraint: Strictly manage underlying token economics during chron execution.*
 
@@ -23,7 +22,8 @@ This document tracks the status of Skills and Plugins across the ecosystem.
 
 ## ⏳ In Progress
 *(Move items here when development begins)*
-- *None currently*
+- [ ] **Vague Task Decomposition:** Combine existing Linear skill logic with a custom prompt tailored specifically for Google Tasks API manipulation via Composio.
+- [ ] **CRM Entity Extraction:** Build an OpenProse pipeline (acting as a Turing-complete workflow orchestrator) to bridge Gmail data extraction logic to a local SQLite/Datasette CRM using Regex and Named Entity Recognition (NER). *Constraint: Enforce immutable execution boundaries via Lobster to ensure auditability.*
 
 ---
 

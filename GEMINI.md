@@ -10,8 +10,10 @@
 
 ## 3. Architectural Pivot (No Kubernetes/Docker)
 * **CRITICAL ARCHITECTURE NOTE:** We are actively replacing the legacy Kubernetes/Docker stack with a lightweight architecture consisting solely of OpenClaw Skills and Plugins, supplemented by a few lightweight open-source applications.
+* **Google Workspace Exception:** The core ecosystem relies heavily on Google Workspace (Gmail, Calendar, Tasks, Drive, Docs, Sheets). You do NOT need to find or suggest open-source alternatives for these specific services; integrate directly with them.
 * You must completely ignore any legacy research documentation, instructions, or workflows that mandate or mention Kubernetes, Docker, Flux CD, Kustomize, Pods, or CRDs.
 * Focus entirely on native OpenClaw runtime execution and local environment dependencies.
 
-## 4. Continuous Learning & Knowledge Preservation
-* Whenever a lesson is learned, a bug is fixed, or a new pattern is established during attempted work, you MUST immediately update the relevant skills, agent context files (`context.md`, `AGENTS.md`), or workflow steps to encode this new knowledge. Do not rely on conversation memory.
+## 4. Continuous Learning & Workflow Evolution
+* Whenever a lesson is learned, a bug is fixed, or a new pattern is established during attempted work, you MUST immediately update the relevant skills, agent context files (`context.md`, `AGENTS.md`), or workflow steps to encode this new knowledge. 
+* **Supplemental Tooling:** If you identify that a workflow requires supplemental tooling or missing steps to function correctly (e.g., viewing a DB, installing a missing local binary), you MUST add those explicitly to the workflow or skill documentation. Do not rely on conversation memory.

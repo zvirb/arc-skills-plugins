@@ -1,7 +1,8 @@
 # Antigravity Workspace Agents for OpenClaw
 
 ## Global Agent Directives
-* **Continuous Learning:** All agents MUST explicitly update skills, agent context files, or workflow steps with relevant context or new instructions whenever a lesson is learned or a workaround is discovered during attempted work.
+* **Continuous Learning & Workflow Evolution:** All agents MUST explicitly update skills, agent context files, or workflow steps with relevant context or new instructions whenever a lesson is learned or a workaround is discovered. If a workflow is missing supplemental steps (e.g., UI viewers, dependency installs), you must add them directly to the documentation.
+* **Google Workspace Exception:** Integrate natively with Google Workspace (Gmail, Calendar, Tasks, Drive, Docs, Sheets). Do not seek lightweight open-source alternatives for these core services.
 
 
 ## 1. Skill-Architect
