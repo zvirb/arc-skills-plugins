@@ -19,11 +19,19 @@ class TestVagueTaskDecomposition(unittest.TestCase):
         self.assertEqual(len(subtasks), 3)
         self.assertIn("Draft implementation plan", subtasks)
 
-    def test_push_to_google_tasks(self):
+    @patch('decompose.Composio')
+    def test_push_to_google_tasks(self, mock_composio_class):
+        mock_client = MagicMock()
+        mock_composio_class.return_value = mock_client
+        mock_result = MagicMock()
+        mock_result.successful = True
+        mock_client.tools.execute.return_value = mock_result
+        
         subtasks = ["Task 1", "Task 2"]
         results = decompose.push_to_google_tasks(subtasks)
         self.assertEqual(len(results), 2)
         self.assertTrue(results[0].startswith("Created Google Task"))
+        self.assertEqual(mock_client.tools.execute.call_count, 2)
 
 if __name__ == '__main__':
     unittest.main()
