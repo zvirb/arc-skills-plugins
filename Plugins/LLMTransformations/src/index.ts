@@ -64,13 +64,17 @@ export default function register(api: PluginApi, config: any) {
         name: 'llm_summarize_text',
         description: 'Summarize text into structured JSON.',
         execute: async (args: { text: string, schema?: string }) => {
-            const rawText = args.text || "";
-            const schemaHint = args.schema || JSON.stringify({ summary: "string", key_points: ["string"], sentiment: "string" });
-            
-            const systemPrompt = `ROLE: Data Transformation Node.\nTASK: Summarize text into structured JSON.\nSCHEMA: ${schemaHint}\nRULES: Output ONLY raw JSON. No conversational text. No markdown blocks.`;
-            const currentPrompt = `TEXT TO PROCESS: ${rawText.substring(0, 3000)}`;
-            
-            return await executeWithJidoka(systemPrompt, currentPrompt);
+            try {
+                const rawText = args.text || "";
+                const schemaHint = args.schema || JSON.stringify({ summary: "string", key_points: ["string"], sentiment: "string" });
+                
+                const systemPrompt = `ROLE: Data Transformation Node.\nTASK: Summarize text into structured JSON.\nSCHEMA: ${schemaHint}\nRULES: Output ONLY raw JSON. No conversational text. No markdown blocks.`;
+                const currentPrompt = `TEXT TO PROCESS: ${rawText.substring(0, 3000)}`;
+                
+                return await executeWithJidoka(systemPrompt, currentPrompt);
+            } catch (error: any) {
+                return { success: false, error: error.message };
+            }
         }
     });
 
@@ -79,13 +83,17 @@ export default function register(api: PluginApi, config: any) {
         name: 'llm_extract_json',
         description: 'Extract raw JSON from unstructured text.',
         execute: async (args: { text: string, expected_schema?: string }) => {
-            const rawText = args.text || "";
-            const schemaHint = args.expected_schema || "Any JSON object or array.";
-            
-            const systemPrompt = `ROLE: Data Extraction Node.\nTASK: Extract JSON from text.\nSCHEMA: ${schemaHint}\nRULES: Output ONLY raw JSON. No markdown blocks.`;
-            const currentPrompt = `TEXT TO PROCESS: ${rawText.substring(0, 5000)}`;
-            
-            return await executeWithJidoka(systemPrompt, currentPrompt);
+            try {
+                const rawText = args.text || "";
+                const schemaHint = args.expected_schema || "Any JSON object or array.";
+                
+                const systemPrompt = `ROLE: Data Extraction Node.\nTASK: Extract JSON from text.\nSCHEMA: ${schemaHint}\nRULES: Output ONLY raw JSON. No markdown blocks.`;
+                const currentPrompt = `TEXT TO PROCESS: ${rawText.substring(0, 5000)}`;
+                
+                return await executeWithJidoka(systemPrompt, currentPrompt);
+            } catch (error: any) {
+                return { success: false, error: error.message };
+            }
         }
     });
 
@@ -94,13 +102,20 @@ export default function register(api: PluginApi, config: any) {
         name: 'llm_classify_intent',
         description: 'Classify the intent of a text payload.',
         execute: async (args: { text: string, categories: string[] }) => {
-            const rawText = args.text || "";
-            const categories = args.categories.join(', ');
-            
-            const systemPrompt = `ROLE: Classification Node.\nTASK: Classify the input text into one of the following categories: ${categories}.\nSCHEMA: {"intent": "string", "confidence": "number"}\nRULES: Output ONLY raw JSON.`;
-            const currentPrompt = `TEXT TO PROCESS: ${rawText}`;
-            
-            return await executeWithJidoka(systemPrompt, currentPrompt);
+            try {
+                if (!args.categories || !Array.isArray(args.categories)) {
+                    return { success: false, error: "Invalid argument: 'categories' must be provided as an array." };
+                }
+                const rawText = args.text || "";
+                const categories = args.categories.join(', ');
+                
+                const systemPrompt = `ROLE: Classification Node.\nTASK: Classify the input text into one of the following categories: ${categories}.\nSCHEMA: {"intent": "string", "confidence": "number"}\nRULES: Output ONLY raw JSON.`;
+                const currentPrompt = `TEXT TO PROCESS: ${rawText}`;
+                
+                return await executeWithJidoka(systemPrompt, currentPrompt);
+            } catch (error: any) {
+                return { success: false, error: error.message };
+            }
         }
     });
 

@@ -53,17 +53,25 @@ export default function register(api: PluginApi, config: any) {
     name: 'get_tool_constraints',
     description: 'Retrieves historical constraints and known anti-patterns for specified tools to prevent hallucination.',
     execute: async (args: { tools: string[] }) => {
-      const history = await loadHistory();
-      const constraints: Record<string, ToolConstraint> = {};
-      
-      for (const tool of args.tools) {
-        if (history.tool_constraints[tool]) {
-          constraints[tool] = history.tool_constraints[tool];
-        } else {
-          constraints[tool] = { known_errors: [], argument_rules: [] };
+      try {
+        if (!args.tools || !Array.isArray(args.tools)) {
+          return { success: false, error: "Invalid argument: 'tools' must be provided as an array of strings." };
         }
+        
+        const history = await loadHistory();
+        const constraints: Record<string, ToolConstraint> = {};
+        
+        for (const tool of args.tools) {
+          if (history.tool_constraints[tool]) {
+            constraints[tool] = history.tool_constraints[tool];
+          } else {
+            constraints[tool] = { known_errors: [], argument_rules: [] };
+          }
+        }
+        return { success: true, constraints };
+      } catch (error: any) {
+        return { success: false, error: error.message };
       }
-      return { success: true, constraints };
     }
   });
 
@@ -72,35 +80,43 @@ export default function register(api: PluginApi, config: any) {
     name: 'record_tool_failure',
     description: 'Records a failure for a specific tool to build the historical ledger and prevent future hallucinations.',
     execute: async (args: { tool_name: string, error_encountered: string, argument_rule: string }) => {
-      const history = await loadHistory();
-      const tool = args.tool_name;
-
-      if (!history.tool_constraints[tool]) {
-        history.tool_constraints[tool] = { known_errors: [], argument_rules: [] };
-      }
-
-      // Helper to check for fuzzy duplicates
-      const isDuplicate = (array: string[], newItem: string) => {
-        const normalizedNew = newItem.toLowerCase().trim();
-        return array.some(existing => existing.toLowerCase().trim() === normalizedNew);
-      };
-
-      if (args.error_encountered && !isDuplicate(history.tool_constraints[tool].known_errors, args.error_encountered)) {
-        history.tool_constraints[tool].known_errors.push(args.error_encountered.trim());
-        if (history.tool_constraints[tool].known_errors.length > 5) {
-            history.tool_constraints[tool].known_errors.shift(); // Keep only last 5
+      try {
+        if (!args.tool_name || typeof args.tool_name !== 'string') {
+          return { success: false, error: "Invalid argument: 'tool_name' must be provided as a string." };
         }
-      }
-      
-      if (args.argument_rule && !isDuplicate(history.tool_constraints[tool].argument_rules, args.argument_rule)) {
-        history.tool_constraints[tool].argument_rules.push(args.argument_rule.trim());
-        if (history.tool_constraints[tool].argument_rules.length > 5) {
-            history.tool_constraints[tool].argument_rules.shift(); // Keep only last 5
-        }
-      }
+        
+        const history = await loadHistory();
+        const tool = args.tool_name;
 
-      await saveHistory(history);
-      return { success: true, message: `Successfully recorded constraints for ${tool}.` };
+        if (!history.tool_constraints[tool]) {
+          history.tool_constraints[tool] = { known_errors: [], argument_rules: [] };
+        }
+
+        // Helper to check for fuzzy duplicates
+        const isDuplicate = (array: string[], newItem: string) => {
+          const normalizedNew = newItem.toLowerCase().trim();
+          return array.some(existing => existing.toLowerCase().trim() === normalizedNew);
+        };
+
+        if (args.error_encountered && !isDuplicate(history.tool_constraints[tool].known_errors, args.error_encountered)) {
+          history.tool_constraints[tool].known_errors.push(args.error_encountered.trim());
+          if (history.tool_constraints[tool].known_errors.length > 5) {
+              history.tool_constraints[tool].known_errors.shift(); // Keep only last 5
+          }
+        }
+        
+        if (args.argument_rule && !isDuplicate(history.tool_constraints[tool].argument_rules, args.argument_rule)) {
+          history.tool_constraints[tool].argument_rules.push(args.argument_rule.trim());
+          if (history.tool_constraints[tool].argument_rules.length > 5) {
+              history.tool_constraints[tool].argument_rules.shift(); // Keep only last 5
+          }
+        }
+
+        await saveHistory(history);
+        return { success: true, message: `Successfully recorded constraints for ${tool}.` };
+      } catch (error: any) {
+        return { success: false, error: error.message };
+      }
     }
   });
 
