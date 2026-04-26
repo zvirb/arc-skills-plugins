@@ -66,3 +66,7 @@ All development MUST adhere to the following Lean principles:
    - Always suggest next steps based on the user's intent in the last prompt.
 7. **Git Sync:**
    - Always perform a git commit and sync (push) at the end of the workflow to persist changes.
+
+
+## 8. Required Reading (Anti-Patterns)
+* **CRITICAL CONTEXT:** Before generating any new OpenClaw Extension (Skill or Plugin), you MUST cross-reference the known anti-patterns documented in Docs/OpenClaw_Best_Practices_and_Common_Issues.md.

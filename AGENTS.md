@@ -58,3 +58,6 @@ When responding to a request to build a capability:
 * **Directives:**
   * For Skills: aggressively flag any variables passed to shell commands without explicit typing and sanitization.
   * For Plugins: ensure the directory architecture prevents path traversal escapes and verify that no logic requires unnecessary Linux capabilities.
+
+## 4. Required Reading (Common Issues)
+* **CRITICAL CONTEXT:** Before generating any new OpenClaw Extension, all agents MUST cross-reference the known anti-patterns documented in `Docs/OpenClaw_Best_Practices_and_Common_Issues.md`. This document contains critical rules regarding Context Bloat, Silent Validation Failures, Zombie Subshells, Manifest Dependency Collisions, Cognitive Drift, and Unsafe Path Traversal.

@@ -61,3 +61,6 @@ When responding to a request to build a capability:
 * **Kaizen (改善):** "Continuous improvement." Break processes apart (改) into simplest components and perfect (善) those tiny steps. Every node/skill must be an Atomic Node.
 * **Standardized Work (Hyojun Sagyo):** Prerequisite to automation. Find the absolute most efficient, simplest manual way (SOP) before automating.
 * **Jidoka (自働化):** "Autonomation" or "automation with a human touch." Automated processes must be intelligent enough to stop immediately upon detecting a defect (strict validation/error handling) to prevent cascading failures.
+
+## 6. Required Reading (Anti-Patterns)
+* **CRITICAL CONTEXT:** Before generating any new OpenClaw Extension (Skill or Plugin), you MUST cross-reference the known anti-patterns documented in `Docs/OpenClaw_Best_Practices_and_Common_Issues.md`. This contains critical architectural rules to prevent Context Bloat, Silent Validation Failures, Zombie Subshells, Manifest Dependency Collisions, Cognitive Drift, and Unsafe Path Traversal.
