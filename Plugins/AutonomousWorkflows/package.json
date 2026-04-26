@@ -1,0 +1,21 @@
+{
+  "name": "autonomous-workflows-plugin",
+  "version": "1.0.0",
+  "description": "Programmatic deterministic workflows orchestrating atomic tools via TypeScript.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
+  "dependencies": {
+    "@openclaw/plugin-sdk": "latest"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "@types/node": "^20.0.0"
+  },
+  "openclaw": {
+    "compat": ">=1.0.0"
+  }
+}
