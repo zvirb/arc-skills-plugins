@@ -79,15 +79,21 @@ export default function register(api: PluginApi, config: any) {
         history.tool_constraints[tool] = { known_errors: [], argument_rules: [] };
       }
 
-      if (args.error_encountered && !history.tool_constraints[tool].known_errors.includes(args.error_encountered)) {
-        history.tool_constraints[tool].known_errors.push(args.error_encountered);
+      // Helper to check for fuzzy duplicates
+      const isDuplicate = (array: string[], newItem: string) => {
+        const normalizedNew = newItem.toLowerCase().trim();
+        return array.some(existing => existing.toLowerCase().trim() === normalizedNew);
+      };
+
+      if (args.error_encountered && !isDuplicate(history.tool_constraints[tool].known_errors, args.error_encountered)) {
+        history.tool_constraints[tool].known_errors.push(args.error_encountered.trim());
         if (history.tool_constraints[tool].known_errors.length > 5) {
             history.tool_constraints[tool].known_errors.shift(); // Keep only last 5
         }
       }
       
-      if (args.argument_rule && !history.tool_constraints[tool].argument_rules.includes(args.argument_rule)) {
-        history.tool_constraints[tool].argument_rules.push(args.argument_rule);
+      if (args.argument_rule && !isDuplicate(history.tool_constraints[tool].argument_rules, args.argument_rule)) {
+        history.tool_constraints[tool].argument_rules.push(args.argument_rule.trim());
         if (history.tool_constraints[tool].argument_rules.length > 5) {
             history.tool_constraints[tool].argument_rules.shift(); // Keep only last 5
         }
