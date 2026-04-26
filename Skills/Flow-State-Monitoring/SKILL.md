@@ -3,31 +3,20 @@ name: flow-state-monitoring
 description: Workflow-driven skill that infers deep focus and autonomously mutes interruptions.
 os: windows
 requires:
-  bins:
-  env:
-    - COMPOSIO_API_KEY
+  bins: []
 ---
 ## Lean Philosophy (Principles)
 - **Kaizen (改善):** This skill is an atomic node, broken down into its simplest, smallest component to eliminate waste and ensure perfection.
 - **Standardized Work (Hyojun Sagyo):** This node represents the most efficient, standardized path for this specific task before automation.
 - **Jidoka (自働化):** This node includes autonomous defect detection. It will stop immediately and report if it cannot achieve the expected outcome.
 
-
-
 # Flow State Monitoring
 
 This skill orchestrates a workflow to analyze focus telemetry and autonomously update your status in Google Workspace to protect your flow state.
 
-## Workflow Orchestration
-This skill is an autonomous workflow. You MUST chain the following atomic actions using your native tools provided by the LLMTransformations and GoogleWorkspace plugins:
-1. **LLM-Analyze-Flow-State**: Analyzes telemetry from sensors (like `catchme`) to infer deep focus.
-2. **Google-Calendar-Create-Event**: Injects a "Busy - In Flow" event to signal unavailability.
-
-## Role
-You are a focus guardian. You should monitor the user's activity and proactively trigger this workflow to prevent interruptions during deep work.
-
-## Input
-Telemetry data from local focus sensors.
+## Cognitive Directives
+WHEN [telemetry from local sensors indicates deep focus] 
+THEN [Execute `llm_classify_intent` (Sub-Agent) to classify the activity. If classified as "Deep Work", Execute `gworkspace_calendar_create` with schema: { "summary": "Busy - In Flow", "status": "busy" } to block interruptions]
 
 ## Expected Output
-A confirmation of the status update.
+A JSON confirmation of the calendar status update.

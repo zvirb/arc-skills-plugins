@@ -20,8 +20,50 @@ export const manifest = {
   }
 };
 
+// Sub-Agent: Context Preserver
+// Spins up an isolated LLM inference loop to extract key entities from massive payloads, preventing context bloat for the parent agent.
+async function summarizeWithSubAgent(api: PluginApi, data: any, actionContext: string): Promise<any> {
+    const rawData = JSON.stringify(data);
+    if (rawData.length < 1500) return data; // Safe size, no bloat risk
+
+    console.log(`Payload size (${rawData.length} chars) exceeds safe threshold. Spawning sub-agent to preserve context...`);
+    
+    const systemPrompt = `You are an OpenClaw Context-Preservation Sub-Agent. 
+TASK: Extract and summarize the critical entities from the raw JSON payload resulting from: ${actionContext}.
+RULES:
+1. Strip out verbose bodies, HTML, and irrelevant metadata.
+2. Return ONLY a minified JSON array of key objects (e.g., id, title, brief_status).
+3. Do not include markdown formatting or conversational text.`;
+
+    try {
+        const result = await api.infer({
+            model: "gemma4", 
+            messages: [{ role: "user", content: `${systemPrompt}\n\nRAW PAYLOAD:\n${rawData.substring(0, 8000)}` }]
+        });
+        
+        const jsonStr = typeof result === 'string' ? result : result.content;
+        const startIdx = jsonStr.indexOf('{');
+        const arrayStartIdx = jsonStr.indexOf('[');
+        const firstIdx = (startIdx !== -1 && arrayStartIdx !== -1) ? Math.min(startIdx, arrayStartIdx) : Math.max(startIdx, arrayStartIdx);
+        
+        const endIdx = jsonStr.lastIndexOf('}');
+        const arrayEndIdx = jsonStr.lastIndexOf(']');
+        const lastIdx = Math.max(endIdx, arrayEndIdx);
+        
+        if (firstIdx !== -1 && lastIdx !== -1) {
+            const cleanJson = jsonStr.substring(firstIdx, lastIdx + 1);
+            return { _sub_agent_summarized: true, original_length: rawData.length, data: JSON.parse(cleanJson) };
+        }
+    } catch (e: any) {
+        console.log("Sub-agent summarization failed:", e.message);
+    }
+    
+    // Fallback: Brutal truncation to preserve Jidoka stability
+    return { _truncated: true, warning: "Data too large and sub-agent failed.", data: rawData.substring(0, 1500) + "...[TRUNCATED]" };
+}
+
 // Jidoka Loop for Google Workspace Execution (Native Node.js execution, NO subshells)
-async function executeWorkspaceAction(composioApiKey: string, composioAction: string, args: Record<string, any>, maxRetries = 3): Promise<any> {
+async function executeWorkspaceAction(api: PluginApi, composioApiKey: string, composioAction: string, args: Record<string, any>, maxRetries = 3): Promise<any> {
     for (let attempt = 1; attempt <= maxRetries; attempt++) {
         console.log(`Attempt ${attempt}: Executing ${composioAction}...`);
         
@@ -30,7 +72,9 @@ async function executeWorkspaceAction(composioApiKey: string, composioAction: st
                 const client = new Composio({ apiKey: composioApiKey });
                 const res = await client.tools.execute(composioAction, { arguments: args });
                 if (res.successful) {
-                    return { success: true, data: res.data };
+                    // Invoke Sub-Agent to prevent context bloat
+                    const processedData = await summarizeWithSubAgent(api, res.data, composioAction);
+                    return { success: true, data: processedData };
                 }
             } else {
                  throw new Error("Composio SDK or API key missing.");
@@ -56,7 +100,7 @@ export default function register(api: PluginApi, config: any) {
             description,
             execute: async (args: any) => {
                 try {
-                    const result = await executeWorkspaceAction(apiKey, composioCmd, args);
+                    const result = await executeWorkspaceAction(api, apiKey, composioCmd, args);
                     return result;
                 } catch (error: any) {
                     return { success: false, error: error.message };

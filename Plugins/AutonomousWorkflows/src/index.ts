@@ -65,7 +65,11 @@ export default function register(api: PluginApi) {
                 }
             }
             
-            return { success: true, groomed_tasks: results };
+            return { 
+                success: true, 
+                total_groomed: results.length,
+                sample_groomed: results.slice(0, 3)
+            };
         }
     });
 

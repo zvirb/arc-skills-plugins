@@ -81,10 +81,16 @@ export default function register(api: PluginApi, config: any) {
 
       if (args.error_encountered && !history.tool_constraints[tool].known_errors.includes(args.error_encountered)) {
         history.tool_constraints[tool].known_errors.push(args.error_encountered);
+        if (history.tool_constraints[tool].known_errors.length > 5) {
+            history.tool_constraints[tool].known_errors.shift(); // Keep only last 5
+        }
       }
       
       if (args.argument_rule && !history.tool_constraints[tool].argument_rules.includes(args.argument_rule)) {
         history.tool_constraints[tool].argument_rules.push(args.argument_rule);
+        if (history.tool_constraints[tool].argument_rules.length > 5) {
+            history.tool_constraints[tool].argument_rules.shift(); // Keep only last 5
+        }
       }
 
       await saveHistory(history);
