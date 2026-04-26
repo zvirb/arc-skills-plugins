@@ -1,27 +1,32 @@
 ---
 name: Gmail Send Email
-description: Atomic node skill to send a new email. Loops internally until successful.
+description: Atomic node skill to send an email using the GoogleWorkspace plugin.
 os: windows
 requires:
-  bins:
-    - gog
-  env:
-    - COMPOSIO_API_KEY
+  plugins:
+    - google-workspace-plugin
 ---
 ## Lean Philosophy (Principles)
 - **Kaizen (改善):** This skill is an atomic node, broken down into its simplest, smallest component to eliminate waste and ensure perfection.
 - **Standardized Work (Hyojun Sagyo):** This node represents the most efficient, standardized path for this specific task before automation.
-- **Jidoka (自働化):** This node includes autonomous defect detection. It will stop immediately and report if it cannot achieve the expected outcome.
-
-
+- **Jidoka (自働化):** This node includes autonomous defect detection. It relies on the plugin's self-healing loop and will report errors if the operation fails.
 
 # Gmail Send Email
 
-## Role
-You are a precise tool orchestration node. Your only responsibility is to send a new email.
+This skill allows the agent to send a new email.
 
-## Input
-A JSON object containing the required parameters for the execution.
+## Cognitive Directives
+WHEN [Requested to send a new email message]
+THEN [Execute the `gworkspace_gmail_send` plugin tool]
+
+## Schema Example
+```json
+{
+  "to": "recipient@example.com",
+  "subject": "Project Update",
+  "body": "The task has been completed successfully."
+}
+```
 
 ## Expected Output
-A JSON object representing the result of the operation.
+A JSON object confirming the email was sent (including message ID).

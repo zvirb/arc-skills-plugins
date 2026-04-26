@@ -1,27 +1,31 @@
 ---
 name: Google Tasks Find Tasks
-description: Atomic node skill to find active tasks in google tasks. Loops internally until successful.
+description: Atomic node skill to search for tasks in Google Tasks using the GoogleWorkspace plugin.
 os: windows
 requires:
-  bins:
-    - gog
-  env:
-    - COMPOSIO_API_KEY
+  plugins:
+    - google-workspace-plugin
 ---
 ## Lean Philosophy (Principles)
 - **Kaizen (改善):** This skill is an atomic node, broken down into its simplest, smallest component to eliminate waste and ensure perfection.
 - **Standardized Work (Hyojun Sagyo):** This node represents the most efficient, standardized path for this specific task before automation.
-- **Jidoka (自働化):** This node includes autonomous defect detection. It will stop immediately and report if it cannot achieve the expected outcome.
-
-
+- **Jidoka (自働化):** This node includes autonomous defect detection. It relies on the plugin's self-healing loop and will report errors if the search fails.
 
 # Google Tasks Find Tasks
 
-## Role
-You are a precise tool orchestration node. Your only responsibility is to find active tasks in google tasks.
+This skill allows the agent to search for active tasks in Google Tasks.
 
-## Input
-A JSON object containing the required parameters for the execution.
+## Cognitive Directives
+WHEN [Requested to list tasks or find a specific task in Google Tasks]
+THEN [Execute the `gworkspace_tasks_find` plugin tool]
+
+## Schema Example
+```json
+{
+  "tasklist": "@default",
+  "showCompleted": false
+}
+```
 
 ## Expected Output
-A JSON array representing the result of the operation.
+A JSON array of task objects (id, title, notes, status).

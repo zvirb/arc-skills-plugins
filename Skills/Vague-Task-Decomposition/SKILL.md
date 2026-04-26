@@ -3,31 +3,31 @@ name: Vague Task Decomposition
 description: Workflow-driven skill that decomposes vague task strings into actionable subtasks and dispatches them to Google Tasks.
 os: windows
 requires:
-  bins:
-  env:
-    - COMPOSIO_API_KEY
+  plugins:
+    - google-workspace-plugin
+    - llm-transformations-plugin
 ---
 ## Lean Philosophy (Principles)
 - **Kaizen (改善):** This skill is an atomic node, broken down into its simplest, smallest component to eliminate waste and ensure perfection.
 - **Standardized Work (Hyojun Sagyo):** This node represents the most efficient, standardized path for this specific task before automation.
-- **Jidoka (自働化):** This node includes autonomous defect detection. It will stop immediately and report if it cannot achieve the expected outcome.
-
-
+- **Jidoka (自働化):** This node includes autonomous defect detection. It relies on the plugins' self-healing loops and will report errors if decomposition or task creation fails.
 
 # Vague Task Decomposition
 
 This skill orchestrates a workflow to decompose vague task descriptions into actionable items using an LLM and then creates those items as tasks in Google Tasks.
 
-## Workflow Orchestration
-This skill is an autonomous workflow. You MUST chain the following atomic actions using your native tools provided by the LLMTransformations and GoogleWorkspace plugins:
-1. **LLM-Extract-Action-Items**: Transforms the vague string into a JSON array of subtasks.
-2. **Google-Tasks-Create-Task**: Iterates through the array and creates each task via `gog` or `composio`.
+## Cognitive Directives
+WHEN [A task is too vague or complex to be executed directly]
+THEN [Execute the decomposition workflow:
+  1. Call `llm_extract_action_items` to generate a list of subtasks.
+  2. For each subtask, call `gworkspace_tasks_create` to log it in Google Tasks.]
 
-## Role
-You are an orchestrator. When a user provides a vague task, you should trigger the decomposition workflow to ensure the resulting tasks are granular and actionable.
-
-## Input
-A string representing a vague or complex task.
+## Schema Example
+```json
+{
+  "task": "Plan the annual company retreat"
+}
+```
 
 ## Expected Output
-A summary of the created Google Tasks.
+A JSON summary of the subtasks created in Google Tasks.

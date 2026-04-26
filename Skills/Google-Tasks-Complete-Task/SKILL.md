@@ -1,27 +1,30 @@
 ---
 name: Google Tasks Complete Task
-description: Atomic node skill to mark a task as complete. Loops internally until successful.
+description: Atomic node skill to complete a task in Google Tasks using the GoogleWorkspace plugin.
 os: windows
 requires:
-  bins:
-    - gog
-  env:
-    - COMPOSIO_API_KEY
+  plugins:
+    - google-workspace-plugin
 ---
 ## Lean Philosophy (Principles)
 - **Kaizen (改善):** This skill is an atomic node, broken down into its simplest, smallest component to eliminate waste and ensure perfection.
 - **Standardized Work (Hyojun Sagyo):** This node represents the most efficient, standardized path for this specific task before automation.
-- **Jidoka (自働化):** This node includes autonomous defect detection. It will stop immediately and report if it cannot achieve the expected outcome.
-
-
+- **Jidoka (自働化):** This node includes autonomous defect detection. It relies on the plugin's self-healing loop and will report errors if the operation fails.
 
 # Google Tasks Complete Task
 
-## Role
-You are a precise tool orchestration node. Your only responsibility is to mark a task as complete.
+This skill allows the agent to mark a specific task as completed.
 
-## Input
-A JSON object containing the required parameters for the execution.
+## Cognitive Directives
+WHEN [A task needs to be marked as finished or completed]
+THEN [Execute the `gworkspace_tasks_complete` plugin tool]
+
+## Schema Example
+```json
+{
+  "taskId": "task_id_123"
+}
+```
 
 ## Expected Output
-A JSON object representing the result of the operation.
+A JSON object confirming the task completion.

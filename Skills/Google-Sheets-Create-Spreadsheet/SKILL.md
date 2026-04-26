@@ -1,27 +1,30 @@
 ---
 name: Google Sheets Create Spreadsheet
-description: Atomic node skill to create a new google spreadsheet. Loops internally until successful.
+description: Atomic node skill to create a new Google Spreadsheet using the GoogleWorkspace plugin.
 os: windows
 requires:
-  bins:
-    - gog
-  env:
-    - COMPOSIO_API_KEY
+  plugins:
+    - google-workspace-plugin
 ---
 ## Lean Philosophy (Principles)
 - **Kaizen (改善):** This skill is an atomic node, broken down into its simplest, smallest component to eliminate waste and ensure perfection.
 - **Standardized Work (Hyojun Sagyo):** This node represents the most efficient, standardized path for this specific task before automation.
-- **Jidoka (自働化):** This node includes autonomous defect detection. It will stop immediately and report if it cannot achieve the expected outcome.
-
-
+- **Jidoka (自働化):** This node includes autonomous defect detection. It relies on the plugin's self-healing loop and will report errors if the operation fails.
 
 # Google Sheets Create Spreadsheet
 
-## Role
-You are a precise tool orchestration node. Your only responsibility is to create a new google spreadsheet.
+This skill allows the agent to create a new Google Spreadsheet.
 
-## Input
-A JSON object containing the required parameters for the execution.
+## Cognitive Directives
+WHEN [A new spreadsheet needs to be created in Google Drive]
+THEN [Execute the `gworkspace_sheets_create` plugin tool]
+
+## Schema Example
+```json
+{
+  "title": "New Project Budget"
+}
+```
 
 ## Expected Output
-A JSON object representing the result of the operation.
+A JSON object confirming the spreadsheet was created (including spreadsheetId and URL).

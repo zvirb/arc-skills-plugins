@@ -1,23 +1,30 @@
 ---
 name: Gmail Search Emails
-description: Atomic node skill to search for emails. Loops internally until a valid array of email headers is retrieved.
+description: Atomic node skill to search for emails using the GoogleWorkspace plugin.
 os: windows
 requires:
-  bins: []
+  plugins:
+    - google-workspace-plugin
 ---
 ## Lean Philosophy (Principles)
 - **Kaizen (改善):** This skill is an atomic node, broken down into its simplest, smallest component to eliminate waste and ensure perfection.
 - **Standardized Work (Hyojun Sagyo):** This node represents the most efficient, standardized path for this specific task before automation.
-- **Jidoka (自働化):** This node includes autonomous defect detection. It will stop immediately and report if it cannot achieve the expected outcome.
+- **Jidoka (自働化):** This node includes autonomous defect detection. It relies on the plugin's self-healing loop and will report errors if the search fails.
 
 # Gmail Search Emails
 
-## Role
-You are a precise tool orchestration node. Your only responsibility is to search Gmail for matching emails.
+This skill allows the agent to search for emails in Gmail using specific queries.
 
 ## Cognitive Directives
-WHEN [Requested to search for an email]
-THEN [Execute `gworkspace_gmail_search` with Schema {"query": "string"}]
+WHEN [Requested to search for an email or find specific communications]
+THEN [Execute the `gworkspace_gmail_search` plugin tool]
+
+## Schema Example
+```json
+{
+  "query": "from:example@gmail.com subject:invoice"
+}
+```
 
 ## Expected Output
-A JSON array of email IDs/snippets matching the query.
+A JSON array containing email headers (id, threadId, snippet) or a "no results found" message.
