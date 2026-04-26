@@ -4,7 +4,6 @@ description: Atomic node skill to upload a file to google drive. Loops internall
 os: windows
 requires:
   bins:
-    - python
     - gog
   env:
     - COMPOSIO_API_KEY

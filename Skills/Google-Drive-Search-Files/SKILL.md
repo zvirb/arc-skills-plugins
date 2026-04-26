@@ -4,7 +4,6 @@ description: Atomic node skill to search for files in google drive. Loops intern
 os: windows
 requires:
   bins:
-    - python
     - gog
   env:
     - COMPOSIO_API_KEY

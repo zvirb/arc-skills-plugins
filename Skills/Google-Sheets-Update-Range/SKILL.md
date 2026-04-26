@@ -4,7 +4,6 @@ description: Atomic node skill to update a range of values in a spreadsheet. Loo
 os: windows
 requires:
   bins:
-    - python
     - gog
   env:
     - COMPOSIO_API_KEY

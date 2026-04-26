@@ -4,7 +4,6 @@ description: Atomic node skill to upsert text/metadata into the local vector sto
 os: windows
 requires:
   bins:
-    - python
   env:
     - LANCE_DB_PATH
 ---

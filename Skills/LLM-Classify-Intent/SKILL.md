@@ -4,7 +4,6 @@ description: Atomic transformation node to classify the intent of a text snippet
 os: windows
 requires:
   bins:
-    - python
     - openclaw
 ---
 ## Lean Philosophy (Principles)

@@ -4,7 +4,6 @@ description: Atomic node skill to delete a file from google drive. Loops interna
 os: windows
 requires:
   bins:
-    - python
     - gog
   env:
     - COMPOSIO_API_KEY

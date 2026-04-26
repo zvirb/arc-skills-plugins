@@ -4,7 +4,6 @@ description: Workflow-driven skill that decomposes vague task strings into actio
 os: windows
 requires:
   bins:
-    - python
   env:
     - COMPOSIO_API_KEY
 ---
@@ -20,7 +19,7 @@ requires:
 This skill orchestrates a workflow to decompose vague task descriptions into actionable items using an LLM and then creates those items as tasks in Google Tasks.
 
 ## Workflow Orchestration
-This skill delegates its execution to `d:\openClaw\Workflows\vague_task_decomposition.py`, which chains the following atomic nodes:
+This skill is an autonomous workflow. You MUST chain the following atomic actions using your native tools provided by the LLMTransformations and GoogleWorkspace plugins:
 1. **LLM-Extract-Action-Items**: Transforms the vague string into a JSON array of subtasks.
 2. **Google-Tasks-Create-Task**: Iterates through the array and creates each task via `gog` or `composio`.
 

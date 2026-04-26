@@ -4,7 +4,6 @@ description: Atomic node skill to update an existing task in google tasks. Loops
 os: windows
 requires:
   bins:
-    - python
     - gog
   env:
     - COMPOSIO_API_KEY

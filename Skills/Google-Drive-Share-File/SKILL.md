@@ -4,7 +4,6 @@ description: Atomic node skill to share a file in google drive. Loops internally
 os: windows
 requires:
   bins:
-    - python
     - gog
   env:
     - COMPOSIO_API_KEY

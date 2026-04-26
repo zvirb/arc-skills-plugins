@@ -4,7 +4,6 @@ description: Atomic node skill to search for emails. Loops internally until a va
 os: windows
 requires:
   bins:
-    - python
     - gog
   env:
     - COMPOSIO_API_KEY

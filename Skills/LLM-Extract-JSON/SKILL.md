@@ -4,7 +4,6 @@ description: Atomic transformation node to extract strictly formatted json from 
 os: windows
 requires:
   bins:
-    - python
     - openclaw
 ---
 ## Lean Philosophy (Principles)

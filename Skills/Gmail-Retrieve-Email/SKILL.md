@@ -4,7 +4,6 @@ description: Atomic node skill to retrieve specific email content by ID. Loops i
 os: windows
 requires:
   bins:
-    - python
     - gog
   env:
     - COMPOSIO_API_KEY

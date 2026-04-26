@@ -4,7 +4,6 @@ description: Atomic node skill to update an existing calendar event. Loops inter
 os: windows
 requires:
   bins:
-    - python
     - gog
   env:
     - COMPOSIO_API_KEY

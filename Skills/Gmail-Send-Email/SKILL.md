@@ -4,7 +4,6 @@ description: Atomic node skill to send a new email. Loops internally until succe
 os: windows
 requires:
   bins:
-    - python
     - gog
   env:
     - COMPOSIO_API_KEY

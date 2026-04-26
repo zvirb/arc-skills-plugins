@@ -4,7 +4,6 @@ description: Workflow-driven skill that routes unstructured audio transcripts or
 os: windows
 requires:
   bins:
-    - python
   env:
     - COMPOSIO_API_KEY
     - LANCE_DB_PATH
@@ -21,7 +20,7 @@ requires:
 This skill orchestrates a workflow to act as a semantic router for inbound text. It evaluates intent and urgency before routing to the appropriate destination.
 
 ## Workflow Orchestration
-This skill delegates its execution to `d:\openClaw\Workflows\capture_classification.py`, which chains the following atomic nodes:
+This skill is an autonomous workflow. You MUST chain the following atomic actions using your native tools provided by the LLMTransformations and GoogleWorkspace plugins:
 1. **LLM-Classify-Intent**: Evaluates the text against urgency heuristics and intent (Actionable vs Informational).
 2. **Google-Tasks-Create-Task**: Used if the item is actionable.
 3. **Vector-Store-Upsert-Memory**: Used if the item is informational/reference material.

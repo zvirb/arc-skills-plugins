@@ -4,7 +4,6 @@ description: Atomic transformation node to identify duplicates in a dataset and 
 os: windows
 requires:
   bins:
-    - python
     - openclaw
 ---
 ## Lean Philosophy (Principles)

@@ -46,12 +46,12 @@ All updates MUST enforce the following Lean principles:
 
 ## Steps
 1. **Audit Phase:**
-   - Review the extension's codebase against current global directives (`GEMINI.md`, `AGENTS.md`).
-   - For Skills: Check for overly complex instructions. Simplify to "one skill, one responsibility". Verify YAML frontmatter for security and environment requirements.
-   - For Plugins: Verify SDK imports (`openclaw/plugin-sdk/plugin-entry`), error handling (graceful failures instead of stack traces), and `package.json` compatibility definitions.
+   - **Architectural Audit:** Check for any legacy Python orchestration scripts (`.py` files) wrapping OpenClaw within the `Skills/` or `Workflows/` directories. These are anti-patterns and must be purged.
+   - For Skills: Skills must contain ONLY a `SKILL.md` file. Check for overly complex instructions. Simplify to "one skill, one responsibility". Verify YAML frontmatter.
+   - For Plugins: If programmatic logic exists, it MUST be migrated to a proper TypeScript Plugin. Verify SDK imports (`@openclaw/plugin-sdk`), explicit `register(api)` calls, and `package.json` compatibility definitions.
 2. **Refactoring:**
-   - Apply necessary updates. Break apart monolithic skills into smaller modular skills if needed.
-   - Transition any long-running, blocking plugin tasks to asynchronous operations.
+   - Apply necessary updates. Delete legacy Python scripts.
+   - Transition programmatic logic into registered TypeScript Plugin tools.
    - Ensure all secrets are gated behind environment variables and are never hardcoded.
 3. **Validation & Testing:**
    - Run existing tests and add new tests covering the refactored logic in `Tests/`.

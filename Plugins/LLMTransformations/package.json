@@ -1,0 +1,21 @@
+{
+  "name": "llm-transformations-plugin",
+  "version": "1.0.0",
+  "description": "Provides native atomic LLM transformation tools (summarize, extract, classify) with Jidoka validation loops.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
+  "dependencies": {
+    "@openclaw/plugin-sdk": "latest"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "@types/node": "^20.0.0"
+  },
+  "openclaw": {
+    "compat": ">=1.0.0"
+  }
+}

@@ -4,7 +4,6 @@ description: Atomic node skill to delete a calendar event. Loops internally unti
 os: windows
 requires:
   bins:
-    - python
     - gog
   env:
     - COMPOSIO_API_KEY

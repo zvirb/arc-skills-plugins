@@ -4,7 +4,6 @@ description: Atomic node skill to find a specific Google Calendar event. It loop
 os: windows
 requires:
   bins:
-    - python
     - gog
   env:
     - COMPOSIO_API_KEY

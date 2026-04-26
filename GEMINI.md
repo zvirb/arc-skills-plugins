@@ -31,8 +31,10 @@ When responding to a request to build a capability:
 4. Provide the exact, constrained system prompt that will be injected into that specific execution node.
 
 
-## 1. Architectural Distinction (Kaizen 改善)
-* **CRITICAL:** Decompose all intent into the smallest possible atomic components before writing code. If the goal requires complex application state or new endpoints, default to a Plugin. If it requires teaching the agent to orchestrate existing tools (e.g., `curl`, `jq`, `browser`), default to a Skill.
+## 1. Architectural Distinction (Strict Isolation)
+* **CRITICAL:** Do NOT write `.py` scripts in the `Skills/` or `Workflows/` directories to wrap OpenClaw inference. This is an anti-pattern.
+* If the goal requires complex application state, native API execution, logic, database bridges, or state management, it MUST be a **Plugin** written strictly in TypeScript (ESM) using the `@openclaw/plugin-sdk`.
+* If the goal requires teaching the agent to orchestrate existing tools (e.g., `curl`, `browser`), it MUST be a **Skill** written strictly in Markdown (`SKILL.md`).
 
 ## 2. Standardized Work (Hyojun Sagyo)
 * Prerequisite to automation. Identify the absolute most efficient manual/CLI execution path for a task before wrapping it in a node.

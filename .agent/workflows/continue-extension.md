@@ -45,8 +45,9 @@ Maintain adherence to the following Lean principles during execution:
 
 
 ## Steps
-1. **Context Restoration:**
+1. **Context Restoration & Architectural Alignment:**
    - Read the relevant `SKILL.md` or Plugin source files.
+   - **CRITICAL:** Check for legacy Python orchestration scripts (`.py` files). If found, they must be flagged for migration to TypeScript Plugins. Skills must remain strictly Markdown.
    - Check `Docs/TODO.md` to understand the current progress state.
    - Read any `MEMORY.md` or `ACTIVE-TASK.md` files located in the extension's folder for durable state from previous sessions.
 2. **Incremental Implementation:**

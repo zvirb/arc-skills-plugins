@@ -4,7 +4,6 @@ description: Atomic node skill to update the contents of a google document. Loop
 os: windows
 requires:
   bins:
-    - python
     - gog
   env:
     - COMPOSIO_API_KEY

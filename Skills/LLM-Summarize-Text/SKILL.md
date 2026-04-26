@@ -4,7 +4,6 @@ description: Atomic transformation node to summarize raw text, returning a struc
 os: windows
 requires:
   bins:
-    - python
     - openclaw
 ---
 ## Lean Philosophy (Principles)

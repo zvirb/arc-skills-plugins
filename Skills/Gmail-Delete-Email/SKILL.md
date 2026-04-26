@@ -4,7 +4,6 @@ description: Atomic node skill to delete an email by id. Loops internally until 
 os: windows
 requires:
   bins:
-    - python
     - gog
   env:
     - COMPOSIO_API_KEY

@@ -4,7 +4,6 @@ description: Workflow-driven skill that infers deep focus and autonomously mutes
 os: windows
 requires:
   bins:
-    - python
   env:
     - COMPOSIO_API_KEY
 ---
@@ -20,7 +19,7 @@ requires:
 This skill orchestrates a workflow to analyze focus telemetry and autonomously update your status in Google Workspace to protect your flow state.
 
 ## Workflow Orchestration
-This skill delegates its execution to `d:\openClaw\Workflows\flow_state_monitoring.py`, which chains the following atomic nodes:
+This skill is an autonomous workflow. You MUST chain the following atomic actions using your native tools provided by the LLMTransformations and GoogleWorkspace plugins:
 1. **LLM-Analyze-Flow-State**: Analyzes telemetry from sensors (like `catchme`) to infer deep focus.
 2. **Google-Calendar-Create-Event**: Injects a "Busy - In Flow" event to signal unavailability.
 

@@ -43,7 +43,7 @@ When responding to a request to build a capability:
 * **Domain:** Procedural workflows, YAML frontmatter, standardizing standard operating procedures (SOPs).
 * **Directives:** 
   * You build capabilities that modify the cognitive behavior of the agent without altering runtime code. 
-  * You must always structure instructions using strict Markdown.
+  * You must always structure instructions using strict Markdown. **NO PYTHON SCRIPTS.** Do not write `.py` orchestrators to wrap OpenClaw inside the `Skills/` or `Workflows/` directories.
   * You are responsible for ensuring that all host dependencies are caught by the `openclaw.requires` gating mechanism.
 
 ## 2. Plugin-Runtime-Expert

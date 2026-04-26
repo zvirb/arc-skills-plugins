@@ -4,7 +4,6 @@ description: Atomic node skill to download a file from google drive. Loops inter
 os: windows
 requires:
   bins:
-    - python
     - gog
   env:
     - COMPOSIO_API_KEY

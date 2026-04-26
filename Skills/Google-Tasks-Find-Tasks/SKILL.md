@@ -4,7 +4,6 @@ description: Atomic node skill to find active tasks in google tasks. Loops inter
 os: windows
 requires:
   bins:
-    - python
     - gog
   env:
     - COMPOSIO_API_KEY

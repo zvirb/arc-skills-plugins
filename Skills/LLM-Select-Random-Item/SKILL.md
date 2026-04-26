@@ -4,7 +4,6 @@ description: Atomic transformation node to select a random item from a provided 
 os: windows
 requires:
   bins:
-    - python
     - openclaw
 ---
 ## Lean Philosophy (Principles)

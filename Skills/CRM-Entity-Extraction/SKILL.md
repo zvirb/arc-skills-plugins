@@ -4,7 +4,6 @@ description: Workflow-driven skill that bridges Gmail data extraction logic to G
 os: windows
 requires:
   bins:
-    - python
   env:
     - COMPOSIO_API_KEY
 ---
@@ -20,7 +19,7 @@ requires:
 This skill orchestrates a workflow to extract structured data (persons, organizations, dates) from raw text and append it to a CRM spreadsheet.
 
 ## Workflow Orchestration
-This skill delegates its execution to `d:\openClaw\Workflows\crm_entity_extraction.py`, which chains the following atomic nodes:
+This skill is an autonomous workflow. You MUST chain the following atomic actions using your native tools provided by the LLMTransformations and GoogleWorkspace plugins:
 1. **LLM-Extract-JSON**: Extracts structured entities from unstructured text.
 2. **Google-Sheets-Append-Row**: Appends the extracted data to a specified Google Sheet.
 

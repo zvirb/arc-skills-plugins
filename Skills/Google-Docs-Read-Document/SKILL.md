@@ -4,7 +4,6 @@ description: Atomic node skill to read the contents of a google document. Loops 
 os: windows
 requires:
   bins:
-    - python
     - gog
   env:
     - COMPOSIO_API_KEY

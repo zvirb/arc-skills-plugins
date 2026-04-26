@@ -4,7 +4,6 @@ description: Atomic node skill to read a range of values from a spreadsheet. Loo
 os: windows
 requires:
   bins:
-    - python
     - gog
   env:
     - COMPOSIO_API_KEY

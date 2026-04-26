@@ -4,7 +4,6 @@ description: Workflow-driven skill that issues minor resilience challenges to bu
 os: windows
 requires:
   bins:
-    - python
   env:
     - COMPOSIO_API_KEY
 ---
@@ -20,7 +19,7 @@ requires:
 This skill orchestrates a workflow to select a random minor task (a "micro-suck") and inject it into your Google Tasks list to kickstart executive function.
 
 ## Workflow Orchestration
-This skill delegates its execution to `d:\openClaw\Workflows\micro_suck_generation.py`, which chains the following atomic nodes:
+This skill is an autonomous workflow. You MUST chain the following atomic actions using your native tools provided by the LLMTransformations and GoogleWorkspace plugins:
 1. **LLM-Select-Random-Item**: Randomly selects a task from a predefined resilience matrix.
 2. **Google-Tasks-Create-Task**: Injects the selected task into Google Tasks with high priority.
 

@@ -4,7 +4,6 @@ description: Atomic transformation node to analyze telemetry and infer if the us
 os: windows
 requires:
   bins:
-    - python
     - openclaw
 ---
 ## Lean Philosophy (Principles)

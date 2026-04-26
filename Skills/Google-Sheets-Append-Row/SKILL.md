@@ -4,7 +4,6 @@ description: Atomic node skill to append a row to a spreadsheet. Loops internall
 os: windows
 requires:
   bins:
-    - python
     - gog
   env:
     - COMPOSIO_API_KEY

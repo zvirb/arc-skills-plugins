@@ -1,0 +1,21 @@
+{
+  "name": "google-workspace-plugin",
+  "version": "1.0.0",
+  "description": "Native integration for Google Workspace (Tasks, Docs, Calendar) using robust Jidoka fallbacks.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
+  "dependencies": {
+    "@openclaw/plugin-sdk": "latest"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "@types/node": "^20.0.0"
+  },
+  "openclaw": {
+    "compat": ">=1.0.0"
+  }
+}

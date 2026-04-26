@@ -8,10 +8,10 @@ This repository contains Skills and Plugins for Open Claw.
 - `Docs/`: Contains overarching project documentation, guidelines, and manuals.
 - `Logs/`: Contains execution traces and agent logs. **This folder is ignored by Git.**
 - `Memory/`: Persistent storage for the agent (e.g., vector databases, context logs). **Data files ignored by Git.**
-- `Plugins/`: Contains Open Claw plugins. Each new plugin should be created in its own sub-folder.
+- `Plugins/`: Contains native OpenClaw plugins. These are runtime extensions written in **TypeScript (ESM)** using the `@openclaw/plugin-sdk`. Each new plugin should be created in its own sub-folder with a `package.json`.
 - `Scripts/`: Contains globally useful utility scripts and repository automation.
 - `Secrets/`: Contains sensitive data, credentials, and API keys. **This folder is strictly ignored by Git.**
-- `Skills/`: Contains Open Claw skills. Each new skill should be created in its own sub-folder.
+- `Skills/`: Contains OpenClaw skills. Skills are **strictly Markdown (`SKILL.md`)** cognitive modifiers teaching the agent how to use tools. NO Python `.py` orchestrators are allowed here.
 - `Tests/`: Contains test suites and testing infrastructure.
 
 ## Project Tidiness & Root Folder Rules

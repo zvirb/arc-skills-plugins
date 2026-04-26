@@ -4,7 +4,6 @@ description: Atomic transformation node to identify time conflicts in a calendar
 os: windows
 requires:
   bins:
-    - python
     - openclaw
 ---
 ## Lean Philosophy (Principles)

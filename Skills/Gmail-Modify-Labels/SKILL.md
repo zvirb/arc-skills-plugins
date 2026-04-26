@@ -4,7 +4,6 @@ description: Atomic node skill to modify labels of an email. Loops internally un
 os: windows
 requires:
   bins:
-    - python
     - gog
   env:
     - COMPOSIO_API_KEY

@@ -4,7 +4,6 @@ description: Workflow-driven skill that autonomously manages stale items in Goog
 os: windows
 requires:
   bins:
-    - python
   env:
     - COMPOSIO_API_KEY
 ---
@@ -20,7 +19,7 @@ requires:
 This skill orchestrates a workflow to identify and archive stale Google Tasks (items older than 30 days) to maintain a clean workspace.
 
 ## Workflow Orchestration
-This skill delegates its execution to `d:\openClaw\Workflows\backlog_grooming.py`, which chains the following atomic nodes:
+This skill is an autonomous workflow. You MUST chain the following atomic actions using your native tools provided by the LLMTransformations and GoogleWorkspace plugins:
 1. **Google-Tasks-Find-Tasks**: Retrieves all active tasks.
 2. **LLM-Summarize-Text**: Generates a concise summary of the task's intent for archiving.
 3. **Google-Tasks-Update-Task**: Prepends `[STALE/ARCHIVED]` and marks the task as completed.

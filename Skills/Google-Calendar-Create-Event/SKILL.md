@@ -4,7 +4,6 @@ description: Atomic node skill to create a Google Calendar event. Loops internal
 os: windows
 requires:
   bins:
-    - python
     - gog
   env:
     - COMPOSIO_API_KEY

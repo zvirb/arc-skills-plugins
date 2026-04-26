@@ -4,7 +4,6 @@ description: Atomic node skill to draft a new email. Loops internally until succ
 os: windows
 requires:
   bins:
-    - python
     - gog
   env:
     - COMPOSIO_API_KEY

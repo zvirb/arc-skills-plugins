@@ -4,7 +4,6 @@ description: Workflow-driven skill that autonomously defends your schedule to ma
 os: windows
 requires:
   bins:
-    - python
   env:
     - COMPOSIO_API_KEY
 ---
@@ -20,7 +19,7 @@ requires:
 This skill orchestrates a workflow to evaluate schedule density and automatically inject recovery blocks into your Google Calendar when needed.
 
 ## Workflow Orchestration
-This skill delegates its execution to `d:\openClaw\Workflows\calendar_guard.py`, which chains the following atomic nodes:
+This skill is an autonomous workflow. You MUST chain the following atomic actions using your native tools provided by the LLMTransformations and GoogleWorkspace plugins:
 1. **Google-Calendar-Find-Event**: Retrieves events for the next 24 hours.
 2. **LLM-Identify-Conflicts**: Analyzes the event list to identify periods of high cognitive load.
 3. **Google-Calendar-Create-Event**: Injects "Recovery Block" events to protect decompression time.

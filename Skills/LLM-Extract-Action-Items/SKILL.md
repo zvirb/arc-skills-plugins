@@ -4,7 +4,6 @@ description: Atomic transformation node to extract a list of actionable tasks fr
 os: windows
 requires:
   bins:
-    - python
     - openclaw
 ---
 ## Lean Philosophy (Principles)

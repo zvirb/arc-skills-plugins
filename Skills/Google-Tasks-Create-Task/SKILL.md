@@ -4,7 +4,6 @@ description: Atomic node skill to create a new task in google tasks. Loops inter
 os: windows
 requires:
   bins:
-    - python
     - gog
   env:
     - COMPOSIO_API_KEY

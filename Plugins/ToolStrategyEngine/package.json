@@ -1,0 +1,28 @@
+{
+  "name": "tool-strategy-engine",
+  "version": "1.0.0",
+  "description": "Dynamic memory-augmented tool strategy engine for OpenClaw to prevent tool hallucination.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
+  "keywords": [
+    "openclaw-plugin",
+    "strategy",
+    "memory"
+  ],
+  "author": "Antigravity",
+  "license": "MIT",
+  "dependencies": {
+    "@openclaw/plugin-sdk": "latest"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "@types/node": "^20.0.0"
+  },
+  "openclaw": {
+    "compat": ">=1.0.0"
+  }
+}

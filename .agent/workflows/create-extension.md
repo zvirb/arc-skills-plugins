@@ -45,15 +45,15 @@ All development MUST adhere to the following Lean principles:
 
 
 ## Steps
-1. **Architectural Decision (Kaizen):** 
-   - Identify the user's goal and decompose it into the smallest possible atomic units.
-   - If it involves orchestrating existing tools (e.g., curl, browser, Python scripts), default to a **Skill**.
-   - If it requires complex application state, new API endpoints, database bridges, or native hooks, default to a **Plugin**.
+1. **Architectural Decision (Strict Isolation):** 
+   - **NO PYTHON ORCHESTRATORS.** Never create `.py` scripts to wrap `wsl openclaw infer`. This is an anti-pattern.
+   - If the task requires execution logic, API calls, state management, or file parsing, it MUST be a **Plugin** (TypeScript).
+   - If the task is purely teaching the agent *when* and *how* to use existing native tools, it MUST be a **Skill** (Markdown).
 2. **Scaffold Directory:**
    - Create a dedicated sub-folder in `Skills/` or `Plugins/`.
 3. **Artifact Generation:**
-   - **For Skills:** Generate a `SKILL.md` with concise, explicit instructions. Follow the "one skill, one responsibility" principle. Enforce security (never concatenate raw shell strings). Add `os` and `requires` (bins, env) to the YAML frontmatter.
-   - **For Plugins:** Initialize `package.json` with the `openclaw` object and strict `compat` versioning. Scaffold TypeScript files using the official SDK (`openclaw/plugin-sdk/plugin-entry`) and `register(api)`. Ensure the plugin fails gracefully.
+   - **For Skills:** Generate a `SKILL.md` file ONLY. No Python scripts. It must contain concise, natural language instructions guiding the agent, along with `os` and `requires` (bins, env) in the YAML frontmatter.
+   - **For Plugins:** Initialize `package.json` with the `openclaw` object. Scaffold TypeScript files using the `@openclaw/plugin-sdk`. Use `export default function register(api)` to register explicitly defined tools. Ensure gracefully self-healing error patterns (Jidoka).
 4. **Validation & Testing:**
    - Generate unit tests in the global `Tests/` directory.
    - **Critical Workflow Rule:** You MUST physically test the extension. All nodes and workflow chains must be tested end-to-end to ensure they actually work. 
