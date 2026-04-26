@@ -1,7 +1,7 @@
 ---
 name: CRM Entity Extraction
 description: Workflow-driven skill that bridges Gmail data extraction logic to Google Sheets or Google Contacts via Composio.
-os: windows
+os: all
 requires:
   bins: []
 ---

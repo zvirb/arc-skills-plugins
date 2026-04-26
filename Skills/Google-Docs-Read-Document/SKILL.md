@@ -1,7 +1,7 @@
 ---
 name: Google Docs Read Document
 description: Atomic node skill to read a Google Doc using the GoogleWorkspace plugin.
-os: windows
+os: all
 requires:
   plugins:
     - google-workspace-plugin

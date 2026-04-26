@@ -1,7 +1,7 @@
 ---
 name: Google Drive Search Files
 description: Atomic node skill to search for files in Google Drive using the GoogleWorkspace plugin.
-os: windows
+os: all
 requires:
   plugins:
     - google-workspace-plugin

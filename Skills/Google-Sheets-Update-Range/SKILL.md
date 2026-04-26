@@ -1,7 +1,7 @@
 ---
 name: Google Sheets Update Range
 description: Atomic node skill to update a range in a Google Sheet using the GoogleWorkspace plugin.
-os: windows
+os: all
 requires:
   plugins:
     - google-workspace-plugin

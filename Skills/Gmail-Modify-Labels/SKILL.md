@@ -1,7 +1,7 @@
 ---
 name: Gmail Modify Labels
 description: Atomic node skill to add or remove labels from an email using the GoogleWorkspace plugin.
-os: windows
+os: all
 requires:
   plugins:
     - google-workspace-plugin

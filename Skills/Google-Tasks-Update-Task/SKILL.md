@@ -1,7 +1,7 @@
 ---
 name: Google Tasks Update Task
 description: Atomic node skill to update a task in Google Tasks using the GoogleWorkspace plugin.
-os: windows
+os: all
 requires:
   plugins:
     - google-workspace-plugin

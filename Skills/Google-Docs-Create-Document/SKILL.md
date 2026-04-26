@@ -1,7 +1,7 @@
 ---
 name: Google Docs Create Document
 description: Atomic node skill to create a Google Doc using the GoogleWorkspace plugin.
-os: windows
+os: all
 requires:
   plugins:
     - google-workspace-plugin

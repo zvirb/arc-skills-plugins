@@ -1,7 +1,7 @@
 ---
 name: Google Sheets Read Range
 description: Atomic node skill to read a range from a Google Sheet using the GoogleWorkspace plugin.
-os: windows
+os: all
 requires:
   plugins:
     - google-workspace-plugin

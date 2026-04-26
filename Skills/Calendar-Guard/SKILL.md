@@ -1,7 +1,7 @@
 ---
 name: calendar-guard
 description: Workflow-driven skill that autonomously defends your schedule to manage cognitive load and prevent burnout.
-os: windows
+os: all
 requires:
   bins: []
 ---

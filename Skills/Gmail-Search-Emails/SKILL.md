@@ -1,7 +1,7 @@
 ---
 name: Gmail Search Emails
 description: Atomic node skill to search for emails using the GoogleWorkspace plugin.
-os: windows
+os: all
 requires:
   plugins:
     - google-workspace-plugin

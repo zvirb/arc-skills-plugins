@@ -1,7 +1,7 @@
 ---
 name: LLM Extract JSON
 description: Atomic transformation node to extract strictly formatted JSON from raw text using the LLMTransformations plugin.
-os: windows
+os: all
 requires:
   plugins:
     - llm-transformations-plugin

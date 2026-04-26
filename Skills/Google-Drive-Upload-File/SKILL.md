@@ -1,7 +1,7 @@
 ---
 name: Google Drive Upload File
 description: Atomic node skill to upload a file to Google Drive using the GoogleWorkspace plugin.
-os: windows
+os: all
 requires:
   plugins:
     - google-workspace-plugin

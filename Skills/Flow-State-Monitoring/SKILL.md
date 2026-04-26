@@ -1,7 +1,7 @@
 ---
 name: flow-state-monitoring
 description: Workflow-driven skill that infers deep focus and autonomously mutes interruptions.
-os: windows
+os: all
 requires:
   bins: []
 ---

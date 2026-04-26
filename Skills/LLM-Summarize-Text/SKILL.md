@@ -1,7 +1,7 @@
 ---
 name: LLM Summarize Text
 description: Atomic transformation node to summarize raw text using the LLMTransformations plugin.
-os: windows
+os: all
 requires:
   plugins:
     - llm-transformations-plugin

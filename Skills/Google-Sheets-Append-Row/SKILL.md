@@ -1,7 +1,7 @@
 ---
 name: Google Sheets Append Row
 description: Atomic node skill to append a row to a Google Sheet using the GoogleWorkspace plugin.
-os: windows
+os: all
 requires:
   plugins:
     - google-workspace-plugin

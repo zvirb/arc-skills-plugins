@@ -1,7 +1,7 @@
 ---
 name: backlog-grooming
 description: Workflow-driven skill that autonomously manages stale items in Google Tasks.
-os: windows
+os: all
 requires:
   bins: []
 ---

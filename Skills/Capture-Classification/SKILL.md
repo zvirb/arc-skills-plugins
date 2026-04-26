@@ -1,7 +1,7 @@
 ---
 name: capture-classification
 description: Workflow-driven skill that routes unstructured audio transcripts or quick notes to Google Tasks or LanceDB based on urgency.
-os: windows
+os: all
 requires:
   bins: []
 ---

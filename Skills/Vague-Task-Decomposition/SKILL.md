@@ -1,7 +1,7 @@
 ---
 name: Vague Task Decomposition
 description: Workflow-driven skill that decomposes vague task strings into actionable subtasks and dispatches them to Google Tasks.
-os: windows
+os: all
 requires:
   plugins:
     - google-workspace-plugin

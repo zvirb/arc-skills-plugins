@@ -1,7 +1,7 @@
 ---
 name: LLM Classify Intent
 description: Atomic transformation node to classify the intent of a text snippet (e.g., Actionable vs. Informational). Loops internally until successful.
-os: windows
+os: all
 requires:
   bins:
     - openclaw

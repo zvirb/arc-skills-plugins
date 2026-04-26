@@ -1,7 +1,7 @@
 ---
 name: LLM Find Duplicates
 description: Atomic transformation node to identify duplicates in a dataset and return a list. Loops internally until successful.
-os: windows
+os: all
 requires:
   bins:
     - openclaw

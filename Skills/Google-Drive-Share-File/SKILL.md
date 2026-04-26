@@ -1,7 +1,7 @@
 ---
 name: Google Drive Share File
 description: Atomic node skill to share a file in Google Drive using the GoogleWorkspace plugin.
-os: windows
+os: all
 requires:
   plugins:
     - google-workspace-plugin

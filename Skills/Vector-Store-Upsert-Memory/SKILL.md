@@ -1,7 +1,7 @@
 ---
 name: Vector Store Upsert Memory
 description: Atomic node skill to upsert text/metadata into the local vector store (LanceDB). Loops internally until successful.
-os: windows
+os: all
 requires:
   bins:
   env:

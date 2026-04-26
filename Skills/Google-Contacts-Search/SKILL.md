@@ -1,7 +1,7 @@
 ---
 name: Google Contacts Search
 description: Atomic node skill to search google contacts. Loops internally until successful.
-os: windows
+os: all
 requires:
   bins:
     - gog

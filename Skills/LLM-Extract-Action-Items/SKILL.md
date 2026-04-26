@@ -1,7 +1,7 @@
 ---
 name: LLM Extract Action Items
 description: Atomic transformation node to extract a list of actionable tasks from raw text. Loops internally until successful.
-os: windows
+os: all
 requires:
   bins:
     - openclaw

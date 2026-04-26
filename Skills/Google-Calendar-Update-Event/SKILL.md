@@ -1,7 +1,7 @@
 ---
 name: Google Calendar Update Event
 description: Atomic node skill to update an existing calendar event using the GoogleWorkspace plugin.
-os: windows
+os: all
 requires:
   plugins:
     - google-workspace-plugin

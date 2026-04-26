@@ -1,7 +1,7 @@
 ---
 name: Gmail Draft Email
 description: Atomic node skill to create a draft email using the GoogleWorkspace plugin.
-os: windows
+os: all
 requires:
   plugins:
     - google-workspace-plugin

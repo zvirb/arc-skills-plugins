@@ -1,7 +1,7 @@
 ---
 name: micro-suck-generation
 description: Workflow-driven skill that issues minor resilience challenges to build task-initiation momentum.
-os: windows
+os: all
 requires:
   bins:
   env:

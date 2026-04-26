@@ -1,7 +1,7 @@
 ---
 name: Google Contacts Create
 description: Atomic node skill to create a new google contact. Loops internally until successful.
-os: windows
+os: all
 requires:
   bins:
     - gog

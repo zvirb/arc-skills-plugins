@@ -1,7 +1,7 @@
 ---
 name: Google Calendar Delete Event
 description: Atomic node skill to delete a calendar event using the GoogleWorkspace plugin.
-os: windows
+os: all
 requires:
   plugins:
     - google-workspace-plugin

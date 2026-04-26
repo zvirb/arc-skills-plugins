@@ -1,7 +1,7 @@
 ---
 name: LLM Analyze Flow State
 description: Atomic transformation node to analyze telemetry and infer if the user is in a deep focus flow state. Loops internally until successful.
-os: windows
+os: all
 requires:
   bins:
     - openclaw
