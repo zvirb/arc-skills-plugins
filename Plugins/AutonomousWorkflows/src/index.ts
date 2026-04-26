@@ -1,5 +1,14 @@
 import { PluginApi } from '@openclaw/plugin-sdk';
 
+export const manifest = {
+  name: "autonomous-workflows-plugin",
+  version: "1.0.0",
+  dependencies: [
+    "google-workspace-plugin",
+    "llm-transformations-plugin"
+  ]
+};
+
 export default function register(api: PluginApi) {
 
     api.registerTool({
@@ -15,7 +24,7 @@ export default function register(api: PluginApi) {
             }
             
             const tasks = findRes.data;
-            const results = [];
+            const results: any[] = [];
             const now = new Date();
             
             for (const task of tasks) {
@@ -49,7 +58,7 @@ export default function register(api: PluginApi) {
                             status: "completed"
                         };
                         const res = await api.executeTool('gworkspace_tasks_update', updateArgs);
-                        results.append(res);
+                        results.push(res);
                     } catch (e: any) {
                         console.log(`Failed to groom task '${task.id}': ${e.message}`);
                     }
@@ -60,10 +69,7 @@ export default function register(api: PluginApi) {
         }
     });
 
-    // Note: Other workflows like 'capture_classification', 'crm_entity_extraction', 'vague_task_decomposition'
-    // would be migrated here following this exact programmatic execution pattern to ensure determinism.
-
     api.on('plugin:ready', () => {
-        console.log('AutonomousWorkflows plugin loaded with deterministic orchestration tools.');
+        console.log('AutonomousWorkflows plugin loaded. Dependencies resolved.');
     });
 }

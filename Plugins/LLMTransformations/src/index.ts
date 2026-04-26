@@ -1,59 +1,64 @@
 import { PluginApi } from '@openclaw/plugin-sdk';
-import { exec } from 'child_process';
-import { promisify } from 'util';
 
-const execAsync = promisify(exec);
+export const manifest = {
+  name: "llm-transformations-plugin",
+  version: "1.0.0",
+  configSchema: {
+    type: "object",
+    properties: {
+      defaultModel: { type: "string", default: "gemma4" }
+    }
+  }
+};
 
-// Standardized Jidoka Evaluator Loop for Atomic LLM Transformations
-async function executeWithJidoka(systemPrompt: string, payload: string, maxRetries: number = 3): Promise<any> {
-    let errorFeedback = "";
-    
-    for (let attempt = 1; attempt <= maxRetries; attempt++) {
-        const instruction = `${systemPrompt}\n\n${errorFeedback}\n\n${payload}`;
-        try {
-            // Atomic Execution (No-Shell Pattern natively within plugin)
-            // Using wsl openclaw infer just like the python script to blindfold the LLM
-            const cmd = `wsl openclaw infer model run --local --prompt "${instruction.replace(/"/g, '\\"')}"`;
-            const { stdout, stderr } = await execAsync(cmd, { timeout: 180000 });
-            
-            if (stderr && stderr.trim().length > 0) {
-                // If it's just logging we might need to be careful, but we simulate the original python logic
-                // Original python logic checked returncode
-            }
+export default function register(api: PluginApi, config: any) {
+    const model = config.defaultModel || "gemma4";
 
+    // Standardized Jidoka Evaluator Loop for Atomic LLM Transformations (Native SDK implementation)
+    async function executeWithJidoka(systemPrompt: string, payload: string, maxRetries: number = 3): Promise<any> {
+        let errorFeedback = "";
+        
+        for (let attempt = 1; attempt <= maxRetries; attempt++) {
+            const instruction = `${systemPrompt}\n\n${errorFeedback}\n\n${payload}`;
             try {
-                // Evaluation - validate JSON
-                const jsonStr = stdout.trim();
-                const startIdx = jsonStr.indexOf('{');
-                const endIdx = jsonStr.lastIndexOf('}');
+                // Atomic Execution (Native SDK inference)
+                const result = await api.infer({
+                    model: model,
+                    messages: [{ role: "user", content: instruction }]
+                });
                 
-                if (startIdx === -1 || endIdx === -1) {
-                    throw new Error("No JSON object found in output.");
+                try {
+                    // Evaluation - validate JSON
+                    const jsonStr = typeof result === 'string' ? result : result.content;
+                    const startIdx = jsonStr.indexOf('{');
+                    const endIdx = jsonStr.lastIndexOf('}');
+                    
+                    if (startIdx === -1 || endIdx === -1) {
+                        throw new Error("No JSON object found in output.");
+                    }
+                    
+                    const cleanJson = jsonStr.substring(startIdx, endIdx + 1);
+                    const data = JSON.parse(cleanJson);
+                    return data; // Success
+                } catch (parseError) {
+                    errorFeedback = `PREVIOUS_ERROR: Invalid JSON returned. ${parseError}. INSTRUCTION: Correct the JSON and try again.`;
                 }
                 
-                const cleanJson = jsonStr.substring(startIdx, endIdx + 1);
-                const data = JSON.parse(cleanJson);
-                return data; // Success
-            } catch (parseError) {
-                errorFeedback = `PREVIOUS_ERROR: Invalid JSON returned. ${parseError}. INSTRUCTION: Correct the JSON and try again.`;
+            } catch (error: any) {
+                errorFeedback = `SYSTEM_EXCEPTION: ${error.message}`;
             }
             
-        } catch (error: any) {
-            errorFeedback = `SYSTEM_EXCEPTION: ${error.message}`;
+            // Wait before retry
+            await new Promise(r => setTimeout(r, 1000));
         }
         
-        // Wait before retry
-        await new Promise(r => setTimeout(r, 1000));
+        return {
+            status: "error",
+            message: `Failed to achieve valid state after ${maxRetries} attempts.`,
+            last_error: errorFeedback
+        };
     }
-    
-    return {
-        status: "error",
-        message: `Failed to achieve valid state after ${maxRetries} attempts.`,
-        last_error: errorFeedback
-    };
-}
 
-export default function register(api: PluginApi) {
     // 1. LLM Summarize Text
     api.registerTool({
         name: 'llm_summarize_text',
@@ -100,6 +105,6 @@ export default function register(api: PluginApi) {
     });
 
     api.on('plugin:ready', () => {
-        console.log('LLMTransformations plugin loaded with atomic Jidoka tools.');
+        console.log('LLMTransformations plugin loaded with atomic SDK-native Jidoka tools.');
     });
 }
