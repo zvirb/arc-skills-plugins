@@ -33,3 +33,6 @@ __pycache__/
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+# Scratch / Temporary
+scratch/
