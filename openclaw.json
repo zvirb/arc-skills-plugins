@@ -59,21 +59,26 @@
           "gh-issues",
           "github",
           "gmail-delete-email",
-          "gmail-draft-email",
+          "gmail-draft-initialize",
+          "gmail-draft-send",
+          "gmail-draft-update-body",
+          "gmail-draft-update-subject",
           "gmail-modify-labels",
           "gmail-retrieve-email",
           "gmail-search-emails",
-          "gmail-send-email",
+          "gmail-search-emails",
           "gog",
           "google-calendar-create-event",
           "google-calendar-delete-event",
           "google-calendar-find-event",
-          "google-calendar-update-event",
+          "google-calendar-update-summary",
+          "google-calendar-update-time",
           "google-contacts-create",
           "google-contacts-search",
           "google-docs-create-document",
           "google-docs-read-document",
-          "google-docs-update-document",
+          "google-docs-append-text",
+          "google-docs-replace-text",
           "goplaces",
           "healthcheck",
           "imsg",
@@ -496,7 +501,16 @@
       "gmail-search-emails": {
         "enabled": true
       },
-      "gmail-send-email": {
+      "gmail-draft-send": {
+        "enabled": true
+      },
+      "gmail-draft-update-body": {
+        "enabled": true
+      },
+      "gmail-draft-update-subject": {
+        "enabled": true
+      },
+      "gmail-draft-initialize": {
         "enabled": true
       },
       "google-calendar-create-event": {
@@ -508,7 +522,10 @@
       "google-calendar-find-event": {
         "enabled": true
       },
-      "google-calendar-update-event": {
+      "google-calendar-update-summary": {
+        "enabled": true
+      },
+      "google-calendar-update-time": {
         "enabled": true
       },
       "google-contacts-create": {
@@ -523,7 +540,10 @@
       "google-docs-read-document": {
         "enabled": true
       },
-      "google-docs-update-document": {
+      "google-docs-append-text": {
+        "enabled": true
+      },
+      "google-docs-replace-text": {
         "enabled": true
       },
       "google-drive-delete-file": {
@@ -562,7 +582,7 @@
       "google-tasks-find-tasks": {
         "enabled": true
       },
-      "google-tasks-update-task": {
+      "google-tasks-update-task-title": {
         "enabled": true
       },
       "llm-analyze-flow-state": {

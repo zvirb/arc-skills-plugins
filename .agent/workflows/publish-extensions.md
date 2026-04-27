@@ -82,6 +82,9 @@ wsl bash -c "openclaw plugins install <plugin-name>"
 ```
 *(Note: If testing locally developed plugins without publishing, you can use the link flag: `openclaw plugins install --link /path/to/plugin`)*
 
+> [!WARNING]
+> **CRITICAL DEPLOYMENT STEP:** Running the install command registers the capability, but agents do not inherit it automatically. You MUST manually open `~/.openclaw/openclaw.json` and append the new `<skill-slug>` to your target agent's profile (e.g., `agents.list[0].skills`) before the agent can utilize it.
+
 ---
 
 ## Step 6: Post-Installation Validation & Repair

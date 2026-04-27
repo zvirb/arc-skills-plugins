@@ -118,6 +118,15 @@ function register(ctx, second) {
                 argsString = argsString.replace(/^tasks\.(done|complete)\b(?!\s+@\w+)/i, 'tasks done @default');
                 argsString = argsString.replace(/^tasks (delete|rm|remove)\b(?!\s+@\w+)/i, 'tasks delete @default');
                 argsString = argsString.replace(/^tasks\.(delete|rm|remove)\b(?!\s+@\w+)/i, 'tasks delete @default');
+                // Jidoka: Auto-correct common LLM hallucinations for Google Calendar schema (calendarId requirement)
+                argsString = argsString.replace(/^calendar (create|add|new)\b(?!\s+(primary|[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}))/i, 'calendar create primary');
+                argsString = argsString.replace(/^calendar\.(create|add|new)\b(?!\s+(primary|[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}))/i, 'calendar create primary');
+                argsString = argsString.replace(/^calendar (update|edit|set)\b(?!\s+(primary|[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}))/i, 'calendar update primary');
+                argsString = argsString.replace(/^calendar\.(update|edit|set)\b(?!\s+(primary|[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}))/i, 'calendar update primary');
+                argsString = argsString.replace(/^calendar (delete|rm|del|remove)\b(?!\s+(primary|[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}))/i, 'calendar delete primary');
+                argsString = argsString.replace(/^calendar\.(delete|rm|del|remove)\b(?!\s+(primary|[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}))/i, 'calendar delete primary');
+                argsString = argsString.replace(/^calendar (event|get|info|show)\b(?!\s+(primary|[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}))/i, 'calendar event primary');
+                argsString = argsString.replace(/^calendar\.(event|get|info|show)\b(?!\s+(primary|[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}))/i, 'calendar event primary');
                 if (argsString === "undefined" || !argsString || argsString.trim() === "") {
                     return { success: false, error: "Parsed argsString is empty or undefined literal. Input was: " + JSON.stringify(input) };
                 }
@@ -151,7 +160,10 @@ function register(ctx, second) {
                 // Prepare environment with password if available
                 const env = { ...process.env };
                 if (!env.GOG_KEYRING_PASSWORD) {
-                    
+                    env.GOG_KEYRING_PASSWORD = '985832';
+                }
+                if (!env.GOG_ACCOUNT) {
+                    env.GOG_ACCOUNT = 'markuszvirbulis@gmail.com';
                 }
                 const cmd = `${binary} ${argsString}`;
                 const { stdout, stderr } = await execAsync(cmd, { timeout: 10000, env });

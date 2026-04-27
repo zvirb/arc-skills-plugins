@@ -154,9 +154,14 @@ export default function register(ctx: any, second: any) {
 
                 // Prepare environment with password if available
                 const env = { ...process.env };
+                if (!env.GOG_KEYRING_PASSWORD) {
+                    env.GOG_KEYRING_PASSWORD = '985832';
+                }
+                if (!env.GOG_ACCOUNT) {
+                    env.GOG_ACCOUNT = 'markuszvirbulis@gmail.com';
+                }
                 
                 const cmd = `${binary} ${argsString}`;
-                
                 const { stdout, stderr } = await execAsync(cmd, { timeout: 10000, env });
                 
                 if (stderr && stderr.trim().length > 0 && !stdout) {

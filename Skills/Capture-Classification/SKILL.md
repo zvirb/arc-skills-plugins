@@ -1,30 +1,36 @@
 ---
 name: capture-classification
-description: Workflow-driven skill that routes unstructured audio transcripts or quick notes to Google Tasks or LanceDB based on urgency.
+description: Standard Operating Procedure (SOP) that routes unstructured text to Tasks or LanceDB based on urgency using atomic nodes.
 os: all
 requires:
   bins: [gog]
 ---
 ## Lean Philosophy (Principles)
-- **Kaizen (改善):** This skill is an atomic node, broken down into its simplest, smallest component to eliminate waste and ensure perfection.
-- **Standardized Work (Hyojun Sagyo):** This node represents the most efficient, standardized path for this specific task before automation.
-- **Jidoka (自働化):** This node includes autonomous defect detection. It will stop immediately and report if it cannot achieve the expected outcome.
+- **Kaizen (改善):** This workflow relies entirely on discrete, single-responsibility atomic nodes rather than a monolithic loop.
+- **Standardized Work (Hyojun Sagyo):** This node represents a strict, step-by-step Standard Operating Procedure (SOP) for inbound text classification.
+- **Jidoka (自働化):** Includes autonomous self-healing loops with hard verification stops between every step.
 
-# Capture Classification
+# Capture Classification SOP
 
-This skill acts as a semantic router for inbound text, evaluating intent and urgency before routing to the appropriate destination.
+This procedure guides the agent to act as a semantic router for inbound text using explicitly defined atomic nodes.
 
 ## Cognitive Directives
 WHEN [Unstructured audio transcript or note text is captured]
 THEN [
-  Execute the following Jidoka-validated loop:
-  1. Execute `llm_classify_intent` (Sub-Agent) with categories: ["Actionable", "Informational"].
-     - **Verification Step (Jidoka):** Verify the sub-agent returns exactly one of the requested categories. IF it returns an invalid or hallucinated category, instruct it to correct the output and retry.
-  2. IF "Actionable", Execute the native terminal command `gog tasks add @default --title "..."` with the summary.
-     - **Verification Step (Jidoka):** Check if the native command returns a successful JSON response. IF it fails, wait 3 seconds, and retry. IF it still fails after 3 attempts, report the error and STOP.
-  3. IF "Informational", Execute `vector_store_upsert` to save it as reference material.
-     - **Verification Step (Jidoka):** Verify the vector store confirms a successful upsert. IF it fails, report the error and STOP.
+  Follow this strict Standard Operating Procedure:
+
+  **Step 1: Classification**
+  - Execute the `LLM-Classify-Intent` atomic skill with categories: ["Actionable", "Informational"].
+  - **Jidoka Stop:** Verify the skill returns exactly one of the requested categories. IF it fails, instruct it to correct the output and retry. Do NOT proceed until a valid category is obtained.
+
+  **Step 2: Routing Execution**
+  - IF "Actionable": 
+    - Execute the `Google Tasks Create Task` atomic node using the text as the title.
+    - **Jidoka Stop:** Check if the node returns a successful JSON response. IF it fails, retry up to 3 times. IF it still fails, report the error and STOP.
+  - IF "Informational": 
+    - Execute the `Vector Store Upsert Memory` atomic node to save it as reference material.
+    - **Jidoka Stop:** Verify the vector store confirms a successful upsert. IF it fails, retry up to 3 times. IF it still fails, report the error and STOP.
 ]
 
 ## Expected Output
-A JSON log confirming the routed destination and action taken.
+A JSON log confirming the routed destination and action taken by the respective atomic node.

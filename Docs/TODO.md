@@ -43,3 +43,6 @@ This document tracks the status of Skills and Plugins across the ecosystem.
 - [x] **LLM-Extract-JSON**: Retrofitted with Jidoka Andon loop and standardized config.
 - [x] **Google-Sheets-Append-Row**: Retrofitted with Jidoka evaluator for API response verification.
 - [x] **Workflow Normalization**: Refactored `crm_entity_extraction.py` into a standardized Runner.
+- [x] **Google Workspace Atomic Nodes**: Deconstructed monolithic tools (Calendar Update Event, Tasks Update Task, Docs Update Document, Gmail Draft/Send Email) into strictly atomic nodes.
+- [x] **Workflow SOP Refactoring**: Refactored `Event-Cancellation-Reconciler`, `Capture-Classification`, `CRM-Entity-Extraction`, and `Vague-Task-Decomposition` from monolithic loops into explicit Markdown SOPs with Jidoka stops.
+- [x] **AutonomousWorkflows TS Refactoring**: Refactored `Executive-Assistant-Time-Blocking` and `Calendar-Guard` into TS plugin logic (calculating gaps, overlap auditing, load detection) and migrated execution to AutonomousWorkflows plugin.

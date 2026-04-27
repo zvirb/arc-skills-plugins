@@ -47,3 +47,6 @@ wsl bash -c "for skill in ~/.openclaw/workspace/skills/*; do openclaw skills ins
 // turbo
 ssh alienware "for skill in ~/.openclaw/workspace/skills/*; do openclaw skills install \$(basename \"\$skill\"); done"
 ```
+
+## Step 5: Verify Agent Binding
+Installing the skills only updates the `skills.entries` registry. You MUST ensure that the `~/.openclaw/openclaw.json` file on both the Laptop and the Alienware Server has the newly injected skill slugs explicitly listed within the `agents.list[0].skills` array. Failure to do so will result in "Ghost Skills" that the gateway loads but the agent cannot see.

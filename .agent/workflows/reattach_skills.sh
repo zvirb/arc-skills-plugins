@@ -32,3 +32,4 @@ for manual_dir in ~/.openclaw/workspace/skills/*; do
 done
 
 echo "Done! Run 'openclaw skills update --all' to update all managed skills."
+echo "CRITICAL: Ensure any newly attached skills are explicitly bound to your agent profile in openclaw.json!"

@@ -1,6 +1,6 @@
 ---
 name: Vague Task Decomposition
-description: Workflow-driven skill that decomposes vague task strings into actionable subtasks and dispatches them to Google Tasks.
+description: Standard Operating Procedure (SOP) to decompose vague tasks into actionable subtasks via atomic nodes.
 os: all
 requires:
   bins:
@@ -9,26 +9,28 @@ requires:
     - llm-transformations-plugin
 ---
 ## Lean Philosophy (Principles)
-- **Kaizen (改善):** This skill is an atomic node, broken down into its simplest, smallest component to eliminate waste and ensure perfection.
-- **Standardized Work (Hyojun Sagyo):** This node represents the most efficient, standardized path for this specific task before automation.
-- **Jidoka (自働化):** This node includes autonomous defect detection. It relies on the plugins' self-healing loops and will report errors if decomposition or task creation fails.
+- **Kaizen (改善):** This workflow relies entirely on discrete, single-responsibility atomic nodes rather than a monolithic loop.
+- **Standardized Work (Hyojun Sagyo):** This node represents a strict, step-by-step Standard Operating Procedure (SOP) for task decomposition.
+- **Jidoka (自働化):** Includes autonomous self-healing loops with hard verification stops between every step.
 
-# Vague Task Decomposition
+# Vague Task Decomposition SOP
 
-This skill orchestrates a workflow to decompose vague task descriptions into actionable items using an LLM and then creates those items as tasks in Google Tasks.
+This procedure guides the agent to decompose vague tasks and dispatch them to Google Tasks using explicitly defined atomic nodes.
 
 ## Cognitive Directives
 WHEN [A task is too vague or complex to be executed directly]
-THEN [Execute the decomposition workflow:
-  1. Call `llm_extract_action_items` to generate a list of subtasks.
-  2. For each subtask, execute the native terminal command `gog tasks add @default --title "Subtask"` to log it in Google Tasks.]
+THEN [
+  Follow this strict Standard Operating Procedure:
 
-## Schema Example
-```json
-{
-  "task": "Plan the annual company retreat"
-}
-```
+  **Step 1: Task Decomposition**
+  - Execute the `LLM-Extract-Action-Items` atomic skill to generate a list of discrete subtasks.
+  - **Jidoka Stop:** Verify the skill returns a properly formatted list of actionable items. IF the output is invalid, retry the extraction. Do NOT proceed without a valid list.
+
+  **Step 2: Task Dispatch**
+  - For each subtask identified in Step 1:
+    - Execute the `Google Tasks Create Task` atomic node to log the item in Google Tasks.
+    - **Jidoka Stop:** Verify the atomic node returns a successful JSON response. IF it fails for any item, retry the creation for that specific item up to 3 times before moving to the next.
+]
 
 ## Expected Output
-A JSON summary of the subtasks created in Google Tasks.
+A JSON summary of the subtasks successfully created in Google Tasks.

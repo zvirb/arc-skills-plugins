@@ -1,29 +1,36 @@
 ---
 name: calendar-guard
-description: Workflow-driven skill that autonomously defends your schedule to manage cognitive load and prevent burnout.
+description: Standard Operating Procedure (SOP) that autonomously defends your schedule using TS atomic plugins.
 os: all
 requires:
   bins: [gog]
+  plugins: [autonomous-workflows-plugin]
 ---
 ## Lean Philosophy (Principles)
-- **Kaizen (改善):** This skill is an atomic node, broken down into its simplest, smallest component to eliminate waste and ensure perfection.
-- **Standardized Work (Hyojun Sagyo):** This node represents the most efficient, standardized path for this specific task before automation.
-- **Jidoka (自働化):** This node includes autonomous defect detection. It will stop immediately and report if it cannot achieve the expected outcome.
+- **Kaizen (改善):** This workflow relies entirely on discrete, single-responsibility TS tools rather than a monolithic loop.
+- **Standardized Work (Hyojun Sagyo):** This node represents a strict, step-by-step Standard Operating Procedure (SOP) for scheduling recovery blocks.
+- **Jidoka (自働化):** Includes autonomous self-healing loops with hard verification stops between every step.
 
-# Calendar Guard
+# Calendar Guard SOP
 
-This skill evaluates schedule density and automatically injects recovery blocks into your Google Calendar when needed to prevent burnout.
+This procedure evaluates schedule density and automatically injects recovery blocks into your Google Calendar when needed to prevent burnout.
 
 ## Cognitive Directives
 WHEN [Requested to check calendar for burnout risks OR running on a daily schedule]
 THEN [
-  Execute the following Jidoka-validated loop:
-  1. Execute the native terminal command `gog calendar events primary --from "..." --to "..." --json` to retrieve events for the next 24 hours.
-     - **Verification Step (Jidoka):** Check if the output is a valid JSON array. IF it fails or returns an error, wait 3 seconds, and retry. IF it still fails, report the error and STOP.
-  2. Execute `llm_identify_conflicts` (Sub-Agent) to analyze the event list for periods of high cognitive load.
-     - **Verification Step (Jidoka):** Verify the sub-agent returns a structured list of detected high-load periods. IF it returns raw unformatted text or an error, request the sub-agent to format the output correctly and retry.
-  3. IF high load is detected, Execute the native terminal command `gog calendar create primary --summary "Recovery Block"` to inject "Recovery Block" events to protect decompression time.
-     - **Verification Step (Jidoka):** Verify that the `gog calendar create` command returns a successful JSON confirmation. IF it fails, log the failure for that specific block and continue to the next block, rather than halting the entire process.
+  Follow this strict Standard Operating Procedure:
+
+  **Step 1: Event Retrieval**
+  - Execute `gog calendar events primary --from "..." --to "..." --json` for the target timeframe.
+  - **Jidoka Stop:** Verify JSON output. IF fails, retry 3 times. IF still fails, STOP.
+
+  **Step 2: High Load Detection**
+  - Execute the `workflow_detect_high_load_periods` atomic TS tool with the retrieved events.
+  - **Jidoka Stop:** Verify the tool returns structured load periods. IF it returns an error, correct input and retry.
+
+  **Step 3: Recovery Injection**
+  - For each detected high-load period, execute `Google Calendar Create Event` to inject a "Recovery Block".
+  - **Jidoka Stop:** Verify creation. IF it fails, log the failure and continue to the next.
 ]
 
 ## Expected Output
