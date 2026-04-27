@@ -22,3 +22,6 @@ This folder contains foundational research and architectural guidelines for the 
 ## Development Mandates
 1. **Extensive Research:** Before implementing any new capability, you MUST research tool/API documentation online to ensure schema and command accuracy.
 2. **Independent Verification:** All Google Workspace mutations MUST be verified independently via the `browser` tool.
+
+## Network & Infrastructure Notes
+- **Ollama Configuration:** Ollama for access from WSL is on port `11450`. Ollama on Alienware (SSH) is on port `11434`.

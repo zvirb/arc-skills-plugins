@@ -71,3 +71,6 @@ When responding to a request to build a capability:
 
 ## 4. Required Reading (Common Issues)
 * **CRITICAL CONTEXT:** Before generating any new OpenClaw Extension, all agents MUST cross-reference the known anti-patterns documented in `Docs/OpenClaw_Best_Practices_and_Common_Issues.md`. This document contains critical rules regarding Context Bloat, Silent Validation Failures, Zombie Subshells, Manifest Dependency Collisions, Cognitive Drift, and Unsafe Path Traversal.
+
+## 5. Network & Infrastructure Notes
+* **Ollama Configuration:** Ollama for access from WSL is on port `11450`. Ollama on Alienware (SSH) is on port `11434`.

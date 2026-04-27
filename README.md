@@ -37,3 +37,6 @@ Failure to bind the skill to the agent's profile will result in the agent being 
 To ensure high-fidelity automation and eliminate hallucinations:
 - **Mandatory Online Research:** Always retrieve the latest API/Tool schemas from the web before implementation.
 - **Independent Browser Verification:** For all Google Workspace tools, use the `browser` tool to physically confirm that actions (like task creation or email sending) were successful in the user's workspace.
+
+## Network & Infrastructure Notes
+- **Ollama Configuration:** Ollama for access from WSL is on port `11450`. Ollama on Alienware (SSH) is on port `11434`.
