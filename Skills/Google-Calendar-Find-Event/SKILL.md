@@ -17,12 +17,12 @@ This skill allows the agent to search for events in Google Calendar within a spe
 
 ## Cognitive Directives
 WHEN [Requested to find events or check schedule for a specific period]
-THEN [Execute the native terminal command `gog calendar events <calendarId> --from <iso> --to <iso> --json` or `gog calendar search "query" --json`]
+THEN [Execute the `gog` tool with the `args` parameter]
 
 ## Schema Example
 ```json
 {
-  "command": "gog calendar events primary --from \"2026-04-26T00:00:00Z\" --to \"2026-04-26T23:59:59Z\" --json"
+  "args": "calendar events primary --from \"2026-04-26T00:00:00Z\" --to \"2026-04-26T23:59:59Z\" --json"
 }
 ```
 

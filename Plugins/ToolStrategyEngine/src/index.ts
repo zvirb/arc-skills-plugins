@@ -19,13 +19,27 @@ export default function register(ctx: any, second: any) {
     api.registerTool({
         name: 'strategy_get_preference',
         description: 'Get the preferred tool for a specific task category.',
+        parameters: {
+            type: "object",
+            properties: {
+                category: { type: "string" }
+            },
+            required: ["category"]
+        },
         execute: async (args: { category: string }) => {
-            const preferences: Record<string, string> = {
-                "search": "exa_search",
-                "mail": "gmail-send-email",
-                "calendar": "google-calendar-create-event"
-            };
-            return { preferred_tool: preferences[args.category] || "unknown" };
+            try {
+                if (typeof args.category !== 'string') {
+                    return { success: false, error: "Invalid argument: 'category' must be provided as a string. Please correct and retry." };
+                }
+                const preferences: Record<string, string> = {
+                    "search": "exa_search",
+                    "mail": "gmail-send-email",
+                    "calendar": "google-calendar-create-event"
+                };
+                return { preferred_tool: preferences[args.category] || "unknown" };
+            } catch (error: any) {
+                return { success: false, error: `ToolStrategyEngine failed: ${error.message || 'Unknown error'}. Please correct and retry.` };
+            }
         }
     });
 

@@ -19,8 +19,18 @@ function register(ctx, second) {
     api.registerTool({
         name: 'workflow_research_summarize',
         description: 'Autonomously research a topic and provide a structured summary.',
+        parameters: {
+            type: "object",
+            properties: {
+                topic: { type: "string" }
+            },
+            required: ["topic"]
+        },
         execute: async (args) => {
             try {
+                if (typeof args.topic !== 'string') {
+                    return { success: false, error: "Invalid argument: 'topic' must be provided as a string. Please correct and retry." };
+                }
                 // 1. Search for information
                 const searchResults = await api.callTool('exa_search', { query: args.topic, num_results: 3 });
                 // Jidoka validation

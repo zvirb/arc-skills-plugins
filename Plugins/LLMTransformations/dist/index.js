@@ -63,8 +63,19 @@ function register(ctx, second) {
     api.registerTool({
         name: 'llm_summarize_text',
         description: 'Summarize text into structured JSON.',
+        parameters: {
+            type: "object",
+            properties: {
+                text: { type: "string" },
+                schema: { type: "string" }
+            },
+            required: ["text"]
+        },
         execute: async (args) => {
             try {
+                if (typeof args.text !== 'string') {
+                    return { success: false, error: "Invalid argument: 'text' must be provided as a string. Please correct and retry." };
+                }
                 const rawText = args.text || "";
                 const schemaHint = args.schema || JSON.stringify({ summary: "string", key_points: ["string"], sentiment: "string" });
                 const systemPrompt = `ROLE: Data Transformation Node.\nTASK: Summarize text into structured JSON.\nSCHEMA: ${schemaHint}\nRULES: Output ONLY raw JSON. No conversational text. No markdown blocks.`;
@@ -80,8 +91,19 @@ function register(ctx, second) {
     api.registerTool({
         name: 'llm_extract_json',
         description: 'Extract raw JSON from unstructured text.',
+        parameters: {
+            type: "object",
+            properties: {
+                text: { type: "string" },
+                expected_schema: { type: "string" }
+            },
+            required: ["text"]
+        },
         execute: async (args) => {
             try {
+                if (typeof args.text !== 'string') {
+                    return { success: false, error: "Invalid argument: 'text' must be provided as a string. Please correct and retry." };
+                }
                 const rawText = args.text || "";
                 const schemaHint = args.expected_schema || "Any JSON object or array.";
                 const systemPrompt = `ROLE: Data Extraction Node.\nTASK: Extract JSON from text.\nSCHEMA: ${schemaHint}\nRULES: Output ONLY raw JSON. No markdown blocks.`;
@@ -97,6 +119,14 @@ function register(ctx, second) {
     api.registerTool({
         name: 'llm_classify_intent',
         description: 'Classify the intent of a text payload.',
+        parameters: {
+            type: "object",
+            properties: {
+                text: { type: "string" },
+                categories: { type: "array", items: { type: "string" } }
+            },
+            required: ["text", "categories"]
+        },
         execute: async (args) => {
             try {
                 if (!args.categories || !Array.isArray(args.categories)) {

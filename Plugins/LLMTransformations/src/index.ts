@@ -70,8 +70,19 @@ export default function register(ctx: any, second: any) {
     api.registerTool({
         name: 'llm_summarize_text',
         description: 'Summarize text into structured JSON.',
+        parameters: {
+            type: "object",
+            properties: {
+                text: { type: "string" },
+                schema: { type: "string" }
+            },
+            required: ["text"]
+        },
         execute: async (args: { text: string, schema?: string }) => {
             try {
+                if (typeof args.text !== 'string') {
+                    return { success: false, error: "Invalid argument: 'text' must be provided as a string. Please correct and retry." };
+                }
                 const rawText = args.text || "";
                 const schemaHint = args.schema || JSON.stringify({ summary: "string", key_points: ["string"], sentiment: "string" });
                 
@@ -89,8 +100,19 @@ export default function register(ctx: any, second: any) {
     api.registerTool({
         name: 'llm_extract_json',
         description: 'Extract raw JSON from unstructured text.',
+        parameters: {
+            type: "object",
+            properties: {
+                text: { type: "string" },
+                expected_schema: { type: "string" }
+            },
+            required: ["text"]
+        },
         execute: async (args: { text: string, expected_schema?: string }) => {
             try {
+                if (typeof args.text !== 'string') {
+                    return { success: false, error: "Invalid argument: 'text' must be provided as a string. Please correct and retry." };
+                }
                 const rawText = args.text || "";
                 const schemaHint = args.expected_schema || "Any JSON object or array.";
                 
@@ -108,6 +130,14 @@ export default function register(ctx: any, second: any) {
     api.registerTool({
         name: 'llm_classify_intent',
         description: 'Classify the intent of a text payload.',
+        parameters: {
+            type: "object",
+            properties: {
+                text: { type: "string" },
+                categories: { type: "array", items: { type: "string" } }
+            },
+            required: ["text", "categories"]
+        },
         execute: async (args: { text: string, categories: string[] }) => {
             try {
                 if (!args.categories || !Array.isArray(args.categories)) {

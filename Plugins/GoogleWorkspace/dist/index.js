@@ -32,7 +32,7 @@ function register(ctx, second) {
     api.registerTool({
         name: 'gog',
         description: 'Execute a command using the native gog CLI for Google Workspace operations (Gmail, Tasks, Calendar, etc).',
-        schema: {
+        parameters: {
             type: "object",
             properties: {
                 args: {
@@ -42,18 +42,73 @@ function register(ctx, second) {
             },
             required: ["args"]
         },
-        execute: async (input) => {
+        execute: async (...execArgs) => {
+            console.error('=== GOG TOOL EXECUTED ===', execArgs);
+            const input = execArgs.length > 1 ? execArgs[1] : execArgs[0];
             try {
                 // Ensure we are only running the gog binary to prevent arbitrary shell injection
                 const gogBin = process.env.GOG_BIN_PATH || '/home/marku/.local/bin/gog';
-                const cmd = `${gogBin} ${input.args}`;
+                let argsString = "";
+                if (typeof input === "string") {
+                    try {
+                        const parsed = JSON.parse(input);
+                        if (parsed.args)
+                            argsString = parsed.args;
+                        else if (parsed.params && parsed.params.args)
+                            argsString = parsed.params.args;
+                        else
+                            argsString = input;
+                    }
+                    catch (e) {
+                        argsString = input;
+                    }
+                }
+                else if (input && typeof input === "object") {
+                    if (typeof input.args === "string") {
+                        argsString = input.args;
+                    }
+                    else if (input.params && typeof input.params.args === "string") {
+                        argsString = input.params.args;
+                    }
+                    else {
+                        // Just stringify the whole thing so it doesn't crash with 'undefined'
+                        argsString = JSON.stringify(input);
+                    }
+                }
+                else {
+                    return { success: false, error: `Invalid tool input. Received: ${typeof input} ${String(input)}` };
+                }
+                if (argsString === "undefined" || !argsString) {
+                    return { success: false, error: "Parsed argsString is empty or undefined literal. Input was: " + JSON.stringify(input) };
+                }
                 // Jidoka validation: Strict timeout to prevent zombie subshells
-                const { stdout, stderr } = await execAsync(cmd, { timeout: 10000 });
+                // Determine the binary to use
+                let binary = 'gogcli';
+                const { execSync } = require('child_process');
+                try {
+                    execSync('which gogcli', { stdio: 'ignore' });
+                }
+                catch {
+                    try {
+                        execSync('which gog', { stdio: 'ignore' });
+                        binary = 'gog';
+                    }
+                    catch {
+                        throw new Error('Neither gogcli nor gog found in PATH');
+                    }
+                }
+                // Prepare environment with password if available
+                const env = { ...process.env };
+                if (!env.GOG_KEYRING_PASSWORD) {
+                    
+                }
+                const cmd = `${binary} ${argsString}`;
+                const { stdout, stderr } = await execAsync(cmd, { timeout: 10000, env });
                 if (stderr && stderr.trim().length > 0 && !stdout) {
                     return { success: false, error: stderr.trim() };
                 }
                 // Attempt to parse JSON if the command was requested with --json
-                if (input.args.includes('--json')) {
+                if (argsString.includes('--json')) {
                     try {
                         return { success: true, data: JSON.parse(stdout) };
                     }
@@ -64,6 +119,7 @@ function register(ctx, second) {
                 return { success: true, output: stdout.trim() };
             }
             catch (error) {
+                console.error('=== GOG EXEC ERROR ===', error);
                 // Jidoka: Deterministic error reporting for self-healing Andon loop
                 return {
                     success: false,

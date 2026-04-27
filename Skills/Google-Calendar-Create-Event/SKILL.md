@@ -17,12 +17,12 @@ This skill allows the agent to create a new event in Google Calendar using the n
 
 ## Cognitive Directives
 WHEN [A new event needs to be scheduled or created in the calendar]
-THEN [Execute the native terminal command `gog calendar create <calendarId> --summary "..." --from "..." --to "..."`]
+THEN [Execute the `gog` tool with the `args` parameter]
 
 ## Schema Example
 ```json
 {
-  "command": "gog calendar create primary --summary \"New Sync Meeting\" --from \"2026-04-26T10:00:00Z\" --to \"2026-04-26T11:00:00Z\" --json"
+  "args": "calendar create primary --summary \"New Sync Meeting\" --from \"2026-04-26T10:00:00Z\" --to \"2026-04-26T11:00:00Z\" --json"
 }
 ```
 
