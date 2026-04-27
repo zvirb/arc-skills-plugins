@@ -17,12 +17,12 @@ This skill allows the agent to update an existing task in Google Tasks using the
 
 ## Cognitive Directives
 WHEN [An existing task needs to be modified or updated]
-THEN [Execute the native terminal command `gog tasks update <tasklistId> <taskId> --title "..." --status "..."`]
+THEN [Invoke the `gog` tool with the argument `tasks update <tasklistId> <taskId> --title "..." --status "..."`]
 
 ## Schema Example
 ```json
 {
-  "command": "gog tasks update @default task_id_123 --title \"Buy milk and bread\" --status \"needsAction\" --json"
+  "args": "tasks update @default task_id_123 --title \"Buy milk and bread\" --status \"needsAction\" --json"
 }
 ```
 

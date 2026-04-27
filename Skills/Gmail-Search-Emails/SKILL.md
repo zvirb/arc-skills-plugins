@@ -17,12 +17,12 @@ This skill allows the agent to search for emails in Gmail using specific queries
 
 ## Cognitive Directives
 WHEN [Requested to search for an email or find specific communications]
-THEN [Execute the native terminal command `gog gmail search "query" --json`]
+THEN [Invoke the `gog` tool with the argument `gmail search "query" --json`]
 
 ## Schema Example
 ```json
 {
-  "command": "gog gmail search \"from:example@gmail.com subject:invoice\" --json"
+  "args": "gmail search \"from:example@gmail.com subject:invoice\" --json"
 }
 ```
 

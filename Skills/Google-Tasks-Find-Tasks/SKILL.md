@@ -19,14 +19,14 @@ This skill allows the agent to search for active tasks in Google Tasks using the
 WHEN [Requested to list tasks or find a specific task in Google Tasks]
 THEN [
   Execute the following Jidoka-validated loop:
-  1. **Execute Node:** Execute the native terminal command `gog tasks list <tasklistId> --json` (with optional flags like `--show-completed` or `--due-max`).
+  1. **Execute Node:** Invoke the `gog` tool with the argument `tasks list <tasklistId> --json` (with optional flags like `--show-completed` or `--due-max`).
   2. **Verification Step (Jidoka):** Check if the output is a valid JSON array. IF the command fails or returns an error message, wait 3 seconds and retry (max 3 times). IF it still fails, report the error to the user and STOP.
 ]
 
 ## Schema Example
 ```json
 {
-  "command": "gog tasks list @default --json"
+  "args": "tasks list @default --json"
 }
 ```
 

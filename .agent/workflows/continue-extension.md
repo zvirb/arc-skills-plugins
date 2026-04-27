@@ -59,6 +59,34 @@ Maintain adherence to the following Lean principles during execution:
    - Log any errors or verbose traces to the `Logs/` directory (which is safely Git-ignored).
    - If OpenClaw is running in WSL2, you MUST sync the updated skills to its workspace first (e.g., `wsl cp -r /mnt/d/openClaw/Skills/* ~/.openclaw/workspace/skills/`) before running any native `openclaw` validations.
    - **CRITICAL DEPLOYMENT STEP:** You MUST manually bind the new skill to the target agent in `openclaw.json`. Skills are not automatically visible to agents just because they are in the workspace. You must add the skill slug to the `agents.list[0].skills` array (e.g. for the "main" agent) in `openclaw.json` before running tests or restarting the gateway!
+   - **Observation and Testing Methods:**
+     Test that the skill or plugin built and deployed to both alienware and local wsl open claw actually functions as it should. Reiterate until you can confirm that the tool works as expected. **CRITICAL:** You must retrieve confirmation that the tool worked. Use another tool to independently verify that the tool did what was expected (e.g., check that there is a new calendar event created as expected, check that there is a new task as expected, or check that the returned information is accurate by retrieving that information from an independent source):
+
+     If your goal is to send a single command and clearly **observe** the agent's thought process, tool execution, and task completion, you have a few ways to do it depending on how much detail you want to see:
+
+     **1. The TUI (Best for Observing Execution)**
+     If you want to watch the agent "think" and see the exact background actions (like shell commands or file reads) it takes to complete your task, the Text User Interface is the best tool:
+     ```bash
+     openclaw tui
+     ```
+     Type your task, hit Enter, and press `[L]` to toggle the split-pane log viewer. This lets you watch the agent's step-by-step execution in real time as it works through the problem.
+
+     **2. The One-Liner (Best for Quick Terminal Execution)**
+     If you just want to fire off a task from your standard command line, let it process, and get the final output without staying in a chat session, you can pipe your request directly into the chat command:
+     ```bash
+     echo "Your assigned task here" | openclaw chat
+     ```
+     OpenClaw will ingest the standard input, execute the required reasoning and tool calls, print the final response to your terminal, and then exit back to your normal prompt.
+
+     **3. Send and Tail Logs (Best for Background Tasks)**
+     If you want to dispatch a task to an existing session or channel and watch the raw system logs to verify its completion:
+     ```bash
+     # Send the message
+     openclaw message send --target <session_id> --message "Your assigned task here"
+
+     # Watch the raw execution logs to verify it completes
+     openclaw logs --follow
+     ```
 4. **Knowledge Preservation:**
    - If a new lesson, workaround, or bug fix is discovered during the session, immediately update the extension's documentation, `Docs/context.md`, or the `SKILL.md` file (Continuous Learning directive).
 5. **Next Steps:**

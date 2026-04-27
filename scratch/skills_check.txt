@@ -1,0 +1,96 @@
+Skills Status Check
+
+Total: 114
+✓ Eligible: 80
+⏸ Disabled: 31
+🚫 Blocked by allowlist: 0
+✗ Missing requirements: 3
+
+Ready to use:
+  📦 Agents
+  📦 backlog-grooming
+  📦 calendar-guard
+  📦 capture-classification
+  📦 clauditor
+  🎬 clawcoach-setup
+  📦 composio-cli
+  📦 CRM Entity Extraction
+  📦 daily-digest
+  📦 diffs
+  📦 executive-assistant-time-blocking
+  📦 flow-state-monitoring
+  ✨ gemini
+  📦 gemini-web-search
+  📦 gh-issues
+  🐙 github
+  📦 Gmail Delete Email
+  📦 Gmail Draft Email
+  📦 Gmail Modify Labels
+  📦 Gmail Retrieve Email
+  📦 Gmail Search Emails
+  📦 Gmail Send Email
+  📦 gog
+  📦 Google Calendar Create Event
+  📦 Google Calendar Delete Event
+  📦 Google Calendar Find Event
+  📦 Google Calendar Update Event
+  📦 Google Contacts Create
+  📦 Google Contacts Search
+  📦 Google Docs Create Document
+  📦 Google Docs Read Document
+  📦 Google Docs Update Document
+  📦 Google Drive Delete File
+  📦 Google Drive Download File
+  📦 Google Drive Search Files
+  📦 Google Drive Share File
+  📦 Google Drive Upload File
+  📦 Google Sheets Append Row
+  📦 Google Sheets Create Spreadsheet
+  📦 Google Sheets Read Range
+  📦 Google Sheets Update Range
+  📦 Google Tasks Complete Task
+  📦 Google Tasks Create Task
+  📦 Google Tasks Find Tasks
+  📦 Google Tasks Update Task
+  📍 goplaces
+  📦 healthcheck
+  📦 LLM Analyze Flow State
+  📦 LLM Classify Intent
+  📦 LLM Extract Action Items
+  📦 LLM Extract JSON
+  📦 LLM Find Duplicates
+  📦 LLM Identify Conflicts
+  📦 LLM Select Random Item
+  📦 LLM Summarize Text
+  📦 LLM-Refine-Tool-Use
+  📦 meeting-to-action
+  📦 micro-suck-generation
+  📄 nano-pdf
+  📦 node-connect
+  📦 nxt-pulse-agent
+  💎 obsidian
+  🎤 openai-whisper
+  📦 PostgreSQL
+  🪶 prose
+  📦 Redis
+  📜 session-logs
+  📦 skill-creator
+  💬 slack
+  🎵 spotify-player
+  🧾 summarize
+  🪝 taskflow
+  📥 taskflow-inbox-triage
+  🔍 tavily
+  🧵 tmux
+  📦 Vague Task Decomposition
+  📦 Vector Store Upsert Memory
+  📱 wacli
+  ☔ weather
+  🐦 xurl
+
+Missing requirements:
+  📦 clawhub (bins: clawhub)
+  🧩 coding-agent (anyBins: claude, codex, opencode, pi)
+  📦 memu (env: OPENAI_API_KEY)
+
+Tip: use `openclaw skills search`, `openclaw skills install`, and `openclaw skills update` for ClawHub-backed skills.

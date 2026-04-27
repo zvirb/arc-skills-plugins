@@ -7,7 +7,8 @@ export const manifest = {
   configSchema: {
     type: "object",
     properties: {}
-  }
+  },
+  dependencies: ["llm-transformations-plugin"]
 };
 
 export default function register(ctx: any, second: any) {
@@ -23,13 +24,23 @@ export default function register(ctx: any, second: any) {
                 // 1. Search for information
                 const searchResults = await api.callTool('exa_search', { query: args.topic, num_results: 3 });
                 
+                // Jidoka validation
+                if (!searchResults || !searchResults.results || !Array.isArray(searchResults.results)) {
+                     return { success: false, error: "exa_search failed to return valid results array. Please check the tool output and retry." };
+                }
+
                 // 2. Extract content from results
                 const content = searchResults.results.map((r: any) => r.text).join('\n\n');
                 
+                if (!content) {
+                     return { success: false, error: "Search results contained no text to summarize." };
+                }
+
                 // 3. Summarize via LLM Transformation
                 return await api.callTool('llm_summarize_text', { text: content });
             } catch (error: any) {
-                return { success: false, error: error.message };
+                // Return structured Jidoka error
+                return { success: false, error: `Workflow execution failed: ${error.message || 'Unknown error'}. Please correct and retry.` };
             }
         }
     });

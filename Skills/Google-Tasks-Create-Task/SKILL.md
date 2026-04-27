@@ -17,12 +17,12 @@ This skill allows the agent to create a new task in Google Tasks using the nativ
 
 ## Cognitive Directives
 WHEN [A new task needs to be added to a Google Tasks list]
-THEN [Execute the native terminal command `gog tasks add <tasklistId> --title "Task Title" --notes "Optional Notes" --due "ISO-Date"`]
+THEN [Invoke the `gog` tool with the argument `tasks add <tasklistId> --title "Task Title" --notes "Optional Notes" --due "ISO-Date"`]
 
 ## Schema Example
 ```json
 {
-  "command": "gog tasks add @default --title \"Buy milk\" --notes \"Organic whole milk\" --due \"2026-04-26T17:00:00Z\" --json"
+  "args": "tasks add @default --title \"Buy milk\" --notes \"Organic whole milk\" --due \"2026-04-26T17:00:00Z\" --json"
 }
 ```
 

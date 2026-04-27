@@ -56,3 +56,11 @@ Developers install a new skill via `openclaw skills install <path>` (which corre
 - **CRITICAL DEPLOYMENT STEP:** You MUST manually bind the new skill's slug to the target agent in `openclaw.json`. 
 - Locate the `agents.list` array, find your specific agent profile (e.g., `"id": "main"`), and append the skill to its `"skills": []` array.
 - Restart the `openclaw-gateway` service. Failure to explicitly bind the skill will result in a "Ghost Skill" that the engine loads but the agent cannot see.
+
+## 8. The CLI Hallucination Trap (Execution Missing)
+**The Issue:**
+Developers create Markdown skills (`SKILL.md`) with instructions like "Execute the native terminal command `gog tasks list`", assuming the LLM has a native `bash` or `shell` tool to run it. If no such generic execution tool exists, the LLM assumes `gog` is the literal name of a tool and hallucinates a tool call to `"name": "gog"`. The engine immediately rejects this with "Tool gog not found", breaking the workflow.
+**The Solution:**
+- Markdown Skills ONLY inject text into the agent's system prompt; they DO NOT magically create tools or grant terminal access.
+- If a skill workflow relies on a native CLI binary (like `gog` or `curl`), you MUST accompany it with a TypeScript Plugin that explicitly registers that binary as a tool (e.g., `api.registerTool('gog')`).
+- The Plugin must securely wrap the execution using `child_process.execAsync(cmd, { timeout: 10000 })` to ensure the agent has a valid target tool in its schema to invoke.

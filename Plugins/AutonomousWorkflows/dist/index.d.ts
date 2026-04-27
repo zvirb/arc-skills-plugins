@@ -6,5 +6,6 @@ export declare const manifest: {
         type: string;
         properties: {};
     };
+    dependencies: string[];
 };
 export default function register(ctx: any, second: any): void;

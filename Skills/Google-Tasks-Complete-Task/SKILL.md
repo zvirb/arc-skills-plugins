@@ -17,12 +17,12 @@ This skill allows the agent to mark a specific task as completed using the nativ
 
 ## Cognitive Directives
 WHEN [A task needs to be marked as finished or completed]
-THEN [Execute the native terminal command `gog tasks done <tasklistId> <taskId>`]
+THEN [Invoke the `gog` tool with the argument `tasks done <tasklistId> <taskId>`]
 
 ## Schema Example
 ```json
 {
-  "command": "gog tasks done @default task_id_123"
+  "args": "tasks done @default task_id_123"
 }
 ```
 
