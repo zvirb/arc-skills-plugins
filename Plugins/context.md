@@ -9,7 +9,9 @@ This folder contains Plugins for Open Claw.
 2. **Self-Containment:** Each plugin sub-folder should contain all its necessary source code, configuration files, manifests, and specific documentation.
 3. **Naming Convention:** Use clear, descriptive names for your plugin sub-folders.
 4. **Progress Tracking:** When planning, starting, or completing a plugin, you MUST update the central progress tracker located at `Docs/TODO.md`.
-5. **Continuous Learning:** Whenever a lesson is learned or a workaround is discovered during attempted work, you MUST immediately update this context file, the specific plugin's documentation, or the relevant workflow steps to ensure the new knowledge is explicitly preserved.
+5. **Compilation Requirement:** Since plugins are written in TypeScript, you MUST compile them (`npm run build`) before attempting to install or load them. Ensure the entry point in `package.json` points to the compiled JavaScript (`dist/`), not the raw TypeScript.
+6. **Extension Injection & Configuration Update:** Whenever copying or injecting unmanaged local skills or plugins into the global OpenClaw runtime environments (e.g., WSL or Alienware), you MUST also update the OpenClaw configuration so the engine recognizes them. A simple folder copy is insufficient. **CRITICAL:** You must follow the exact installation and registration procedures defined in [`Docs/Local_Extension_Installation.md`](../Docs/Local_Extension_Installation.md).
+7. **Continuous Learning:** Whenever a lesson is learned or a workaround is discovered during attempted work, you MUST immediately update this context file, the specific plugin's documentation, or the relevant workflow steps to ensure the new knowledge is explicitly preserved.
 
 ## Plugin Antipatterns & SDK Best Practices (The Native TS Pivot)
 Based on OpenClaw's Lean architecture and strict isolation requirements, the following antipatterns are explicitly forbidden in all Plugins:

@@ -55,7 +55,7 @@ export default function register(api: PluginApi, config: any) {
     execute: async (args: { tools: string[] }) => {
       try {
         if (!args.tools || !Array.isArray(args.tools)) {
-          return { success: false, error: "Invalid argument: 'tools' must be provided as an array of strings." };
+          return { success: false, error: "Invalid argument: 'tools' must be provided as an array of strings. Please correct and retry." };
         }
         
         const history = await loadHistory();
@@ -82,7 +82,7 @@ export default function register(api: PluginApi, config: any) {
     execute: async (args: { tool_name: string, error_encountered: string, argument_rule: string }) => {
       try {
         if (!args.tool_name || typeof args.tool_name !== 'string') {
-          return { success: false, error: "Invalid argument: 'tool_name' must be provided as a string." };
+          return { success: false, error: "Invalid argument: 'tool_name' must be provided as a string. Please correct and retry." };
         }
         
         const history = await loadHistory();
