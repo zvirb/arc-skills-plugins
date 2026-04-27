@@ -63,6 +63,7 @@ When responding to a request to build a capability:
   4. **Physical Verification:** Use the `browser` tool to navigate to the relevant Google Workspace URL (e.g., `tasks.google.com`, `calendar.google.com`) and confirm the expected change is visible.
 * **Supplemental Tooling:** If you identify that a workflow requires supplemental tooling or missing steps to function correctly (e.g., viewing a DB, installing a missing local binary), you MUST add those explicitly to the workflow or skill documentation. Do not rely on conversation memory.
 * **Extensive Research & Documentation Review:** Before implementation, you MUST research extensively online for up-to-date information regarding how tools and their underlying APIs work. You must have a full understanding of schemas, necessary commands, and database structures (if applicable) to ensure success. Do not rely on training data for evolving API specifications.
+* **Secret Management:** Any temporary or configuration files generated that contain API keys, passwords, authentication tokens, or other sensitive information MUST be placed exclusively in the `Secrets/` directory. This directory is explicitly ignored by Git. NEVER write sensitive credentials to `scratch/`, `Config/`, or the project root.
 
 ## 5. Lean Manufacturing Principles
 * **Kaizen (改善):** "Continuous improvement." Break processes apart (改) into simplest components and perfect (善) those tiny steps. Every node/skill must be an Atomic Node.
