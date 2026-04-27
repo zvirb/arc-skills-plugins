@@ -1,7 +1,10 @@
-import { PluginApi } from '@openclaw/plugin-sdk';
 export declare const manifest: {
     name: string;
     version: string;
-    dependencies: string[];
+    description: string;
+    configSchema: {
+        type: string;
+        properties: {};
+    };
 };
-export default function register(api: PluginApi): void;
+export default function register(ctx: any, second: any): void;

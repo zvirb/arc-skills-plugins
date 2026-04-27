@@ -3,8 +3,9 @@ name: Vague Task Decomposition
 description: Workflow-driven skill that decomposes vague task strings into actionable subtasks and dispatches them to Google Tasks.
 os: all
 requires:
+  bins:
+    - gog
   plugins:
-    - google-workspace-plugin
     - llm-transformations-plugin
 ---
 ## Lean Philosophy (Principles)
@@ -20,7 +21,7 @@ This skill orchestrates a workflow to decompose vague task descriptions into act
 WHEN [A task is too vague or complex to be executed directly]
 THEN [Execute the decomposition workflow:
   1. Call `llm_extract_action_items` to generate a list of subtasks.
-  2. For each subtask, call `gworkspace_tasks_create` to log it in Google Tasks.]
+  2. For each subtask, execute the native terminal command `gog tasks add @default --title "Subtask"` to log it in Google Tasks.]
 
 ## Schema Example
 ```json

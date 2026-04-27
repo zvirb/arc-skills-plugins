@@ -11,8 +11,10 @@ export const manifest = {
   }
 };
 
-export default function register(api: PluginApi, config: any) {
-    const model = config.defaultModel || "gemma4";
+export default function register(ctx: any, second: any) {
+    const api: PluginApi = ctx?.api || ctx;
+    const config = ctx?.pluginConfig || second || {};
+    const model = config?.defaultModel || "gemma4";
 
     // Standardized Jidoka Evaluator Loop for Atomic LLM Transformations (Native SDK implementation)
     async function executeWithJidoka(systemPrompt: string, payload: string, maxRetries: number = 3): Promise<any> {

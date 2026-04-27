@@ -1,32 +1,30 @@
 ---
 name: Google Docs Update Document
-description: Atomic node skill to update a Google Doc using the GoogleWorkspace plugin.
+description: Atomic node skill to update a Google Doc using the gog CLI.
 os: all
 requires:
-  plugins:
-    - google-workspace-plugin
+  bins:
+    - gog
 ---
 ## Lean Philosophy (Principles)
 - **Kaizen (改善):** This skill is an atomic node, broken down into its simplest, smallest component to eliminate waste and ensure perfection.
 - **Standardized Work (Hyojun Sagyo):** This node represents the most efficient, standardized path for this specific task before automation.
-- **Jidoka (自働化):** This node includes autonomous defect detection. It relies on the plugin's self-healing loop and will report errors if the update fails.
+- **Jidoka (自働化):** This node includes autonomous defect detection. It relies on the CLI's self-healing loop and will report errors if the update fails.
 
 # Google Docs Update Document
 
-This skill allows the agent to update or append content to a Google Document.
+This skill allows the agent to write or insert text into an existing Google Document using the native CLI.
 
 ## Cognitive Directives
-WHEN [A document ID is provided and content needs to be updated or appended]
-THEN [Execute the `gworkspace_docs_update` plugin tool]
+WHEN [Text needs to be added, written, or updated in a Google Doc]
+THEN [Execute the native terminal command `gog docs write <docId> --text "..."` or `gog docs edit <docId> <find> <replace>`]
 
 ## Schema Example
 ```json
 {
-  "documentId": "document_id_123",
-  "text": "Adding new project details...",
-  "index": 1
+  "command": "gog docs edit doc_id_123 \"old text\" \"new text\""
 }
 ```
 
 ## Expected Output
-A JSON object confirming the update.
+A JSON object or confirmation string indicating the update was successful.

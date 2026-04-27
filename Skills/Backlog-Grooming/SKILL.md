@@ -16,7 +16,10 @@ This skill directs the agent to trigger the native programmatic backlog grooming
 
 ## Cognitive Directives
 WHEN [Triggered by schedule or user request to groom backlog] 
-THEN [Execute the `workflow_backlog_grooming` plugin tool, which autonomously finds, summarizes via sub-agent, and archives tasks older than 30 days]
-
+THEN [
+  Execute the following Jidoka-validated loop:
+  1. **Execute Node:** Execute the `workflow_backlog_grooming` plugin tool with empty JSON `{}` to trigger the grooming process.
+  2. **Verification Step (Jidoka):** Check if the tool returns a valid JSON response with `{"success": true}` or an error message. IF it returns an error or hallucinated output, report the error, wait 3 seconds, and retry (max 3 times). IF it still fails, stop and notify the user.
+]
 ## Expected Output
 A JSON summary of the groomed tasks returned by the plugin.

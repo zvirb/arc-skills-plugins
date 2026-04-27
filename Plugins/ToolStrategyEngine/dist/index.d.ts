@@ -4,7 +4,7 @@ export declare const manifest: {
     configSchema: {
         type: string;
         properties: {
-            defaultModel: {
+            storageKey: {
                 type: string;
                 default: string;
             };

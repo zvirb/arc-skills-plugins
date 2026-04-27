@@ -3,7 +3,7 @@ name: CRM Entity Extraction
 description: Workflow-driven skill that bridges Gmail data extraction logic to Google Sheets or Google Contacts via Composio.
 os: all
 requires:
-  bins: []
+  bins: [gog]
 ---
 ## Lean Philosophy (Principles)
 - **Kaizen (改善):** This skill is an atomic node, broken down into its simplest, smallest component to eliminate waste and ensure perfection.
@@ -17,8 +17,11 @@ This skill extracts structured data (persons, organizations, dates) from raw tex
 ## Cognitive Directives
 WHEN [A business-related email or note containing CRM data is received]
 THEN [
+  Execute the following Jidoka-validated loop:
   1. Execute `llm_extract_json` (Sub-Agent) to extract structured entities (name, org, date).
-  2. Execute `gworkspace_sheets_append` to add the extracted JSON row to the CRM spreadsheet.
+     - **Verification Step (Jidoka):** Check if the sub-agent returns a valid JSON object matching the requested entity schema. IF it returns unstructured text or invalid JSON, instruct the sub-agent to format correctly and retry.
+  2. Execute the native terminal command `gog sheets append <spreadsheetId> <range> --values-json '[["..."]]'` to add the extracted JSON row to the CRM spreadsheet.
+     - **Verification Step (Jidoka):** Verify the `gog sheets append` command returns a successful JSON confirmation. IF the API request fails, wait 3 seconds and retry (max 3 times). IF it still fails, report the error and STOP.
 ]
 
 ## Expected Output

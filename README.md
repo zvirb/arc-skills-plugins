@@ -22,3 +22,13 @@ To maintain a clean and manageable repository, please adhere to the following ru
 2. **Strict Sub-Folder Isolation:** All code, assets, and documentation for a specific skill or plugin MUST live entirely within its designated sub-folder (e.g., `Skills/MySkill/`). Do not leak skill-specific files into the root or parent directories.
 3. **Use the Docs Folder:** Any overarching documentation or project-wide notes must go into the `Docs/` directory, not the root directory.
 4. **Clean Up:** Regularly delete temporary files and test scripts. If a script is useful globally, consider making it a proper utility within a designated folder rather than leaving it in the root.
+
+## Extension Installation & Deployment
+
+When deploying an extension (Skill or Plugin) to an OpenClaw gateway, remember the following critical rule:
+**Agents do NOT automatically inherit newly installed skills.** 
+You must explicitly configure the `openclaw.json` manifest:
+1. Install the extension via `openclaw skills install <path>` (or `plugins`).
+2. Add the skill's slug into the specific agent's profile array (e.g., `agents.list[0].skills`) inside `~/.openclaw/openclaw.json`.
+3. Restart the `openclaw-gateway` service.
+Failure to bind the skill to the agent's profile will result in the agent being completely unaware of the capability!

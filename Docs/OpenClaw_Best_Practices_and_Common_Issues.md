@@ -47,3 +47,12 @@ Writing `SKILL.md` files as conversational or overly verbose stories. The LLM lo
 Plugins attempting to manage their own state by hardcoding relative filesystem paths (e.g., `fs.writeFileSync('../../../Memory/state.json')`). This breaks sandboxing and fails across different operating systems.
 **The Solution:**
 - Exclusively use the native SDK storage handlers: `api.storage.get('key')` and `api.storage.set('key', value)`. The host engine determines where and how to persist this securely.
+
+## 7. Ghost Skills (The Registration Breach)
+**The Issue:**
+Developers install a new skill via `openclaw skills install <path>` (which correctly registers it in the `skills.entries` registry) but find that the agent is completely unaware of the skill and refuses to use it.
+**The Solution:**
+- In the OpenClaw architecture, skills are not automatically inherited by agents.
+- **CRITICAL DEPLOYMENT STEP:** You MUST manually bind the new skill's slug to the target agent in `openclaw.json`. 
+- Locate the `agents.list` array, find your specific agent profile (e.g., `"id": "main"`), and append the skill to its `"skills": []` array.
+- Restart the `openclaw-gateway` service. Failure to explicitly bind the skill will result in a "Ghost Skill" that the engine loads but the agent cannot see.

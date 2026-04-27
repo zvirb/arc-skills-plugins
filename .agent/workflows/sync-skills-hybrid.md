@@ -1,0 +1,45 @@
+# Hybrid Skill Synchronization Workflow (Local Injection & ClawHub Re-Attachment)
+
+## Overview
+This workflow automates the deployment of OpenClaw skills across multiple machines (Laptop/Local WSL and Remote Alienware Server) bypassing ClawHub rate limits for immediate availability, while preserving the ability to update them via the official registry once published.
+
+## Step 1: Local Injection (Bypass Rate Limits)
+Copy the latest skills from the development folder (`D:\openClaw\Skills`) directly into the OpenClaw managed workspace on all target machines. This makes them instantly available as "unmanaged" local skills.
+
+### Action (Laptop / Local WSL)
+```bash
+// turbo
+wsl bash -c "cp -r /mnt/d/openClaw/Skills/* ~/.openclaw/workspace/skills/"
+```
+
+### Action (Alienware Server)
+```bash
+// turbo
+ssh alienware "mkdir -p ~/.openclaw/workspace/skills && rsync -avP marku@laptop_ip:/mnt/d/openClaw/Skills/ ~/.openclaw/workspace/skills/"
+# Note: Alternatively, clone the git repo directly on Alienware to avoid SSH-from-SSH issues:
+ssh alienware "git clone https://github.com/zvirb/arc-skills-plugins.git /tmp/openclaw-skills || (cd /tmp/openclaw-skills && git pull) && cp -r /tmp/openclaw-skills/Skills/* ~/.openclaw/workspace/skills/"
+```
+
+## Step 2: Check ClawHub Publication Status
+Verify if the skills have been fully published to the ClawHub registry. This allows us to transition from "local unmanaged" to "ClawHub managed".
+
+```bash
+// turbo
+wsl bash -c "openclaw skills search \"\""
+```
+*(Manually compare the returned list with the local skills to determine if they are fully published.)*
+
+## Step 3: Re-attach to ClawHub (Regain Update Utility)
+Once a skill is officially published to ClawHub, re-install it to inject the `_meta.json` tracking files. This overwrites the local copy and turns it back into a managed skill, enabling `openclaw skills update`.
+
+### Action (Laptop / Local WSL)
+```bash
+// turbo
+wsl bash -c "for skill in ~/.openclaw/workspace/skills/*; do openclaw skills install \$(basename \"\$skill\"); done"
+```
+
+### Action (Alienware Server)
+```bash
+// turbo
+ssh alienware "for skill in ~/.openclaw/workspace/skills/*; do openclaw skills install \$(basename \"\$skill\"); done"
+```

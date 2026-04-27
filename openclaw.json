@@ -1,0 +1,650 @@
+{
+  "gateway": {
+    "mode": "local",
+    "port": 18771,
+    "bind": "loopback",
+    "auth": {
+      "mode": "token",
+      "token": "REDACTED"
+    },
+    "tailscale": {
+      "mode": "serve",
+      "resetOnExit": true
+    },
+    "remote": {
+      "url": "ws://100.109.60.113:18771"
+    }
+  },
+  "agents": {
+    "defaults": {
+      "workspace": "/home/marku/.openclaw/workspace",
+      "models": {
+        "ollama/gemma4": {},
+        "google/gemini-3.1-pro-preview": {}
+      },
+      "compaction": {
+        "mode": "safeguard"
+      },
+      "model": {
+        "primary": "google/gemini-3.1-pro-preview",
+        "fallbacks": [
+          "ollama/gemma4"
+        ]
+      }
+    },
+    "list": [
+      {
+        "id": "main",
+        "model": "ollama/gemma4",
+        "skills": [
+          "backlog-grooming",
+          "calendar-guard",
+          "capture-classification",
+          "clauditor",
+          "clawcoach-core",
+          "clawcoach-setup",
+          "clawemail",
+          "clawhub",
+          "coding-agent",
+          "composio-cli",
+          "composio-integration",
+          "crm-entity-extraction",
+          "daily-brief-digest",
+          "daily-digest",
+          "event-cancellation-reconciler",
+          "exa-search",
+          "flow-state-monitoring",
+          "gemini",
+          "gemini-web-search",
+          "gh-issues",
+          "github",
+          "gmail-delete-email",
+          "gmail-draft-email",
+          "gmail-modify-labels",
+          "gmail-retrieve-email",
+          "gmail-search-emails",
+          "gmail-send-email",
+          "gog",
+          "google-calendar-create-event",
+          "google-calendar-delete-event",
+          "google-calendar-find-event",
+          "google-calendar-update-event",
+          "google-contacts-create",
+          "google-contacts-search",
+          "google-docs-create-document",
+          "google-docs-read-document",
+          "google-docs-update-document",
+          "goplaces",
+          "healthcheck",
+          "imsg",
+          "linear",
+          "llm-analyze-flow-state",
+          "llm-classify-intent",
+          "llm-extract-action-items",
+          "llm-extract-json",
+          "llm-find-duplicates",
+          "llm-identify-conflicts",
+          "llm-refine-tool-use",
+          "llm-select-random-item",
+          "llm-summarize-text",
+          "mcporter",
+          "meeting-to-action",
+          "memu",
+          "micro-suck-generation",
+          "nano-pdf",
+          "node-connect",
+          "notion",
+          "nxt-pulse-agent",
+          "obsidian",
+          "open-prose",
+          "openai-whisper",
+          "pg",
+          "Playwright (Automation + MCP + Scraper)",
+          "prose",
+          "redis-store",
+          "sherpa-onnx-tts",
+          "skill-creator",
+          "slack",
+          "spotify-player",
+          "summarize",
+          "taskflow",
+          "taskflow-inbox-triage",
+          "tmux",
+          "vague-task-decomposition",
+          "weather"
+        ]
+      },
+      {
+        "id": "operator",
+        "name": "Operator",
+        "workspace": "/home/marku/.openclaw/workspace-operator",
+        "model": "ollama/qwen2.5:7b",
+        "heartbeat": {
+          "every": "45m",
+          "isolatedSession": true,
+          "lightContext": true,
+          "prompt": "Read HEARTBEAT.md and perform routine triage. Only alert me if something requires immediate attention, otherwise reply HEARTBEAT_OK."
+        },
+        "skills": [
+          "healthcheck",
+          "daily-digest",
+          "summarize",
+          "gog",
+          "linear"
+        ]
+      }
+    ]
+  },
+  "wizard": {
+    "lastRunAt": "2026-04-26T08:28:42.169Z",
+    "lastRunVersion": "2026.4.24",
+    "lastRunCommand": "onboard",
+    "lastRunMode": "remote"
+  },
+  "models": {
+    "mode": "merge",
+    "providers": {
+      "ollama": {
+        "baseUrl": "http://127.0.0.1:11450",
+        "api": "ollama",
+        "apiKey": "OLLAMA_API_KEY",
+        "models": [
+          {
+            "id": "gemma4",
+            "name": "gemma4",
+            "reasoning": false,
+            "input": [
+              "text"
+            ],
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0
+            },
+            "contextWindow": 128000,
+            "maxTokens": 8192
+          },
+          {
+            "id": "gemma4:latest",
+            "name": "gemma4:latest",
+            "reasoning": false,
+            "input": [
+              "text",
+              "image"
+            ],
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0
+            },
+            "contextWindow": 131072,
+            "maxTokens": 8192
+          },
+          {
+            "id": "gemma4:e4b",
+            "name": "gemma4:e4b",
+            "reasoning": false,
+            "input": [
+              "text",
+              "image"
+            ],
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0
+            },
+            "contextWindow": 131072,
+            "maxTokens": 8192
+          },
+          {
+            "id": "qwen2.5:7b",
+            "name": "qwen2.5:7b",
+            "reasoning": false,
+            "input": [
+              "text"
+            ],
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0
+            },
+            "contextWindow": 32768,
+            "maxTokens": 8192
+          }
+        ]
+      }
+    }
+  },
+  "auth": {
+    "profiles": {
+      "ollama:default": {
+        "provider": "ollama",
+        "mode": "api_key"
+      },
+      "google:default": {
+        "provider": "google",
+        "mode": "api_key"
+      }
+    }
+  },
+  "tools": {
+    "web": {
+      "search": {
+        "provider": "google",
+        "enabled": true,
+        "openaiCodex": {}
+      },
+      "fetch": {
+        "enabled": true
+      }
+    }
+  },
+  "plugins": {
+    "allow": [
+      "autonomous-workflows",
+      "google-workspace",
+      "llm-transformations",
+      "tool-strategy"
+    ],
+    "entries": {
+      "ollama": {
+        "enabled": true
+      },
+      "google": {
+        "config": {
+          "webSearch": {
+            "model": "gemini-3.1-flash-lite-preview",
+            "apiKey": "REDACTED"
+          }
+        },
+        "enabled": true
+      },
+      "diffs": {
+        "enabled": true
+      },
+      "duckduckgo": {
+        "enabled": true
+      },
+      "exa": {
+        "enabled": true
+      },
+      "llm-task": {
+        "enabled": true
+      },
+      "searxng": {
+        "enabled": true
+      },
+      "memory-core": {
+        "enabled": true,
+        "config": {
+          "dreaming": {
+            "frequency": "0 3 * * *"
+          }
+        }
+      },
+      "firecrawl": {
+        "enabled": true
+      },
+      "tavily": {
+        "enabled": true
+      },
+      "active-memory": {
+        "enabled": true
+      },
+      "brave": {
+        "enabled": true
+      },
+      "tokenjuice": {
+        "enabled": true
+      },
+      "skill-workshop": {
+        "enabled": true
+      },
+      "whatsapp": {
+        "enabled": true
+      },
+      "openshell": {
+        "enabled": true
+      },
+      "qqbot": {
+        "enabled": false
+      },
+      "slack": {
+        "enabled": false
+      },
+      "autonomous-workflows": {
+        "enabled": true,
+        "config": {
+          "localPath": "/home/marku/.openclaw/extensions/autonomous-workflows-plugin"
+        }
+      },
+      "google-workspace": {
+        "enabled": true,
+        "config": {
+          "localPath": "/home/marku/.openclaw/extensions/google-workspace-plugin",
+          "composioApiKey": "COMPOSIO_API_KEY"
+        }
+      },
+      "llm-transformations": {
+        "enabled": true,
+        "config": {
+          "localPath": "/home/marku/.openclaw/extensions/llm-transformations-plugin",
+          "defaultModel": "google/gemini-3.1-flash-lite-preview"
+        }
+      },
+      "tool-strategy": {
+        "enabled": true,
+        "config": {
+          "localPath": "/home/marku/.openclaw/extensions/tool-strategy-engine",
+          "storageKey": "TOOL_STRATEGY_STORAGE"
+        }
+      }
+    },
+    "slots": {
+      "memory": "memory-core"
+    }
+  },
+  "meta": {
+    "lastTouchedVersion": "2026.4.24",
+    "lastTouchedAt": "2026-04-27T05:22:24.197Z"
+  },
+  "skills": {
+    "entries": {
+      "clawemail": {
+        "enabled": false
+      },
+      "1password": {
+        "enabled": false
+      },
+      "apple-reminders": {
+        "enabled": false
+      },
+      "blogwatcher": {
+        "enabled": false
+      },
+      "bluebubbles": {
+        "enabled": false
+      },
+      "discord": {
+        "enabled": false
+      },
+      "gifgrep": {
+        "enabled": false
+      },
+      "himalaya": {
+        "enabled": false
+      },
+      "mcporter": {
+        "enabled": false
+      },
+      "imsg": {
+        "enabled": false
+      },
+      "model-usage": {
+        "enabled": false
+      },
+      "goplaces": {
+        "config": {
+          "apiKey": "REDACTED"
+        },
+        "enabled": true,
+        "apiKey": "REDACTED"
+      },
+      "openai-whisper": {
+        "enabled": true
+      },
+      "oracle": {
+        "enabled": false
+      },
+      "peekaboo": {
+        "enabled": false
+      },
+      "session-logs": {
+        "enabled": true
+      },
+      "songsee": {
+        "enabled": false
+      },
+      "things-mac": {
+        "enabled": false
+      },
+      "voice-call": {
+        "enabled": false
+      },
+      "video-frames": {
+        "enabled": false
+      },
+      "composio-integration": {
+        "enabled": true
+      },
+      "clawcoach-core": {
+        "enabled": false
+      },
+      "memu": {
+        "enabled": true
+      },
+      "apple-notes": {
+        "enabled": false
+      },
+      "bear-notes": {
+        "enabled": false
+      },
+      "camsnap": {
+        "enabled": false
+      },
+      "blucli": {
+        "enabled": false
+      },
+      "eightctl": {
+        "enabled": false
+      },
+      "notion": {
+        "enabled": false
+      },
+      "openai-whisper-api": {
+        "enabled": false
+      },
+      "ordercli": {
+        "enabled": false
+      },
+      "sag": {
+        "enabled": false
+      },
+      "sherpa-onnx-tts": {
+        "enabled": false
+      },
+      "sonoscli": {
+        "enabled": false
+      },
+      "trello": {
+        "enabled": false
+      },
+      "openhue": {
+        "enabled": false
+      },
+      "backlog-grooming": {
+        "enabled": true
+      },
+      "calendar-guard": {
+        "enabled": true
+      },
+      "capture-classification": {
+        "enabled": true
+      },
+      "crm-entity-extraction": {
+        "enabled": true
+      },
+      "flow-state-monitoring": {
+        "enabled": true
+      },
+      "gmail-delete-email": {
+        "enabled": true
+      },
+      "gmail-draft-email": {
+        "enabled": true
+      },
+      "gmail-modify-labels": {
+        "enabled": true
+      },
+      "gmail-retrieve-email": {
+        "enabled": true
+      },
+      "gmail-search-emails": {
+        "enabled": true
+      },
+      "gmail-send-email": {
+        "enabled": true
+      },
+      "google-calendar-create-event": {
+        "enabled": true
+      },
+      "google-calendar-delete-event": {
+        "enabled": true
+      },
+      "google-calendar-find-event": {
+        "enabled": true
+      },
+      "google-calendar-update-event": {
+        "enabled": true
+      },
+      "google-contacts-create": {
+        "enabled": true
+      },
+      "google-contacts-search": {
+        "enabled": true
+      },
+      "google-docs-create-document": {
+        "enabled": true
+      },
+      "google-docs-read-document": {
+        "enabled": true
+      },
+      "google-docs-update-document": {
+        "enabled": true
+      },
+      "google-drive-delete-file": {
+        "enabled": true
+      },
+      "google-drive-download-file": {
+        "enabled": true
+      },
+      "google-drive-search-files": {
+        "enabled": true
+      },
+      "google-drive-share-file": {
+        "enabled": true
+      },
+      "google-drive-upload-file": {
+        "enabled": true
+      },
+      "google-sheets-append-row": {
+        "enabled": true
+      },
+      "google-sheets-create-spreadsheet": {
+        "enabled": true
+      },
+      "google-sheets-read-range": {
+        "enabled": true
+      },
+      "google-sheets-update-range": {
+        "enabled": true
+      },
+      "google-tasks-complete-task": {
+        "enabled": true
+      },
+      "google-tasks-create-task": {
+        "enabled": true
+      },
+      "google-tasks-find-tasks": {
+        "enabled": true
+      },
+      "google-tasks-update-task": {
+        "enabled": true
+      },
+      "llm-analyze-flow-state": {
+        "enabled": true
+      },
+      "llm-classify-intent": {
+        "enabled": true
+      },
+      "llm-extract-action-items": {
+        "enabled": true
+      },
+      "llm-extract-json": {
+        "enabled": true
+      },
+      "llm-find-duplicates": {
+        "enabled": true
+      },
+      "llm-identify-conflicts": {
+        "enabled": true
+      },
+      "llm-refine-tool-use": {
+        "enabled": true
+      },
+      "llm-select-random-item": {
+        "enabled": true
+      },
+      "llm-summarize-text": {
+        "enabled": true
+      },
+      "micro-suck-generation": {
+        "enabled": true
+      },
+      "vague-task-decomposition": {
+        "enabled": true
+      },
+      "vector-store-upsert-memory": {
+        "enabled": true
+      },
+      "executive-assistant-time-blocking": {
+        "enabled": true
+      },
+      "event-cancellation-reconciler": {
+        "enabled": true
+      }
+    }
+  },
+  "update": {
+    "channel": "stable",
+    "checkOnStart": true,
+    "auto": {
+      "enabled": true,
+      "betaCheckIntervalHours": 1
+    }
+  },
+  "diagnostics": {
+    "enabled": true,
+    "otel": {
+      "enabled": true,
+      "metrics": true,
+      "logs": true
+    },
+    "cacheTrace": {
+      "includeMessages": true,
+      "includePrompt": true,
+      "includeSystem": true
+    }
+  },
+  "cli": {
+    "banner": {
+      "taglineMode": "off"
+    }
+  },
+  "channels": {
+    "whatsapp": {
+      "enabled": true,
+      "dmPolicy": "pairing"
+    },
+    "qqbot": {
+      "enabled": false
+    },
+    "slack": {
+      "enabled": false
+    }
+  }
+}

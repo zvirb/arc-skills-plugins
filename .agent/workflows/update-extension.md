@@ -58,6 +58,7 @@ All updates MUST enforce the following Lean principles:
    - **Critical Workflow Rule:** You MUST physically test the extension. All nodes and workflow chains must be tested end-to-end to ensure they actually work. 
    - Test LLM-driven nodes directly using native OpenClaw or by wiring in a local `ollama` model (e.g., `gemma4`) to ensure true integration resilience.
    - If OpenClaw is running in WSL2, you MUST sync the updated skills to its workspace first (e.g., `wsl cp -r /mnt/d/openClaw/Skills/* ~/.openclaw/workspace/skills/`).
+   - **CRITICAL DEPLOYMENT STEP:** You MUST manually bind the new skill to the target agent in `openclaw.json`. Skills are not automatically visible to agents just because they are in the workspace. You must add the skill slug to the `agents.list[0].skills` array (e.g. for the "main" agent) in `openclaw.json` before running tests or restarting the gateway!
    - Execute `wsl openclaw skills check` or `openclaw plugins list --verbose`.
 4. **State Tracking:**
    - Document the update in the extension's `README.md` or `SKILL.md` changelog.

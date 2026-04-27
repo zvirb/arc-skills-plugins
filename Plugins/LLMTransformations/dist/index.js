@@ -12,8 +12,10 @@ exports.manifest = {
         }
     }
 };
-function register(api, config) {
-    const model = config.defaultModel || "gemma4";
+function register(ctx, second) {
+    const api = ctx?.api || ctx;
+    const config = ctx?.pluginConfig || second || {};
+    const model = config?.defaultModel || "gemma4";
     // Standardized Jidoka Evaluator Loop for Atomic LLM Transformations (Native SDK implementation)
     async function executeWithJidoka(systemPrompt, payload, maxRetries = 3) {
         let errorFeedback = "";
