@@ -20,7 +20,13 @@ async function run() {
     }
     
     try {
-        const result = await gogTool.execute({ args: "tasks list @default --json" });
+        const result = await gogTool.execute({ 
+            action: "tasks.create", 
+            body: { 
+                title: "Alienware Jidoka Test Task", 
+                notes: "Testing auto-correction of tasks.create hallucination" 
+            } 
+        });
         console.log(JSON.stringify(result, null, 2));
     } catch (e) {
         console.error("Test error:", e);

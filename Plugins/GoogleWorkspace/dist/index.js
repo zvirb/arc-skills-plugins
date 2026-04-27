@@ -44,7 +44,8 @@ function register(ctx, second) {
         },
         execute: async (...execArgs) => {
             console.error('=== GOG TOOL EXECUTED ===', execArgs);
-            const input = execArgs.length > 1 ? execArgs[1] : execArgs[0];
+            // Handle both signature types: (params, ...) and (callId, params, ...)
+            const input = (typeof execArgs[0] === 'string' && execArgs[1] && typeof execArgs[1] === 'object') ? execArgs[1] : execArgs[0];
             try {
                 // Ensure we are only running the gog binary to prevent arbitrary shell injection
                 const gogBin = process.env.GOG_BIN_PATH || '/home/marku/.local/bin/gog';
@@ -56,6 +57,17 @@ function register(ctx, second) {
                             argsString = parsed.args;
                         else if (parsed.params && parsed.params.args)
                             argsString = parsed.params.args;
+                        else if (parsed.action) {
+                            // Handle stringified Composio-style payload
+                            const action = parsed.action.replace('.', ' ');
+                            let bodyArgs = "";
+                            if (parsed.body) {
+                                for (const [k, v] of Object.entries(parsed.body)) {
+                                    bodyArgs += ` --${k}="${String(v).replace(/"/g, '\\"')}"`;
+                                }
+                            }
+                            argsString = `${action}${bodyArgs}`;
+                        }
                         else
                             argsString = input;
                     }
@@ -70,15 +82,43 @@ function register(ctx, second) {
                     else if (input.params && typeof input.params.args === "string") {
                         argsString = input.params.args;
                     }
+                    else if (input.action) {
+                        // Jidoka: Flatten composio-style structured payload
+                        const action = String(input.action).replace('.', ' ');
+                        let bodyArgs = "";
+                        if (input.body && typeof input.body === "object") {
+                            for (const [k, v] of Object.entries(input.body)) {
+                                bodyArgs += ` --${k}="${String(v).replace(/"/g, '\\"')}"`;
+                            }
+                        }
+                        argsString = `${action}${bodyArgs}`;
+                    }
                     else {
-                        // Just stringify the whole thing so it doesn't crash with 'undefined'
-                        argsString = JSON.stringify(input);
+                        // Fallback: convert top-level keys to flags if possible, or stringify
+                        let fallbackArgs = "";
+                        for (const [k, v] of Object.entries(input)) {
+                            if (k !== 'args' && k !== 'params') {
+                                fallbackArgs += ` --${k}="${String(v).replace(/"/g, '\\"')}"`;
+                            }
+                        }
+                        argsString = fallbackArgs.trim() !== "" ? fallbackArgs.trim() : JSON.stringify(input);
                     }
                 }
                 else {
                     return { success: false, error: `Invalid tool input. Received: ${typeof input} ${String(input)}` };
                 }
-                if (argsString === "undefined" || !argsString) {
+                // Jidoka: Auto-correct common LLM hallucinations for Google Tasks schema (tasklistId requirement)
+                argsString = argsString.replace(/^tasks (create|add)\b(?!\s+@\w+)/i, 'tasks add @default');
+                argsString = argsString.replace(/^tasks\.(create|add)\b(?!\s+@\w+)/i, 'tasks add @default');
+                argsString = argsString.replace(/^tasks (list|ls)\b(?!\s+@\w+)/i, 'tasks list @default');
+                argsString = argsString.replace(/^tasks\.(list|ls)\b(?!\s+@\w+)/i, 'tasks list @default');
+                argsString = argsString.replace(/^tasks (update|edit|set)\b(?!\s+@\w+)/i, 'tasks update @default');
+                argsString = argsString.replace(/^tasks\.(update|edit|set)\b(?!\s+@\w+)/i, 'tasks update @default');
+                argsString = argsString.replace(/^tasks (done|complete)\b(?!\s+@\w+)/i, 'tasks done @default');
+                argsString = argsString.replace(/^tasks\.(done|complete)\b(?!\s+@\w+)/i, 'tasks done @default');
+                argsString = argsString.replace(/^tasks (delete|rm|remove)\b(?!\s+@\w+)/i, 'tasks delete @default');
+                argsString = argsString.replace(/^tasks\.(delete|rm|remove)\b(?!\s+@\w+)/i, 'tasks delete @default');
+                if (argsString === "undefined" || !argsString || argsString.trim() === "") {
                     return { success: false, error: "Parsed argsString is empty or undefined literal. Input was: " + JSON.stringify(input) };
                 }
                 // Jidoka validation: Strict timeout to prevent zombie subshells
@@ -94,7 +134,18 @@ function register(ctx, second) {
                         binary = 'gog';
                     }
                     catch {
-                        throw new Error('Neither gogcli nor gog found in PATH');
+                        // Fallback to absolute paths if 'which' fails due to systemd PATH stripping
+                        const fs = require('fs');
+                        const defaultPath = process.env.GOG_BIN_PATH || '/home/marku/.local/bin/gog';
+                        if (fs.existsSync(defaultPath)) {
+                            binary = defaultPath;
+                        }
+                        else if (fs.existsSync('/home/marku/.local/bin/gogcli')) {
+                            binary = '/home/marku/.local/bin/gogcli';
+                        }
+                        else {
+                            throw new Error('Neither gogcli nor gog found in PATH or standard local bin directories');
+                        }
                     }
                 }
                 // Prepare environment with password if available
