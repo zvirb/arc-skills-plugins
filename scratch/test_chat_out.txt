@@ -2,7 +2,7 @@
  local ready | idle                                                             [0m]8;;
  agent main | session main | unknown | tokens ?                                 [0m]8;;
 ────────────────────────────────────────────────────────────────────────────────[0m]8;;
-Please use the gog tool to retrieve my incomplete Google Tasks                  [0m]8;;
+Create a task in Google Tasks called 'Buy Organic Milk' due tomorrow            [0m]8;;
 [7m [0m                                                                               [0m]8;;
 ────────────────────────────────────────────────────────────────────────────────[0m]8;;[?2026l[1A[1G[?25l[>4;2m[?2026h[4A[2K[0m]8;;
 [2K session agent:main:main                                                        [0m]8;;
@@ -224,9 +224,84 @@ Please use the gog tool to retrieve my incomplete Google Tasks                  
 [2Kcheck your plan and billing details. For more information on this error, head   [0m]8;;
 [2Kto: ]8;;https://ai.google.dev/gemini-api/docs/rate-limits.https://ai.google.dev/gemini-api/docs/rate-limits.]8;; To monitor your current  [0m]8;;
 [2Kusage, head to: https:… [code=RESOURCE_EXHAUSTED]                               [0m]8;;
+[2K[0m]8;;
+[2K                                                                                [0m]8;;
+[2KCreate a task in Google Tasks called Buy Organic Milk due tomorrow              [0m]8;;
+[2K                                                                                [0m]8;;
+[2K[0m]8;;
+[2Kfetch failed | connect ECONNREFUSED 127.0.0.1:11450                             [0m]8;;
+[2K[0m]8;;
+[2Kfetch failed | connect ECONNREFUSED 127.0.0.1:11450                             [0m]8;;
+[2K[0m]8;;
+[2Kfetch failed | connect ECONNREFUSED 127.0.0.1:11450                             [0m]8;;
+[2K[0m]8;;
+[2Kfetch failed | connect ECONNREFUSED 127.0.0.1:11450                             [0m]8;;
+[2K[0m]8;;
+[2K                                                                                [0m]8;;
+[2K[Retry after the previous model attempt failed or timed out]                    [0m]8;;
+[2K                                                                                [0m]8;;
+[2K[Mon 2026-04-27 16:58 GMT+10] Create a task in Google Tasks called Buy Organic  [0m]8;;
+[2KMilk due tomorrow                                                               [0m]8;;
+[2K                                                                                [0m]8;;
+[2K[0m]8;;
+[2KGoogle Generative AI API error (429): {                                         [0m]8;;
+[2K  "error": {                                                                    [0m]8;;
+[2K    "code": 429,                                                                [0m]8;;
+[2K    "message": "You exceeded your current quota, please check your plan and     [0m]8;;
+[2Kbilling details. For more information on this error, head to:                   [0m]8;;
+[2K]8;;https://ai.google.dev/gemini-api/docs/rate-limits.https://ai.google.dev/gemini-api/docs/rate-limits.]8;; To monitor your current      [0m]8;;
+[2Kusage, head to: ]8;;https://ai.dev/rate-limit.https://ai.dev/rate-limit.]8;; \n* Quota exceeded for metric:       [0m]8;;
+[2Kgenerativelanguage.googleapis.com/generate_requests_per_model_per_day, limit:   [0m]8;;
+[2K250, model: gemini-3.1-pro\nPlease retry in 17h34.887942253s.",                 [0m]8;;
+[2K    "status": "RESOURCE_EXHAUSTED",                                             [0m]8;;
+[2K    "details": [                                                                [0m]8;;
+[2K      {                                                                         [0m]8;;
+[2K        "@type": "type.googleapis.com/go…                                       [0m]8;;
+[2K[0m]8;;
+[2KGoogle Generative AI API error (429): {                                         [0m]8;;
+[2K  "error": {                                                                    [0m]8;;
+[2K    "code": 429,                                                                [0m]8;;
+[2K    "message": "You exceeded your current quota, please check your plan and     [0m]8;;
+[2Kbilling details. For more information on this error, head to:                   [0m]8;;
+[2K]8;;https://ai.google.dev/gemini-api/docs/rate-limits.https://ai.google.dev/gemini-api/docs/rate-limits.]8;; To monitor your current      [0m]8;;
+[2Kusage, head to: ]8;;https://ai.dev/rate-limit.https://ai.dev/rate-limit.]8;; \n* Quota exceeded for metric:       [0m]8;;
+[2Kgenerativelanguage.googleapis.com/generate_requests_per_model_per_day, limit:   [0m]8;;
+[2K250, model: gemini-3.1-pro\nPlease retry in 17h32.079228661s.",                 [0m]8;;
+[2K    "status": "RESOURCE_EXHAUSTED",                                             [0m]8;;
+[2K    "details": [                                                                [0m]8;;
+[2K      {                                                                         [0m]8;;
+[2K        "@type": "type.googleapis.com/go…                                       [0m]8;;
+[2K[0m]8;;
+[2KGoogle Generative AI API error (429): {                                         [0m]8;;
+[2K  "error": {                                                                    [0m]8;;
+[2K    "code": 429,                                                                [0m]8;;
+[2K    "message": "You exceeded your current quota, please check your plan and     [0m]8;;
+[2Kbilling details. For more information on this error, head to:                   [0m]8;;
+[2K]8;;https://ai.google.dev/gemini-api/docs/rate-limits.https://ai.google.dev/gemini-api/docs/rate-limits.]8;; To monitor your current      [0m]8;;
+[2Kusage, head to: ]8;;https://ai.dev/rate-limit.https://ai.dev/rate-limit.]8;; \n* Quota exceeded for metric:       [0m]8;;
+[2Kgenerativelanguage.googleapis.com/generate_requests_per_model_per_day, limit:   [0m]8;;
+[2K250, model: gemini-3.1-pro\nPlease retry in 17h27.659653585s.",                 [0m]8;;
+[2K    "status": "RESOURCE_EXHAUSTED",                                             [0m]8;;
+[2K    "details": [                                                                [0m]8;;
+[2K      {                                                                         [0m]8;;
+[2K        "@type": "type.googleapis.com/go…                                       [0m]8;;
+[2K[0m]8;;
+[2KGoogle Generative AI API error (429): {                                         [0m]8;;
+[2K  "error": {                                                                    [0m]8;;
+[2K    "code": 429,                                                                [0m]8;;
+[2K    "message": "You exceeded your current quota, please check your plan and     [0m]8;;
+[2Kbilling details. For more information on this error, head to:                   [0m]8;;
+[2K]8;;https://ai.google.dev/gemini-api/docs/rate-limits.https://ai.google.dev/gemini-api/docs/rate-limits.]8;; To monitor your current      [0m]8;;
+[2Kusage, head to: ]8;;https://ai.dev/rate-limit.https://ai.dev/rate-limit.]8;; \n* Quota exceeded for metric:       [0m]8;;
+[2Kgenerativelanguage.googleapis.com/generate_requests_per_model_per_day, limit:   [0m]8;;
+[2K250, model: gemini-3.1-pro\nPlease retry in 17h19.025568093s.",                 [0m]8;;
+[2K    "status": "RESOURCE_EXHAUSTED",                                             [0m]8;;
+[2K    "details": [                                                                [0m]8;;
+[2K      {                                                                         [0m]8;;
+[2K        "@type": "type.googleapis.com/go…                                       [0m]8;;
 [2K local ready | idle                                                             [0m]8;;
 [2K agent main | session main | ollama/gemma4 | tokens ?/1.0m                      [0m]8;;
 [2K────────────────────────────────────────────────────────────────────────────────[0m]8;;
-[2KPlease use the gog tool to retrieve my incomplete Google Tasks                  [0m]8;;
+[2KCreate a task in Google Tasks called 'Buy Organic Milk' due tomorrow            [0m]8;;
 [2K[7m [0m                                                                               [0m]8;;
 [2K────────────────────────────────────────────────────────────────────────────────[0m]8;;[?2026l[1A[1G[?25l

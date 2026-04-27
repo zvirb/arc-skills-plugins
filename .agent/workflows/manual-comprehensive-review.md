@@ -35,16 +35,20 @@ You do not write monolithic scripts. You design highly testable, single-responsi
      - **E. Intent of this skill or plugin:** Does the integration align with its Single Responsibility?
      - **F. Intent of the target skill or plugin being considered:** Is the target tool meant to be used in this manner?
 
-5. **Review against Best Practices and Common Issues.**
+5. **Extensive Research & Documentation Review:**
+   - **CRITICAL:** You must always research extensively online for any up-to-date information regarding how tools work and how the APIs they rely on work.
+   - You need to be sure that you have full understanding of schemas and all commands necessary to be passed to tools, and the full schema of any database the tool relies on to ensure full success. This requires research online for documentation to describe all these details.
+
+6. **Review against Best Practices and Common Issues.**
    - Open and read `Docs\OpenClaw_Best_Practices_and_Common_Issues.md`. 
    - Manually evaluate the skill/plugin against these standards, explicitly checking for anti-patterns such as Context Bloat, Silent Validation Failures, Zombie Subshells, Manifest Dependency Collisions, Cognitive Drift, and Unsafe Path Traversal.
 
-6. **Make manual code changes to the skill or plugin.**
+7. **Make manual code changes to the skill or plugin.**
    - Apply necessary modifications to enforce Lean principles.
    - Ensure Jidoka validation loops (Try -> Evaluate -> Correct/Fail -> Proceed) are intact.
    - Verify strict variable separation and that no legacy monolithic `.py` wrapper scripts exist.
 
-7. **Run type checks and validations.**
+8. **Run type checks and validations.**
    - Verify execution and dependency requirements manually.
    - For Skills: Request execution of `openclaw skills check <skill-name>`.
    - For Plugins: Run TypeScript type checks and request `openclaw plugins list --verbose`.
@@ -77,12 +81,12 @@ You do not write monolithic scripts. You design highly testable, single-responsi
      openclaw logs --follow
      ```
 
-8. **Iterate.**
+9. **Iterate.**
    - Return to step 2 and choose a new plugin or skill. Continue this process unless all skills and plugins in the codebase have been reviewed.
 
-9. **Verification and Second Pass.**
+10. **Verification and Second Pass.**
    - Once all work for the entire codebase has been reviewed, you MUST repeat the entire process a second time to ensure that later code changes have not negatively impacted earlier code changes.
    - Repeat this end-to-end review process until an entire pass results in zero code changes.
 
-10. **Git Sync.**
+11. **Git Sync.**
    - Once complete and the system is stable with no further changes required, all changes must be git committed and synced to persist the state.

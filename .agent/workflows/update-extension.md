@@ -49,11 +49,14 @@ All updates MUST enforce the following Lean principles:
    - **Architectural Audit:** Check for any legacy Python orchestration scripts (`.py` files) wrapping OpenClaw within the `Skills/` or `Workflows/` directories. These are anti-patterns and must be purged.
    - For Skills: Skills must contain ONLY a `SKILL.md` file. Check for overly complex instructions. Simplify to "one skill, one responsibility". Verify YAML frontmatter.
    - For Plugins: If programmatic logic exists, it MUST be migrated to a proper TypeScript Plugin. Verify SDK imports (`@openclaw/plugin-sdk`), explicit `register(api)` calls, and `package.json` compatibility definitions.
-2. **Refactoring:**
+2. **Extensive Research & Documentation Review:**
+   - **CRITICAL:** You must always research extensively online for any up-to-date information regarding how tools work and how the APIs they rely on work.
+   - You need to be sure that you have full understanding of schemas and all commands necessary to be passed to tools, and the full schema of any database the tool relies on to ensure full success. This requires research online for documentation to describe all these details.
+3. **Refactoring:**
    - Apply necessary updates. Delete legacy Python scripts.
    - Transition programmatic logic into registered TypeScript Plugin tools.
    - Ensure all secrets are gated behind environment variables and are never hardcoded.
-3. **Validation & Testing:**
+4. **Validation & Testing:**
    - Run existing tests and add new tests covering the refactored logic in `Tests/`.
    - **Critical Workflow Rule:** You MUST physically test the extension. All nodes and workflow chains must be tested end-to-end to ensure they actually work. 
    - Test LLM-driven nodes directly using native OpenClaw or by wiring in a local `ollama` model (e.g., `gemma4`) to ensure true integration resilience.
@@ -88,12 +91,12 @@ All updates MUST enforce the following Lean principles:
      # Watch the raw execution logs to verify it completes
      openclaw logs --follow
      ```
-4. **State Tracking:**
+5. **State Tracking:**
    - Document the update in the extension's `README.md` or `SKILL.md` changelog.
    - If the update resolves an outstanding issue, update `Docs/TODO.md`.
-5. **Next Steps:**
+6. **Next Steps:**
    - Always suggest next steps based on the user's intent in the last prompt.
-6. **Git Sync:**
+7. **Git Sync:**
    - Always perform a git commit and sync (push) at the end of the workflow to persist changes.
 
 

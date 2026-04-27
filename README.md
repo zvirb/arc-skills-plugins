@@ -32,3 +32,8 @@ You must explicitly configure the `openclaw.json` manifest:
 2. Add the skill's slug into the specific agent's profile array (e.g., `agents.list[0].skills`) inside `~/.openclaw/openclaw.json`.
 3. Restart the `openclaw-gateway` service.
 Failure to bind the skill to the agent's profile will result in the agent being completely unaware of the capability!
+
+## Development Standard: Research & Verification
+To ensure high-fidelity automation and eliminate hallucinations:
+- **Mandatory Online Research:** Always retrieve the latest API/Tool schemas from the web before implementation.
+- **Independent Browser Verification:** For all Google Workspace tools, use the `browser` tool to physically confirm that actions (like task creation or email sending) were successful in the user's workspace.

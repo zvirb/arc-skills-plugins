@@ -49,12 +49,15 @@ All development MUST adhere to the following Lean principles:
    - **NO PYTHON ORCHESTRATORS.** Never create `.py` scripts to wrap `wsl openclaw infer`. This is an anti-pattern.
    - If the task requires execution logic, API calls, state management, or file parsing, it MUST be a **Plugin** (TypeScript).
    - If the task is purely teaching the agent *when* and *how* to use existing native tools, it MUST be a **Skill** (Markdown).
-2. **Scaffold Directory:**
+2. **Extensive Research & Documentation Review:**
+   - **CRITICAL:** You must always research extensively online for any up-to-date information regarding how tools work and how the APIs they rely on work.
+   - You need to be sure that you have full understanding of schemas and all commands necessary to be passed to tools, and the full schema of any database the tool relies on to ensure full success. This requires research online for documentation to describe all these details.
+3. **Scaffold Directory:**
    - Create a dedicated sub-folder in `Skills/` or `Plugins/`.
-3. **Artifact Generation:**
+4. **Artifact Generation:**
    - **For Skills:** Generate a `SKILL.md` file ONLY. No Python scripts. It must contain concise, natural language instructions guiding the agent, along with `os` and `requires` (bins, env) in the YAML frontmatter.
    - **For Plugins:** Initialize `package.json` with the `openclaw` object. Scaffold TypeScript files using the `@openclaw/plugin-sdk`. Use `export default function register(api)` to register explicitly defined tools. Ensure gracefully self-healing error patterns (Jidoka).
-4. **Validation & Testing:**
+5. **Validation & Testing:**
    - Generate unit tests in the global `Tests/` directory.
    - **Critical Workflow Rule:** You MUST physically test the extension. All nodes and workflow chains must be tested end-to-end to ensure they actually work. 
    - If testing LLM inference loops, explicitly wire in `ollama` (using the local `gemma4` model) or test directly via native OpenClaw subprocesses to ensure the schema transformation works in the real world.
@@ -89,11 +92,11 @@ All development MUST adhere to the following Lean principles:
      # Watch the raw execution logs to verify it completes
      openclaw logs --follow
      ```
-5. **State Tracking:**
+6. **State Tracking:**
    - Update `Docs/TODO.md` to list the new extension under "In Progress".
-6. **Next Steps:**
+7. **Next Steps:**
    - Always suggest next steps based on the user's intent in the last prompt.
-7. **Git Sync:**
+8. **Git Sync:**
    - Always perform a git commit and sync (push) at the end of the workflow to persist changes.
 
 

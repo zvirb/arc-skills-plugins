@@ -26,9 +26,9 @@
         "mode": "safeguard"
       },
       "model": {
-        "primary": "google/gemini-3.1-pro-preview",
+        "primary": "ollama/gemma4",
         "fallbacks": [
-          "ollama/gemma4"
+          "ollama/gemma4:latest"
         ]
       }
     },
@@ -333,7 +333,7 @@
         "enabled": true,
         "config": {
           "localPath": "/home/marku/.openclaw/extensions/llm-transformations-plugin",
-          "defaultModel": "google/gemini-3.1-flash-lite-preview"
+          "defaultModel": "ollama/gemma4"
         }
       },
       "tool-strategy": {

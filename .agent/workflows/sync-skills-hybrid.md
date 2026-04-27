@@ -3,7 +3,11 @@
 ## Overview
 This workflow automates the deployment of OpenClaw skills across multiple machines (Laptop/Local WSL and Remote Alienware Server) bypassing ClawHub rate limits for immediate availability, while preserving the ability to update them via the official registry once published.
 
-## Step 1: Local Injection (Bypass Rate Limits)
+## Step 1: Extensive Research & Documentation Review
+- **CRITICAL:** You must always research extensively online for any up-to-date information regarding how tools work and how the APIs they rely on work.
+- You need to be sure that you have full understanding of schemas and all commands necessary to be passed to tools, and the full schema of any database the tool relies on to ensure full success. This requires research online for documentation to describe all these details.
+
+## Step 2: Local Injection (Bypass Rate Limits)
 Copy the latest skills from the development folder (`D:\openClaw\Skills`) directly into the OpenClaw managed workspace on all target machines. This makes them instantly available as "unmanaged" local skills.
 
 ### Action (Laptop / Local WSL)
@@ -20,7 +24,7 @@ ssh alienware "mkdir -p ~/.openclaw/workspace/skills && rsync -avP marku@laptop_
 ssh alienware "git clone https://github.com/zvirb/arc-skills-plugins.git /tmp/openclaw-skills || (cd /tmp/openclaw-skills && git pull) && cp -r /tmp/openclaw-skills/Skills/* ~/.openclaw/workspace/skills/"
 ```
 
-## Step 2: Check ClawHub Publication Status
+## Step 3: Check ClawHub Publication Status
 Verify if the skills have been fully published to the ClawHub registry. This allows us to transition from "local unmanaged" to "ClawHub managed".
 
 ```bash
@@ -29,7 +33,7 @@ wsl bash -c "openclaw skills search \"\""
 ```
 *(Manually compare the returned list with the local skills to determine if they are fully published.)*
 
-## Step 3: Re-attach to ClawHub (Regain Update Utility)
+## Step 4: Re-attach to ClawHub (Regain Update Utility)
 Once a skill is officially published to ClawHub, re-install it to inject the `_meta.json` tracking files. This overwrites the local copy and turns it back into a managed skill, enabling `openclaw skills update`.
 
 ### Action (Laptop / Local WSL)

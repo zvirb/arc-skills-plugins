@@ -15,5 +15,10 @@ This folder contains foundational research and architectural guidelines for the 
 - `OpenClaw Skills Research for Productivity.docx`: Gap analysis detailing custom builds for OpenClaw, including integration with OpenProse, CatchMe, LanceDB, and Lobster.
 - `OpenClaw Extension Developer Guide.docx`: Guidelines for building extensions and plugins.
 
-**⚠️ CRITICAL WARNING REGARDING RESEARCH DOCS:** 
-Some of these legacy research documents reference Kubernetes or Docker infrastructure. **IGNORE** all such references. The project direction has pivoted: we are replacing the entire stack with pure OpenClaw skills, plugins, and lightweight open-source applications. Do not attempt to scaffold K8s manifests or Dockerfiles based on these documents.
+
+ ## ⚠️ CRITICAL WARNING REGARDING RESEARCH DOCS: 
+ Some of these legacy research documents reference Kubernetes or Docker infrastructure. **IGNORE** all such references. The project direction has pivoted: we are replacing the entire stack with pure OpenClaw skills, plugins, and lightweight open-source applications. Do not attempt to scaffold K8s manifests or Dockerfiles based on these documents.
+
+## Development Mandates
+1. **Extensive Research:** Before implementing any new capability, you MUST research tool/API documentation online to ensure schema and command accuracy.
+2. **Independent Verification:** All Google Workspace mutations MUST be verified independently via the `browser` tool.

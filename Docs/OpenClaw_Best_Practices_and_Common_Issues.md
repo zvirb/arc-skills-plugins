@@ -64,3 +64,16 @@ Developers create Markdown skills (`SKILL.md`) with instructions like "Execute t
 - Markdown Skills ONLY inject text into the agent's system prompt; they DO NOT magically create tools or grant terminal access.
 - If a skill workflow relies on a native CLI binary (like `gog` or `curl`), you MUST accompany it with a TypeScript Plugin that explicitly registers that binary as a tool (e.g., `api.registerTool('gog')`).
 - The Plugin must securely wrap the execution using `child_process.execAsync(cmd, { timeout: 10000 })` to ensure the agent has a valid target tool in its schema to invoke.
+
+## 9. Lack of Empirical Verification
+**The Issue:**
+Relying solely on CLI return codes or "Success" text from an LLM. Tools may return 0 (success) but fail to actually persist data in the target system (e.g., a silent API error or token mismatch).
+**The Solution (Independent Browser Verification):**
+- For all Google Workspace interactions, the developer MUST use the `browser` tool to navigate to the live service (Gmail, Tasks, Calendar) and confirm the mutation.
+- This is a non-negotiable step in the "Trust But Verify" protocol.
+
+## 10. API Schema Hallucination
+**The Issue:**
+Assuming an API's schema or a tool's flags based on outdated training data.
+**The Solution (Extensive Research):**
+- Before implementing any tool interaction, you MUST perform a mandatory online research step to retrieve the latest documentation, schemas, and required parameters for the target service.

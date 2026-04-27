@@ -9,7 +9,11 @@ This workflow governs the process of publishing OpenClaw skills and plugins to C
 
 ---
 
-## Step 1: Authentication & User Setup
+## Step 1: Extensive Research & Documentation Review
+- **CRITICAL:** You must always research extensively online for any up-to-date information regarding how tools work and how the APIs they rely on work.
+- You need to be sure that you have full understanding of schemas and all commands necessary to be passed to tools, and the full schema of any database the tool relies on to ensure full success. This requires research online for documentation to describe all these details.
+
+## Step 2: Authentication & User Setup
 ClawHub requires an authenticated session to publish packages.
 
 1.  **Verify Authentication Status:**
@@ -20,7 +24,7 @@ ClawHub requires an authenticated session to publish packages.
 
 ---
 
-## Step 2: Publishing Skills to ClawHub
+## Step 3: Publishing Skills to ClawHub
 OpenClaw skills (directories containing `SKILL.md`) can be published to the registry.
 
 **Option A: Automated Batch Publishing (Recommended)**
@@ -45,7 +49,7 @@ wsl npx -y clawhub publish <path_to_skill_folder>
 
 ---
 
-## Step 3: Publishing Plugins to ClawHub
+## Step 4: Publishing Plugins to ClawHub
 Plugins add new code capabilities and must be published individually.
 
 1.  Navigate to the specific plugin directory or point to it directly.
@@ -57,7 +61,7 @@ Plugins add new code capabilities and must be published individually.
 
 ---
 
-## Step 4: Installing & Updating Locally (WSL)
+## Step 5: Installing & Updating Locally (WSL)
 Once published, or to synchronize your local OpenClaw daemon with the latest registry updates, you must install or update them via the native `openclaw` CLI.
 
 **Updating Installed Skills:**
@@ -80,7 +84,7 @@ wsl bash -c "openclaw plugins install <plugin-name>"
 
 ---
 
-## Step 5: Post-Installation Validation & Repair
+## Step 6: Post-Installation Validation & Repair
 After updating plugins or skills, ensure the daemon is healthy.
 
 1.  **Restart Gateway (if plugins changed):**
