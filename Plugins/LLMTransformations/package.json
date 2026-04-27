@@ -9,7 +9,7 @@
     "dev": "tsc --watch"
   },
   "dependencies": {
-    "@openclaw/plugin-sdk": "link:../../../../../home/marku/.openclaw/plugin-runtime-deps/openclaw-2026.4.24-b4baa132457d/dist/extensions/node_modules/openclaw/plugin-sdk"
+    "@openclaw/plugin-sdk": "file:../../../../../home/marku/.openclaw/plugin-runtime-deps/openclaw-2026.4.24-b4baa132457d/dist/extensions/node_modules/openclaw/plugin-sdk"
   },
   "devDependencies": {
     "typescript": "^5.0.0",

@@ -43,15 +43,22 @@ All development MUST adhere to the following Lean principles:
 - **Standardized Work (Hyojun Sagyo):** Before automating, find the absolute most efficient, simplest way to execute the task. Optimize the node's internal logic (e.g., using `gog` before `Composio`) to eliminate waste.
 - **Jidoka (自働化):** Build "autonomation" into every node. Every node must have the "intelligence" to stop immediately (via validation loops) if it detects a defect, rather than blindly continuing.
 
+## MANDATORY EXECUTION CONSTRAINTS
+To prevent "hallucination by assumption" and skipped workflow steps, you MUST adhere to these cognitive constraints:
+1. **The Research Gate:** You are strictly forbidden from writing or editing any code or SKILL.md files until you have explicitly executed `search_web` (or equivalent documentation lookups) to verify the current API schemas, CLI flags, and package dependencies. 
+2. **The Verification Gate:** You are strictly forbidden from declaring the task complete until you have explicitly executed the new tool using `wsl openclaw chat` OR the TUI, AND independently verified the state change using a separate tool (e.g., `browser_subagent`).
+3. **The Audit Checklist:** Your responses must explicitly reference these gates. If you have not passed a gate, state what you are doing to pass it before proceeding.
+
 
 ## Steps
 1. **Architectural Decision (Strict Isolation):** 
    - **NO PYTHON ORCHESTRATORS.** Never create `.py` scripts to wrap `wsl openclaw infer`. This is an anti-pattern.
    - If the task requires execution logic, API calls, state management, or file parsing, it MUST be a **Plugin** (TypeScript).
    - If the task is purely teaching the agent *when* and *how* to use existing native tools, it MUST be a **Skill** (Markdown).
-2. **Extensive Research & Documentation Review:**
+2. **Extensive Research & Documentation Review (MANDATORY):**
    - **CRITICAL:** You must always research extensively online for any up-to-date information regarding how tools work and how the APIs they rely on work.
    - You need to be sure that you have full understanding of schemas and all commands necessary to be passed to tools, and the full schema of any database the tool relies on to ensure full success. This requires research online for documentation to describe all these details.
+   - **EXECUTION REQUIREMENT:** You MUST execute a `search_web` tool call to verify syntax before writing code. Do not rely on internal memory for API parameters.
 3. **Scaffold Directory:**
    - Create a dedicated sub-folder in `Skills/` or `Plugins/`.
 4. **Artifact Generation:**
@@ -63,9 +70,11 @@ All development MUST adhere to the following Lean principles:
    - If testing LLM inference loops, explicitly wire in `ollama` (using the local `gemma4` model) or test directly via native OpenClaw subprocesses to ensure the schema transformation works in the real world.
    - For Skills, note that `openclaw skills check` takes no arguments and runs against the configured workspace. If OpenClaw is running in WSL2, you MUST sync the new skills to its workspace first (e.g., `wsl cp -r /mnt/d/openClaw/Skills/* ~/.openclaw/workspace/skills/`).
    - **CRITICAL DEPLOYMENT STEP:** You MUST manually bind the new skill to the target agent in `openclaw.json`. Skills are not automatically visible to agents just because they are in the workspace. You must add the skill slug to the `agents.list[0].skills` array (e.g. for the "main" agent) in `openclaw.json` before running tests or restarting the gateway!
-   - Run `openclaw plugins list --verbose` (for Plugins).
-   - **Observation and Testing Methods:**
-     Test that the skill or plugin built and deployed to both alienware and local wsl open claw actually functions as it should. Reiterate until you can confirm that the tool works as expected. **CRITICAL:** You must retrieve confirmation that the tool worked. Use another tool to independently verify that the tool did what was expected (e.g., check that there is a new calendar event created as expected, check that there is a new task as expected, or check that the returned information is accurate by retrieving that information from an independent source):
+   - Execute `wsl openclaw skills check` or `openclaw plugins list --verbose` (for Plugins).
+   - **Observation and Testing Methods (MANDATORY):**
+     Test that the skill or plugin built and deployed to both alienware and local wsl open claw actually functions as it should. Reiterate until you can confirm that the tool works as expected. 
+     **CRITICAL INDEPENDENT VERIFICATION:** You must retrieve confirmation that the tool worked. Use another tool to independently verify that the tool did what was expected (e.g., check that there is a new calendar event created as expected, check that there is a new task as expected, or check that the returned information is accurate by retrieving that information from an independent source).
+     **EXECUTION REQUIREMENT:** You MUST execute the `browser_subagent` (or equivalent standalone API curl) to physically navigate to the Google Workspace URL (e.g., `tasks.google.com`) and confirm the expected state change before declaring Phase 5 complete.
 
      If your goal is to send a single command and clearly **observe** the agent's thought process, tool execution, and task completion, you have a few ways to do it depending on how much detail you want to see:
 
