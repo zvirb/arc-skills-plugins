@@ -46,7 +46,7 @@ All updates MUST enforce the following Lean principles:
 ## MANDATORY EXECUTION CONSTRAINTS
 To prevent "hallucination by assumption" and skipped workflow steps, you MUST adhere to these cognitive constraints:
 1. **The Research Gate:** You are strictly forbidden from writing or editing any code or SKILL.md files until you have explicitly executed `search_web` (or equivalent documentation lookups) to verify the current API schemas, CLI flags, and package dependencies. 
-2. **The Verification Gate:** You are strictly forbidden from declaring the task complete until you have explicitly executed the new tool using `wsl openclaw chat` OR the TUI, AND independently verified the state change using a separate tool (e.g., `browser_subagent`).
+2. **The Verification Gate:** You are strictly forbidden from declaring the task complete until you have explicitly executed the new tool using `wsl openclaw chat` OR the TUI, AND independently verified the state change using a separate tool (e.g., `browser_subagent`). **CRITICAL VERIFICATION RULE:** Your verification tool must ONLY check the state. You must NOT use the verification tool to actively complete the task (e.g., do not create missing tasks via the browser if they are not found). Doing so creates a false positive and ruins the verification process. Ensure you check that the verification tool did not just fix the issue for you.
 3. **The Audit Checklist:** Your responses must explicitly reference these gates. If you have not passed a gate, state what you are doing to pass it before proceeding.
 
 
@@ -55,10 +55,11 @@ To prevent "hallucination by assumption" and skipped workflow steps, you MUST ad
    - **Architectural Audit:** Check for any legacy Python orchestration scripts (`.py` files) wrapping OpenClaw within the `Skills/` or `Workflows/` directories. These are anti-patterns and must be purged.
    - For Skills: Skills must contain ONLY a `SKILL.md` file. Check for overly complex instructions. Simplify to "one skill, one responsibility". Verify YAML frontmatter.
    - For Plugins: If programmatic logic exists, it MUST be migrated to a proper TypeScript Plugin. Verify SDK imports (`@openclaw/plugin-sdk`), explicit `register(api)` calls, and `package.json` compatibility definitions.
-2. **Extensive Research & Documentation Review (MANDATORY):**
+2. **Extensive Research & Environment Verification (MANDATORY PHASE 0):**
    - **CRITICAL:** You must always research extensively online for any up-to-date information regarding how tools work and how the APIs they rely on work.
-   - You need to be sure that you have full understanding of schemas and all commands necessary to be passed to tools, and the full schema of any database the tool relies on to ensure full success. This requires research online for documentation to describe all these details.
    - **EXECUTION REQUIREMENT:** You MUST execute a `search_web` tool call to verify syntax before writing code. Do not rely on internal memory for API parameters.
+   - **BINARY & PATH VERIFICATION:** If the extension relies on a local CLI tool or binary (e.g., `gog`, `aws`, `kubectl`), you MUST physically execute `which <tool>`, `<tool> --help`, or search local `bin` directories (like `~/.local/bin`) using terminal commands to confirm the binary's exact location, actual name, and syntax. Do not hallucinate flags or paths.
+   - **ENVIRONMENT VERIFICATION:** Explicitly check `openclaw.json` (specifically `env.vars` and `tools.exec.pathPrepend`) or environment config files to ensure any required credentials (e.g., accounts, passwords, API keys) and paths are properly scoped and available to the OpenClaw runtime before writing code.
 3. **Refactoring:**
    - Apply necessary updates. Delete legacy Python scripts.
    - Transition programmatic logic into registered TypeScript Plugin tools.
@@ -66,12 +67,12 @@ To prevent "hallucination by assumption" and skipped workflow steps, you MUST ad
 4. **Validation & Testing:**
    - Run existing tests and add new tests covering the refactored logic in `Tests/`.
    - **Critical Workflow Rule:** You MUST physically test the extension. All nodes and workflow chains must be tested end-to-end to ensure they actually work. 
-   - Test LLM-driven nodes directly using native OpenClaw or by wiring in a local `ollama` model (e.g., `gemma4`) to ensure true integration resilience.
+   - Testing MUST NOT occur locally on WSL. All testing must occur via SSH on alienware. Test LLM-driven nodes directly using native OpenClaw on alienware to ensure true integration resilience.
    - If OpenClaw is running in WSL2, you MUST sync the updated skills to its workspace first (e.g., `wsl cp -r /mnt/d/openClaw/Skills/* ~/.openclaw/workspace/skills/`).
    - **CRITICAL DEPLOYMENT STEP:** You MUST manually bind the new skill to the target agent in `openclaw.json`. Skills are not automatically visible to agents just because they are in the workspace. You must add the skill slug to the `agents.list[0].skills` array (e.g. for the "main" agent) in `openclaw.json` before running tests or restarting the gateway!
    - Execute `wsl openclaw skills check` or `openclaw plugins list --verbose`.
    - **Observation and Testing Methods (MANDATORY):**
-     Test that the skill or plugin built and deployed to both alienware and local wsl open claw actually functions as it should. Reiterate until you can confirm that the tool works as expected. 
+     Testing MUST NOT occur locally on WSL. All testing must occur via SSH on alienware. Test that the skill or plugin built and deployed to alienware actually functions as it should. Reiterate until you can confirm that the tool works as expected. 
      **CRITICAL INDEPENDENT VERIFICATION:** You must retrieve confirmation that the tool worked. Use another tool to independently verify that the tool did what was expected (e.g., check that there is a new calendar event created as expected, check that there is a new task as expected, or check that the returned information is accurate by retrieving that information from an independent source). 
      **EXECUTION REQUIREMENT:** You MUST execute the `browser_subagent` (or equivalent standalone API curl) to physically navigate to the Google Workspace URL (e.g., `tasks.google.com`) and confirm the expected state change before declaring Phase 4 complete.
 

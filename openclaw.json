@@ -1,4 +1,10 @@
-{
+﻿{
+  "env": {
+    "vars": {
+      "GOG_ACCOUNT": "markuszvirbulis@gmail.com",
+      "GOG_KEYRING_PASSWORD": "REDACTED"
+    }
+  },
   "gateway": {
     "mode": "local",
     "port": 18771,
@@ -238,6 +244,9 @@
     }
   },
   "tools": {
+    "exec": {
+      "pathPrepend": "/home/marku/.local/bin"
+    },
     "web": {
       "search": {
         "provider": "google",

@@ -16,13 +16,15 @@ requires:
 This skill allows the agent to search for events in Google Calendar within a specific time range using the native CLI.
 
 ## Cognitive Directives
-WHEN [Requested to find events or check schedule for a specific period]
+WHEN [Requested to find events or check schedule for a specific period or subject]
 THEN [Execute the `gog` tool with the `args` parameter]
+
+**CRITICAL RULE:** Do NOT use the `--subject` flag, it does not exist. To search for a specific title or subject, you MUST use the `--query "Search Term"` flag.
 
 ## Schema Example
 ```json
 {
-  "args": "calendar events primary --from \"2026-04-26T00:00:00Z\" --to \"2026-04-26T23:59:59Z\" --json"
+  "args": "calendar events primary --from \"2026-04-26T00:00:00Z\" --to \"2026-04-26T23:59:59Z\" --query \"Meeting Title\" --json"
 }
 ```
 

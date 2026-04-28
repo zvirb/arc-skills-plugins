@@ -50,20 +50,22 @@ Maintain adherence to the following Lean principles during execution:
    - **CRITICAL:** Check for legacy Python orchestration scripts (`.py` files). If found, they must be flagged for migration to TypeScript Plugins. Skills must remain strictly Markdown.
    - Check `Docs/TODO.md` to understand the current progress state.
    - Read any `MEMORY.md` or `ACTIVE-TASK.md` files located in the extension's folder for durable state from previous sessions.
-2. **Extensive Research & Documentation Review:**
+2. **Extensive Research & Environment Verification (MANDATORY PHASE 0):**
    - **CRITICAL:** You must always research extensively online for any up-to-date information regarding how tools work and how the APIs they rely on work.
-   - You need to be sure that you have full understanding of schemas and all commands necessary to be passed to tools, and the full schema of any database the tool relies on to ensure full success. This requires research online for documentation to describe all these details.
+   - **EXECUTION REQUIREMENT:** You MUST execute a `search_web` tool call to verify syntax before writing code. Do not rely on internal memory for API parameters.
+   - **BINARY & PATH VERIFICATION:** If the extension relies on a local CLI tool or binary (e.g., `gog`, `aws`, `kubectl`), you MUST physically execute `which <tool>`, `<tool> --help`, or search local `bin` directories (like `~/.local/bin`) using terminal commands to confirm the binary's exact location, actual name, and syntax. Do not hallucinate flags or paths.
+   - **ENVIRONMENT VERIFICATION:** Explicitly check `openclaw.json` (specifically `env.vars` and `tools.exec.pathPrepend`) or environment config files to ensure any required credentials (e.g., accounts, passwords, API keys) and paths are properly scoped and available to the OpenClaw runtime before writing code.
 3. **Incremental Implementation:**
    - Proceed with modular task execution. Do not mix unrelated tasks into a single prompt.
    - Rely on "Artifacts" (e.g., code diffs, test results) to visually or programmatically verify each step before moving to the next.
 4. **Validation & Testing:**
    - Write and run incremental tests in the `Tests/` directory.
-   - **Critical Workflow Rule:** You MUST physically test the extension. All nodes and workflow chains must be tested end-to-end to ensure they actually work. Use native OpenClaw execution or a local `ollama` setup (like `gemma4`) to definitively prove the workflow logic.
+   - **Critical Workflow Rule:** You MUST physically test the extension. Testing MUST NOT occur locally on WSL. All testing must occur via SSH on alienware. All nodes and workflow chains must be tested end-to-end to ensure they actually work. Use native OpenClaw execution on alienware to definitively prove the workflow logic.
    - Log any errors or verbose traces to the `Logs/` directory (which is safely Git-ignored).
    - If OpenClaw is running in WSL2, you MUST sync the updated skills to its workspace first (e.g., `wsl cp -r /mnt/d/openClaw/Skills/* ~/.openclaw/workspace/skills/`) before running any native `openclaw` validations.
    - **CRITICAL DEPLOYMENT STEP:** You MUST manually bind the new skill to the target agent in `openclaw.json`. Skills are not automatically visible to agents just because they are in the workspace. You must add the skill slug to the `agents.list[0].skills` array (e.g. for the "main" agent) in `openclaw.json` before running tests or restarting the gateway!
    - **Observation and Testing Methods:**
-     Test that the skill or plugin built and deployed to both alienware and local wsl open claw actually functions as it should. Reiterate until you can confirm that the tool works as expected. **CRITICAL:** You must retrieve confirmation that the tool worked. Use another tool to independently verify that the tool did what was expected (e.g., check that there is a new calendar event created as expected, check that there is a new task as expected, or check that the returned information is accurate by retrieving that information from an independent source):
+     Testing MUST NOT occur locally on WSL. All testing must occur via SSH on alienware. Test that the skill or plugin built and deployed to alienware actually functions as it should. Reiterate until you can confirm that the tool works as expected. **CRITICAL:** You must retrieve confirmation that the tool worked. Use another tool to independently verify that the tool did what was expected (e.g., check that there is a new calendar event created as expected, check that there is a new task as expected, or check that the returned information is accurate by retrieving that information from an independent source):
 
      If your goal is to send a single command and clearly **observe** the agent's thought process, tool execution, and task completion, you have a few ways to do it depending on how much detail you want to see:
 

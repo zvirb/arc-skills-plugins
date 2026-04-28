@@ -35,9 +35,11 @@ You do not write monolithic scripts. You design highly testable, single-responsi
      - **E. Intent of this skill or plugin:** Does the integration align with its Single Responsibility?
      - **F. Intent of the target skill or plugin being considered:** Is the target tool meant to be used in this manner?
 
-5. **Extensive Research & Documentation Review:**
+5. **Extensive Research & Environment Verification (MANDATORY PHASE 0):**
    - **CRITICAL:** You must always research extensively online for any up-to-date information regarding how tools work and how the APIs they rely on work.
-   - You need to be sure that you have full understanding of schemas and all commands necessary to be passed to tools, and the full schema of any database the tool relies on to ensure full success. This requires research online for documentation to describe all these details.
+   - **EXECUTION REQUIREMENT:** You MUST execute a `search_web` tool call to verify syntax before writing code. Do not rely on internal memory for API parameters.
+   - **BINARY & PATH VERIFICATION:** If the extension relies on a local CLI tool or binary (e.g., `gog`, `aws`, `kubectl`), you MUST physically execute `which <tool>`, `<tool> --help`, or search local `bin` directories (like `~/.local/bin`) using terminal commands to confirm the binary's exact location, actual name, and syntax. Do not hallucinate flags or paths.
+   - **ENVIRONMENT VERIFICATION:** Explicitly check `openclaw.json` (specifically `env.vars` and `tools.exec.pathPrepend`) or environment config files to ensure any required credentials (e.g., accounts, passwords, API keys) and paths are properly scoped and available to the OpenClaw runtime before writing code.
 
 6. **Review against Best Practices and Common Issues.**
    - Open and read `Docs\OpenClaw_Best_Practices_and_Common_Issues.md`. 
@@ -53,7 +55,7 @@ You do not write monolithic scripts. You design highly testable, single-responsi
    - For Skills: Request execution of `openclaw skills check <skill-name>`.
    - For Plugins: Run TypeScript type checks and request `openclaw plugins list --verbose`.
    - **Observation and Testing Methods:**
-     Test that the skill or plugin built and deployed to both alienware and local wsl open claw actually functions as it should. Reiterate until you can confirm that the tool works as expected. **CRITICAL:** You must retrieve confirmation that the tool worked. Use another tool to independently verify that the tool did what was expected (e.g., check that there is a new calendar event created as expected, check that there is a new task as expected, or check that the returned information is accurate by retrieving that information from an independent source):
+     Testing MUST NOT occur locally on WSL. All testing must occur via SSH on alienware. Test that the skill or plugin built and deployed to alienware actually functions as it should. Reiterate until you can confirm that the tool works as expected. **CRITICAL:** You must retrieve confirmation that the tool worked. Use another tool to independently verify that the tool did what was expected (e.g., check that there is a new calendar event created as expected, check that there is a new task as expected, or check that the returned information is accurate by retrieving that information from an independent source):
 
      If your goal is to send a single command and clearly **observe** the agent's thought process, tool execution, and task completion, you have a few ways to do it depending on how much detail you want to see:
 

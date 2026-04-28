@@ -19,6 +19,8 @@ This skill allows the agent to create a new event in Google Calendar using the n
 WHEN [A new event needs to be scheduled or created in the calendar]
 THEN [Execute the `gog` tool with the `args` parameter]
 
+**CRITICAL RULE:** Do NOT use the `--title`, `--start`, or `--end` flags. They do not exist. You MUST use `--summary` for the title, and `--from` and `--to` for the time bounds. The time MUST be in RFC3339 format or relative (e.g. "tomorrow 16:00").
+
 ## Schema Example
 ```json
 {

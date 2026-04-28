@@ -3,7 +3,8 @@
 This folder contains all testing infrastructure for the repository.
 
 ## Structure
-- You may mirror the `Skills/` and `Plugins/` folder structure here (e.g., `Tests/Skills/MySkill_test.py`).
+- You may mirror the `Plugins/` folder structure here (e.g., `Tests/Plugins/MyPlugin_test.py`).
+- For Markdown skills (`SKILL.md`), they are validated structurally via `Skill_Integrity_test.py` since the architectural pivot removed Python wrappers.
 - Keep fixtures and mock data in a dedicated `Tests/fixtures/` sub-folder.
 
 ## Lessons Learned
