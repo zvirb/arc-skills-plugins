@@ -31,21 +31,25 @@ function register(ctx, second) {
     // Native execution wrapper for the gog CLI binary
     api.registerTool({
         name: 'gog',
-        description: 'Execute a command using the native gog CLI for Google Workspace operations (Gmail, Tasks, Calendar, etc). To add a task, use: gogcli tasks add \'Task Title\' (one at a time). Do not use batch flags like --add.',
+        description: 'Execute a command using the native gog CLI for Google Workspace operations (Gmail, Tasks, Calendar, etc). To add a task, use: gog tasks add @default --title="Task Title" (one at a time). Do not use batch flags like --add.',
         parameters: {
             type: "object",
             properties: {
-                args: {
-                    type: "string",
-                    description: "The arguments to pass to the gog CLI (e.g., 'tasks list @default --json')"
-                }
-            },
-            required: ["args"]
+                service: { type: "string", enum: ["tasks", "calendar", "gmail"], description: "The Google service to use (e.g., 'tasks' or 'calendar')" },
+                action: { type: "string", enum: ["add", "create", "list", "update", "delete", "done", "event", "send"], description: "The action to perform" },
+                targetId: { type: "string", description: "The specific Task ID or Calendar Event ID. REQUIRED for update, delete, and done/complete. NEVER pass the title here." },
+                title: { type: "string", description: "The summary or title of the task/event to create or update" },
+                notes: { type: "string", description: "The notes or description body" },
+                start: { type: "string", description: "Start time for events (Strictly RFC3339 format, e.g., 2026-04-29T16:00:00+10:00)" },
+                end: { type: "string", description: "End time for events (Strictly RFC3339 format)" },
+                extraFlags: { type: "string", description: "Additional raw flags, e.g. '--json'" },
+                args: { type: "string", description: "Legacy raw CLI arguments (Use the structured parameters above instead if possible)" }
+            }
         },
         execute: async (...execArgs) => {
             console.error('=== GOG TOOL EXECUTED ===', execArgs);
             // Handle both signature types: (params, ...) and (callId, params, ...)
-            const input = (typeof execArgs[0] === 'string' && execArgs[1] && typeof execArgs[1] === 'object') ? execArgs[1] : execArgs[0];
+            let input = (typeof execArgs[0] === 'string' && execArgs[1] && typeof execArgs[1] === 'object') ? execArgs[1] : execArgs[0];
             try {
                 // Ensure we are only running the gog binary to prevent arbitrary shell injection
                 const gogBin = process.env.GOG_BIN_PATH || '/home/marku/.local/bin/gog';
@@ -53,36 +57,48 @@ function register(ctx, second) {
                 if (typeof input === "string") {
                     try {
                         const parsed = JSON.parse(input);
-                        if (parsed.args)
-                            argsString = parsed.args;
-                        else if (parsed.params && parsed.params.args)
-                            argsString = parsed.params.args;
-                        else if (parsed.action) {
-                            // Handle stringified Composio-style payload
-                            const action = parsed.action.replace('.', ' ');
-                            let bodyArgs = "";
-                            if (parsed.body) {
-                                for (const [k, v] of Object.entries(parsed.body)) {
-                                    bodyArgs += ` --${k}="${String(v).replace(/"/g, '\\"')}"`;
-                                }
-                            }
-                            argsString = `${action}${bodyArgs}`;
-                        }
-                        else
-                            argsString = input;
+                        input = parsed;
                     }
                     catch (e) {
                         argsString = input;
                     }
                 }
-                else if (input && typeof input === "object") {
-                    if (typeof input.args === "string") {
+                if (typeof input === "object") {
+                    if (input.service && input.action) {
+                        // Schema-Based Parameter Builder
+                        let parts = [input.service, input.action];
+                        // Handle strict ID requirements
+                        if (input.service === "tasks")
+                            parts.push("@default");
+                        if (input.service === "calendar")
+                            parts.push("primary");
+                        if (input.targetId) {
+                            parts.push(input.targetId);
+                        }
+                        // Append properties as flags
+                        if (input.title) {
+                            if (input.service === "tasks")
+                                parts.push(`--title="${String(input.title).replace(/"/g, '\\"')}"`);
+                            if (input.service === "calendar")
+                                parts.push(`--summary="${String(input.title).replace(/"/g, '\\"')}"`);
+                        }
+                        if (input.notes)
+                            parts.push(`--notes="${String(input.notes).replace(/"/g, '\\"')}"`);
+                        if (input.start)
+                            parts.push(`--from="${String(input.start).replace(/"/g, '\\"')}"`);
+                        if (input.end)
+                            parts.push(`--to="${String(input.end).replace(/"/g, '\\"')}"`);
+                        if (input.extraFlags)
+                            parts.push(input.extraFlags);
+                        argsString = parts.join(" ");
+                    }
+                    else if (typeof input.args === "string") {
                         argsString = input.args;
                     }
                     else if (input.params && typeof input.params.args === "string") {
                         argsString = input.params.args;
                     }
-                    else if (input.action) {
+                    else if (input.action && !input.service) {
                         // Jidoka: Flatten composio-style structured payload
                         const action = String(input.action).replace('.', ' ');
                         let bodyArgs = "";
@@ -97,14 +113,14 @@ function register(ctx, second) {
                         // Fallback: convert top-level keys to flags if possible, or stringify
                         let fallbackArgs = "";
                         for (const [k, v] of Object.entries(input)) {
-                            if (k !== 'args' && k !== 'params') {
+                            if (k !== 'args' && k !== 'params' && k !== 'service' && k !== 'action') {
                                 fallbackArgs += ` --${k}="${String(v).replace(/"/g, '\\"')}"`;
                             }
                         }
                         argsString = fallbackArgs.trim() !== "" ? fallbackArgs.trim() : JSON.stringify(input);
                     }
                 }
-                else {
+                else if (!argsString) {
                     return { success: false, error: `Invalid tool input. Received: ${typeof input} ${String(input)}` };
                 }
                 // Jidoka: Auto-correct common LLM hallucinations for Google Tasks schema (tasklistId requirement)
@@ -118,6 +134,8 @@ function register(ctx, second) {
                 argsString = argsString.replace(/^tasks\.(done|complete)\b(?!\s+@\w+)/i, 'tasks done @default');
                 argsString = argsString.replace(/^tasks (delete|rm|remove)\b(?!\s+@\w+)/i, 'tasks delete @default');
                 argsString = argsString.replace(/^tasks\.(delete|rm|remove)\b(?!\s+@\w+)/i, 'tasks delete @default');
+                // Jidoka: Naked Title Conversion
+                argsString = argsString.replace(/^tasks add (@[\w-]+)\s+(['"].+?['"])$/i, 'tasks add $1 --title=$2');
                 // Jidoka: Auto-correct common LLM hallucinations for Google Calendar schema (calendarId requirement)
                 argsString = argsString.replace(/^calendar (create|add|new)\b(?!\s+(primary|[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}))/i, 'calendar create primary');
                 argsString = argsString.replace(/^calendar\.(create|add|new)\b(?!\s+(primary|[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}))/i, 'calendar create primary');
@@ -129,6 +147,13 @@ function register(ctx, second) {
                 argsString = argsString.replace(/^calendar\.(event|get|info|show)\b(?!\s+(primary|[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}))/i, 'calendar event primary');
                 if (argsString === "undefined" || !argsString || argsString.trim() === "") {
                     return { success: false, error: "Parsed argsString is empty or undefined literal. Input was: " + JSON.stringify(input) };
+                }
+                // Append --force and --no-input to prevent hanging on all commands natively
+                if (!argsString.includes('--force') && !argsString.includes('-y')) {
+                    argsString += " --force";
+                }
+                if (!argsString.includes('--no-input')) {
+                    argsString += " --no-input";
                 }
                 // Jidoka: Enforce atomic operations (Kaizen). Reject hallucinated batch flags like --add.
                 if (argsString.includes('--add')) {

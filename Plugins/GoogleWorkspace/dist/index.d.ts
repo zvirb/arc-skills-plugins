@@ -1,3 +1,7 @@
+export interface PluginApi {
+    registerTool(tool: any): void;
+    on(event: string, callback: () => void): void;
+}
 export declare const manifest: {
     name: string;
     version: string;
