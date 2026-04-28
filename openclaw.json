@@ -116,7 +116,8 @@
           "taskflow-inbox-triage",
           "tmux",
           "vague-task-decomposition",
-          "weather"
+          "weather",
+          "google-tasks-create-subtask"
         ]
       },
       {
@@ -580,6 +581,9 @@
         "enabled": true
       },
       "google-tasks-find-tasks": {
+        "enabled": true
+      },
+      "google-tasks-create-subtask": {
         "enabled": true
       },
       "google-tasks-update-task-title": {

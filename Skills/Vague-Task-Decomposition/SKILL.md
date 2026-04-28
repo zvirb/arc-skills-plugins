@@ -27,8 +27,10 @@ THEN [
   - **Jidoka Stop:** Verify the skill returns a properly formatted list of actionable items. IF the output is invalid, retry the extraction. Do NOT proceed without a valid list.
 
   **Step 2: Task Dispatch**
+  - Create the parent vague task using `Google Tasks Create Task` if it doesn't already exist.
+  - **Jidoka Stop:** Verify the parent task was created and you have its `id`.
   - For each subtask identified in Step 1:
-    - Execute the `Google Tasks Create Task` atomic node to log the item in Google Tasks.
+    - Execute the `Google Tasks Create Subtask` atomic node to log the item in Google Tasks, providing the parent task's `id` as `--parent`.
     - **Jidoka Stop:** Verify the atomic node returns a successful JSON response. IF it fails for any item, retry the creation for that specific item up to 3 times before moving to the next.
 ]
 
