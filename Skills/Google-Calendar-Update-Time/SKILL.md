@@ -22,7 +22,11 @@ THEN [Execute the native terminal command `gog calendar update <calendarId> <eve
 ## Schema Example
 ```json
 {
-  "command": "gog calendar update primary event_id_123 --from \"2026-04-28T10:00:00Z\" --to \"2026-04-28T11:00:00Z\" --json"
+  "service": "calendar",
+  "action": "update",
+  "targetId": "event_id_123",
+  "start": "2026-04-28T10:00:00Z",
+  "end": "2026-04-28T11:00:00Z"
 }
 ```
 

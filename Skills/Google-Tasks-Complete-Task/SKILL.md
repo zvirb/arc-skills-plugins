@@ -22,7 +22,10 @@ THEN [Invoke the `gog` tool with the argument `tasks done <tasklistId> <taskId>`
 ## Schema Example
 ```json
 {
-  "args": "tasks done @default task_id_123"
+  "service": "tasks",
+  "action": "update",
+  "targetId": "task_id_123",
+  "extraFlags": "--status=completed"
 }
 ```
 

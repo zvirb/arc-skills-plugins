@@ -22,7 +22,9 @@ THEN [Execute the native terminal command `gog calendar delete <calendarId> <eve
 ## Schema Example
 ```json
 {
-  "command": "gog calendar delete primary event_id_123"
+  "service": "calendar",
+  "action": "delete",
+  "targetId": "event_id_123"
 }
 ```
 
