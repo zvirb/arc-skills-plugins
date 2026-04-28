@@ -1,4 +1,7 @@
-import { PluginApi } from '@openclaw/plugin-sdk';
+export interface PluginApi {
+  registerTool(tool: any): void;
+  on(event: string, callback: () => void): void;
+}
 import { exec } from 'child_process';
 import { promisify } from 'util';
 
@@ -33,7 +36,7 @@ export default function register(ctx: any, second: any) {
     // Native execution wrapper for the gog CLI binary
     api.registerTool({
         name: 'gog',
-        description: 'Execute a command using the native gog CLI for Google Workspace operations (Gmail, Tasks, Calendar, etc).',
+        description: 'Execute a command using the native gog CLI for Google Workspace operations (Gmail, Tasks, Calendar, etc). To add a task, use: gogcli tasks add \'Task Title\' (one at a time). Do not use batch flags like --add.',
         parameters: {
             type: "object",
             properties: {
@@ -126,6 +129,14 @@ export default function register(ctx: any, second: any) {
                 
                 if (argsString === "undefined" || !argsString || argsString.trim() === "") {
                      return { success: false, error: "Parsed argsString is empty or undefined literal. Input was: " + JSON.stringify(input) };
+                }
+
+                // Jidoka: Enforce atomic operations (Kaizen). Reject hallucinated batch flags like --add.
+                if (argsString.includes('--add')) {
+                     return { 
+                        success: false, 
+                        error: "Jidoka Violation: Batch operations are strictly forbidden and the '--add' flag does not exist. You must create tasks one at a time to ensure atomic operations (Kaizen). Use '--title' for the task name." 
+                     };
                 }
 
                 // Jidoka validation: Strict timeout to prevent zombie subshells

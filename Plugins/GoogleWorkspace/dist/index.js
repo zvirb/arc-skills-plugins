@@ -31,7 +31,7 @@ function register(ctx, second) {
     // Native execution wrapper for the gog CLI binary
     api.registerTool({
         name: 'gog',
-        description: 'Execute a command using the native gog CLI for Google Workspace operations (Gmail, Tasks, Calendar, etc).',
+        description: 'Execute a command using the native gog CLI for Google Workspace operations (Gmail, Tasks, Calendar, etc). To add a task, use: gogcli tasks add \'Task Title\' (one at a time). Do not use batch flags like --add.',
         parameters: {
             type: "object",
             properties: {
@@ -129,6 +129,13 @@ function register(ctx, second) {
                 argsString = argsString.replace(/^calendar\.(event|get|info|show)\b(?!\s+(primary|[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}))/i, 'calendar event primary');
                 if (argsString === "undefined" || !argsString || argsString.trim() === "") {
                     return { success: false, error: "Parsed argsString is empty or undefined literal. Input was: " + JSON.stringify(input) };
+                }
+                // Jidoka: Enforce atomic operations (Kaizen). Reject hallucinated batch flags like --add.
+                if (argsString.includes('--add')) {
+                    return {
+                        success: false,
+                        error: "Jidoka Violation: Batch operations are strictly forbidden and the '--add' flag does not exist. You must create tasks one at a time to ensure atomic operations (Kaizen). Use '--title' for the task name."
+                    };
                 }
                 // Jidoka validation: Strict timeout to prevent zombie subshells
                 // Determine the binary to use

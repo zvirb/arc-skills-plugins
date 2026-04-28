@@ -19,6 +19,9 @@ This skill allows the agent to create a new task in Google Tasks using the nativ
 WHEN [A new task needs to be added to a Google Tasks list]
 THEN [Invoke the `gog` tool with the argument `tasks add <tasklistId> --title "Task Title" --notes "Optional Notes" --due "ISO-Date"`]
 
+**CRITICAL ANTI-HALLUCINATION WARNING:** 
+The `gogcli` tool does NOT support batch creation or the `--add` flag. You MUST create tasks ONE AT A TIME. If you need to create multiple tasks, you must make multiple separate tool calls in sequence. Never use `--add`.
+
 ## Schema Example
 ```json
 {

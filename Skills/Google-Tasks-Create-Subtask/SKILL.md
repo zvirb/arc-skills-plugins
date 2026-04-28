@@ -19,6 +19,9 @@ This skill allows the agent to create a new subtask under an existing parent tas
 WHEN [A task needs to be added as a subtask under another parent task in Google Tasks]
 THEN [Invoke the `gog` tool with the argument `tasks add <tasklistId> --title "Subtask Title" --parent "<parentTaskId>" --notes "Optional Notes" --due "ISO-Date"`]
 
+**CRITICAL ANTI-HALLUCINATION WARNING:** 
+The `gogcli` tool does NOT support batch creation or the `--add` flag. You MUST create subtasks ONE AT A TIME. If you need to create multiple subtasks, you must make multiple separate tool calls in sequence. Never use `--add`.
+
 ## Schema Example
 ```json
 {
