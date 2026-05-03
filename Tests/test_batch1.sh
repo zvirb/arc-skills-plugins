@@ -1,6 +1,6 @@
 #!/bin/bash
 
-log_file="/mnt/d/openClaw/Logs/batch1_results.log"
+log_file="Logs/batch1_results.log"
 TS=$(date +%s)
 echo "=== Batch 1 Testing (ID: $TS) ===" > $log_file
 
@@ -20,9 +20,9 @@ run_test() {
 # WSL Tests
 
 # Alienware Tests
-run_test "Alienware" "ssh -o StrictHostKeyChecking=no alienware" "Google-Tasks-Create-Task" "Create a task in Google Tasks called 'Batch1 Alienware Create $TS' with notes 'Initial Alienware Note'."
-run_test "Alienware" "ssh -o StrictHostKeyChecking=no alienware" "Google-Tasks-Find-Tasks" "List my recent Google Tasks. Specifically find the ID for the task 'Batch1 Alienware Create $TS'."
-run_test "Alienware" "ssh -o StrictHostKeyChecking=no alienware" "Google-Tasks-Update-Task" "Update the Google Task named 'Batch1 Alienware Create $TS' to have notes 'Updated by Alienware'."
-run_test "Alienware" "ssh -o StrictHostKeyChecking=no alienware" "Google-Tasks-Complete-Task" "Mark the Google Task named 'Batch1 Alienware Create $TS' as completed."
+run_test "Alienware" "ssh -o StrictHostKeyChecking=no marku@100.109.60.113" "Google-Tasks-Create-Task" "Create a task in Google Tasks called 'Batch1 Alienware Create $TS' with notes 'Initial Alienware Note'."
+run_test "Alienware" "ssh -o StrictHostKeyChecking=no marku@100.109.60.113" "Google-Tasks-Find-Tasks" "List my recent Google Tasks. Specifically find the ID for the task 'Batch1 Alienware Create $TS'."
+run_test "Alienware" "ssh -o StrictHostKeyChecking=no marku@100.109.60.113" "Google-Tasks-Update-Task" "Update the Google Task named 'Batch1 Alienware Create $TS' to have notes 'Updated by Alienware'."
+run_test "Alienware" "ssh -o StrictHostKeyChecking=no marku@100.109.60.113" "Google-Tasks-Complete-Task" "Mark the Google Task named 'Batch1 Alienware Create $TS' as completed."
 
 echo "Batch 1 complete."

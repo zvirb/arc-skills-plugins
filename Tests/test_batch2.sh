@@ -1,6 +1,6 @@
 #!/bin/bash
 
-log_file="/mnt/d/openClaw/Logs/batch2_results.log"
+log_file="Logs/batch2_results.log"
 TS=$(date +%s)
 echo "=== Batch 2 Testing (ID: $TS) ===" > $log_file
 
@@ -20,9 +20,9 @@ run_test() {
 # WSL Tests
 
 # Alienware Tests
-run_test "Alienware" "ssh -o StrictHostKeyChecking=no alienware" "Google-Calendar-Create-Event" "Create an event in Google Calendar called 'Batch2 Alienware Event $TS' tomorrow at 4 PM for 1 hour."
-run_test "Alienware" "ssh -o StrictHostKeyChecking=no alienware" "Google-Calendar-Find-Event" "Find the Google Calendar event called 'Batch2 Alienware Event $TS'."
-run_test "Alienware" "ssh -o StrictHostKeyChecking=no alienware" "Google-Calendar-Update-Event" "Update the Google Calendar event 'Batch2 Alienware Event $TS' to start at 5 PM tomorrow."
-run_test "Alienware" "ssh -o StrictHostKeyChecking=no alienware" "Google-Calendar-Delete-Event" "Delete the Google Calendar event 'Batch2 Alienware Event $TS'."
+run_test "Alienware" "ssh -o StrictHostKeyChecking=no marku@100.109.60.113" "Google-Calendar-Create-Event" "Create an event in Google Calendar called 'Batch2 Alienware Event $TS' tomorrow at 4 PM for 1 hour."
+run_test "Alienware" "ssh -o StrictHostKeyChecking=no marku@100.109.60.113" "Google-Calendar-Find-Event" "Find the Google Calendar event called 'Batch2 Alienware Event $TS'."
+run_test "Alienware" "ssh -o StrictHostKeyChecking=no marku@100.109.60.113" "Google-Calendar-Update-Event" "Update the Google Calendar event 'Batch2 Alienware Event $TS' to start at 5 PM tomorrow."
+run_test "Alienware" "ssh -o StrictHostKeyChecking=no marku@100.109.60.113" "Google-Calendar-Delete-Event" "Delete the Google Calendar event 'Batch2 Alienware Event $TS'."
 
 echo "Batch 2 complete."
