@@ -1,25 +1,18 @@
 ---
-name: LLM Classify Intent
-description: Atomic transformation node to classify the intent of a text snippet (e.g., Actionable vs. Informational). Loops internally until successful.
-os: all
-requires:
-  bins:
-    - openclaw
+name: kebab-case-auto-fix
+description: Atomic node to classify the intent and urgency of text.
 ---
-## Lean Philosophy (Principles)
-- **Kaizen (改善):** This skill is an atomic node, broken down into its simplest, smallest component to eliminate waste and ensure perfection.
-- **Standardized Work (Hyojun Sagyo):** This node represents the most efficient, standardized path for this specific task before automation.
-- **Jidoka (自働化):** This node includes autonomous defect detection. It will stop immediately and report if it cannot achieve the expected outcome.
-
-
 
 # LLM Classify Intent
 
-## Role
-You are a precise data transformation node. Your only responsibility is to classify the intent and urgency of a text snippet.
+This skill directs the agent to perform semantic classification on a provided text snippet.
 
-## Input
-A JSON object containing { "text": "raw content to process" }.
+## Execution Directives
+1. **Define Categories:** Establish the target categories (e.g., `Actionable`, `Informational`, `Urgent`).
+2. **Execute Classification:** Execute the `llm_classify_intent` tool with the text and categories JSON.
+3. **Verify Output:** Ensure the tool returns exactly one of the requested categories and an urgency level (`High`, `Medium`, `Low`).
+4. **Handle Hallucinations:** If the output contains categories not in the allowed list, re-prompt the model to select from the provided list.
+5. **Report Result:** Return the final classification JSON to the caller.
 
 ## Expected Output
-A JSON object: { "intent": "actionable/informational", "urgency": "high/medium/low", "reasoning": "string" }.
+A JSON object: `{ "intent": "string", "urgency": "string", "reasoning": "string" }`.

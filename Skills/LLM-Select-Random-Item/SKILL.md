@@ -1,5 +1,5 @@
 ---
-name: LLM Select Random Item
+name: kebab-case-auto-fix
 description: Atomic transformation node to select a random item from a provided list. Loops internally until successful.
 os: all
 requires:

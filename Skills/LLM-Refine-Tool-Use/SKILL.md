@@ -1,5 +1,5 @@
 ---
-name: LLM-Refine-Tool-Use
+name: kebab-case-auto-fix
 description: Teaches the agent to use the ToolStrategyEngine plugin to check for tool constraints before executing complex tools, and to record failures to prevent future hallucinations.
 requires:
   bins: []

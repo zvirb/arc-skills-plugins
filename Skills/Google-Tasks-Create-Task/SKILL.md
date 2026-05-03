@@ -1,33 +1,15 @@
 ---
-name: Google Tasks Create Task
-description: Atomic node skill to create a task in Google Tasks using the gog CLI.
-os: all
-requires:
-  bins:
-    - gog
+name: google-tasks-create-task
+description: "Hardened script-based execution for google-tasks-create-task."
+allowed-tools: [exec]
 ---
-## Lean Philosophy (Principles)
-- **Kaizen (改善):** This skill is an atomic node, broken down into its simplest, smallest component to eliminate waste and ensure perfection.
-- **Standardized Work (Hyojun Sagyo):** This node represents the most efficient, standardized path for this specific task before automation.
-- **Jidoka (自働化):** This node includes autonomous defect detection. It relies on the CLI's self-healing loop and will report errors if task creation fails.
 
-# Google Tasks Create Task
+# Google Tasks Create Task Directive
 
-This skill allows the agent to create a new task in Google Tasks using the native CLI.
+You MUST use the deterministic script for this action.
 
-## Cognitive Directives
-WHEN [A new task needs to be added to a Google Tasks list]
-THEN [Invoke the `gog` tool with the argument `tasks add <tasklistId> --title "Task Title" --notes "Optional Notes" --due "ISO-Date"`]
-
-**CRITICAL ANTI-HALLUCINATION WARNING:** 
-The `gogcli` tool does NOT support batch creation or the `--add` flag. You MUST create tasks ONE AT A TIME. If you need to create multiple tasks, you must make multiple separate tool calls in sequence. Never use `--add`.
-
-## Schema Example
-```json
-{
-  "args": "tasks add @default --title \"Buy milk\" --notes \"Organic whole milk\" --due \"2026-04-26T17:00:00Z\" --json"
-}
-```
-
-## Expected Output
-A JSON object confirming the task was created (including task ID).
+## Execution Directives
+1. Execute Script:
+   - Command: `bash /home/marku/.openclaw/workspace/skills/google-tasks-create-task/scripts/run.sh` followed by required arguments in double quotes.
+   - Tool: `exec`
+   - Details: Pass arguments sequentially. Example: `bash /home/marku/.openclaw/workspace/skills/google-tasks-create-task/scripts/run.sh "arg1" "arg2"`

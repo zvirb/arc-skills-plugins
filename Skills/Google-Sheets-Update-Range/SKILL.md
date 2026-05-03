@@ -1,30 +1,15 @@
 ---
-name: Google Sheets Update Range
-description: Atomic node skill to update a range in Google Sheets using the gog CLI.
-os: all
-requires:
-  bins:
-    - gog
+name: google-sheets-update-range
+description: "Hardened script-based execution for google-sheets-update-range."
+allowed-tools: [exec]
 ---
-## Lean Philosophy (Principles)
-- **Kaizen (改善):** This skill is an atomic node, broken down into its simplest, smallest component to eliminate waste and ensure perfection.
-- **Standardized Work (Hyojun Sagyo):** This node represents the most efficient, standardized path for this specific task before automation.
-- **Jidoka (自働化):** This node includes autonomous defect detection. It relies on the CLI's self-healing loop and will report errors if the update fails.
 
-# Google Sheets Update Range
+# Google Sheets Update Range Directive
 
-This skill allows the agent to update a specific range in a Google Sheet using the native CLI.
+You MUST use the deterministic script for this action.
 
-## Cognitive Directives
-WHEN [A range of cells needs to be updated in a Google Sheet]
-THEN [Execute the native terminal command `gog sheets update <spreadsheetId> <range> --values-json '[["..."]]'`]
-
-## Schema Example
-```json
-{
-  "command": "gog sheets update sheet_id_123 \"Tab1!A1:B1\" --values-json '[[\"Val1\", \"Val2\"]]' --json"
-}
-```
-
-## Expected Output
-A JSON object confirming the update.
+## Execution Directives
+1. Execute Script:
+   - Command: `bash /home/marku/.openclaw/workspace/skills/google-sheets-update-range/scripts/run.sh` followed by required arguments in double quotes.
+   - Tool: `exec`
+   - Details: Pass arguments sequentially. Example: `bash /home/marku/.openclaw/workspace/skills/google-sheets-update-range/scripts/run.sh "arg1" "arg2"`

@@ -1,5 +1,5 @@
 ---
-name: LLM Extract Action Items
+name: kebab-case-auto-fix
 description: Atomic transformation node to extract a list of actionable tasks from raw text. Loops internally until successful.
 os: all
 requires:

@@ -1,30 +1,15 @@
 ---
-name: Google Drive Search Files
-description: Atomic node skill to search for files in Google Drive using the gog CLI.
-os: all
-requires:
-  bins:
-    - gog
+name: google-drive-search-files
+description: "Hardened script-based execution for google-drive-search-files."
+allowed-tools: [exec]
 ---
-## Lean Philosophy (Principles)
-- **Kaizen (改善):** This skill is an atomic node, broken down into its simplest, smallest component to eliminate waste and ensure perfection.
-- **Standardized Work (Hyojun Sagyo):** This node represents the most efficient, standardized path for this specific task before automation.
-- **Jidoka (自働化):** This node includes autonomous defect detection. It relies on the CLI's self-healing loop and will report errors if the search fails.
 
-# Google Drive Search Files
+# Google Drive Search Files Directive
 
-This skill allows the agent to search for files across Google Drive using the native CLI.
+You MUST use the deterministic script for this action.
 
-## Cognitive Directives
-WHEN [A file or folder needs to be located in Google Drive]
-THEN [Execute the native terminal command `gog drive search "query" --json`]
-
-## Schema Example
-```json
-{
-  "command": "gog drive search \"project proposal\" --json"
-}
-```
-
-## Expected Output
-A JSON array of file objects matching the search criteria.
+## Execution Directives
+1. Execute Script:
+   - Command: `bash /home/marku/.openclaw/workspace/skills/google-drive-search-files/scripts/run.sh` followed by required arguments in double quotes.
+   - Tool: `exec`
+   - Details: Pass arguments sequentially. Example: `bash /home/marku/.openclaw/workspace/skills/google-drive-search-files/scripts/run.sh "arg1" "arg2"`

@@ -1,30 +1,15 @@
 ---
-name: Google Docs Read Document
-description: Atomic node skill to read a Google Doc using the gog CLI.
-os: all
-requires:
-  bins:
-    - gog
+name: google-docs-read-document
+description: "Hardened script-based execution for google-docs-read-document."
+allowed-tools: [exec]
 ---
-## Lean Philosophy (Principles)
-- **Kaizen (改善):** This skill is an atomic node, broken down into its simplest, smallest component to eliminate waste and ensure perfection.
-- **Standardized Work (Hyojun Sagyo):** This node represents the most efficient, standardized path for this specific task before automation.
-- **Jidoka (自働化):** This node includes autonomous defect detection. It relies on the CLI's self-healing loop and will report errors if reading fails.
 
-# Google Docs Read Document
+# Google Docs Read Document Directive
 
-This skill allows the agent to read the plain text contents of a Google Document using the native CLI.
+You MUST use the deterministic script for this action.
 
-## Cognitive Directives
-WHEN [The contents of a Google Doc need to be read]
-THEN [Execute the native terminal command `gog docs cat <docId>`]
-
-## Schema Example
-```json
-{
-  "command": "gog docs cat doc_id_123"
-}
-```
-
-## Expected Output
-The plain text content of the Google Doc.
+## Execution Directives
+1. Execute Script:
+   - Command: `bash /home/marku/.openclaw/workspace/skills/google-docs-read-document/scripts/run.sh` followed by required arguments in double quotes.
+   - Tool: `exec`
+   - Details: Pass arguments sequentially. Example: `bash /home/marku/.openclaw/workspace/skills/google-docs-read-document/scripts/run.sh "arg1" "arg2"`

@@ -1,25 +1,20 @@
 ---
 name: backlog-grooming
-description: Workflow-driven skill that autonomously manages stale items in Google Tasks.
+description: Atomic node skill to autonomously manage stale items in Google Tasks.
 os: all
 requires:
   bins: []
 ---
-## Lean Philosophy (Principles)
-- **Kaizen (改善):** This skill is an atomic node, broken down into its simplest, smallest component to eliminate waste and ensure perfection.
-- **Standardized Work (Hyojun Sagyo):** This node represents the most efficient, standardized path for this specific task before automation.
-- **Jidoka (自働化):** This node includes autonomous defect detection. It will stop immediately and report if it cannot achieve the expected outcome.
 
 # Backlog Grooming
 
-This skill directs the agent to trigger the native programmatic backlog grooming plugin to maintain a clean workspace.
+This skill directs the agent to trigger the native programmatic backlog grooming plugin.
 
-## Cognitive Directives
-WHEN [Triggered by schedule or user request to groom backlog] 
-THEN [
-  Execute the following Jidoka-validated loop:
-  1. **Execute Node:** Execute the `workflow_backlog_grooming` plugin tool with empty JSON `{}` to trigger the grooming process.
-  2. **Verification Step (Jidoka):** Check if the tool returns a valid JSON response with `{"success": true}` or an error message. IF it returns an error or hallucinated output, report the error, wait 3 seconds, and retry (max 3 times). IF it still fails, stop and notify the user.
-]
+## Execution Directives
+1. **Initiate Grooming:** Execute the `workflow_backlog_grooming` plugin tool with empty JSON `{}`.
+2. **Verify Response:** Inspect the tool output for a valid JSON object.
+3. **Handle Errors:** If the tool returns an error or hallucinated output, report the issue to the user. Wait 3 seconds and retry (maximum 3 attempts).
+4. **Finalize:** Report the JSON summary of groomed tasks to the user once successful.
+
 ## Expected Output
 A JSON summary of the groomed tasks returned by the plugin.

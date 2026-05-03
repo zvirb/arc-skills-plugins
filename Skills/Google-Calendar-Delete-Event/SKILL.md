@@ -1,32 +1,15 @@
 ---
-name: Google Calendar Delete Event
-description: Atomic node skill to delete a Google Calendar event using the gog CLI.
-os: all
-requires:
-  bins:
-    - gog
+name: google-calendar-delete-event
+description: "Hardened script-based execution for google-calendar-delete-event."
+allowed-tools: [exec]
 ---
-## Lean Philosophy (Principles)
-- **Kaizen (改善):** This skill is an atomic node, broken down into its simplest, smallest component to eliminate waste and ensure perfection.
-- **Standardized Work (Hyojun Sagyo):** This node represents the most efficient, standardized path for this specific task before automation.
-- **Jidoka (自働化):** This node includes autonomous defect detection. It relies on the CLI's self-healing loop and will report errors if the deletion fails.
 
-# Google Calendar Delete Event
+# Google Calendar Delete Event Directive
 
-This skill allows the agent to delete an event from Google Calendar using the native CLI.
+You MUST use the deterministic script for this action.
 
-## Cognitive Directives
-WHEN [An event needs to be removed or deleted from the calendar]
-THEN [Execute the native terminal command `gog calendar delete <calendarId> <eventId>`]
-
-## Schema Example
-```json
-{
-  "service": "calendar",
-  "action": "delete",
-  "targetId": "event_id_123"
-}
-```
-
-## Expected Output
-Confirmation that the event was deleted.
+## Execution Directives
+1. Execute Script:
+   - Command: `bash /home/marku/.openclaw/workspace/skills/google-calendar-delete-event/scripts/run.sh` followed by required arguments in double quotes.
+   - Tool: `exec`
+   - Details: Pass arguments sequentially. Example: `bash /home/marku/.openclaw/workspace/skills/google-calendar-delete-event/scripts/run.sh "arg1" "arg2"`

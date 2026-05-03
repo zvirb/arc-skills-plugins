@@ -1,5 +1,5 @@
 ---
-name: micro-suck-generation
+name: kebab-case-auto-fix
 description: Workflow-driven skill that issues minor resilience challenges to build task-initiation momentum.
 os: all
 requires:

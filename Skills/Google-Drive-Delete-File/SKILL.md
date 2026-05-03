@@ -1,30 +1,15 @@
 ---
-name: Google Drive Delete File
-description: Atomic node skill to delete a file in Google Drive using the gog CLI.
-os: all
-requires:
-  bins:
-    - gog
+name: google-drive-delete-file
+description: "Hardened script-based execution for google-drive-delete-file."
+allowed-tools: [exec]
 ---
-## Lean Philosophy (Principles)
-- **Kaizen (改善):** This skill is an atomic node, broken down into its simplest, smallest component to eliminate waste and ensure perfection.
-- **Standardized Work (Hyojun Sagyo):** This node represents the most efficient, standardized path for this specific task before automation.
-- **Jidoka (自働化):** This node includes autonomous defect detection. It relies on the CLI's self-healing loop and will report errors if the deletion fails.
 
-# Google Drive Delete File
+# Google Drive Delete File Directive
 
-This skill allows the agent to move a file to trash in Google Drive using the native CLI.
+You MUST use the deterministic script for this action.
 
-## Cognitive Directives
-WHEN [A file needs to be removed or moved to trash in Google Drive]
-THEN [Execute the native terminal command `gog drive delete <fileId>`]
-
-## Schema Example
-```json
-{
-  "command": "gog drive delete file_id_123"
-}
-```
-
-## Expected Output
-Confirmation that the file was moved to the trash.
+## Execution Directives
+1. Execute Script:
+   - Command: `bash /home/marku/.openclaw/workspace/skills/google-drive-delete-file/scripts/run.sh` followed by required arguments in double quotes.
+   - Tool: `exec`
+   - Details: Pass arguments sequentially. Example: `bash /home/marku/.openclaw/workspace/skills/google-drive-delete-file/scripts/run.sh "arg1" "arg2"`

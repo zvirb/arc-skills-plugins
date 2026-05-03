@@ -1,5 +1,5 @@
 ---
-name: Vector Store Upsert Memory
+name: kebab-case-auto-fix
 description: Atomic node skill to upsert text/metadata into the local vector store (LanceDB). Loops internally until successful.
 os: all
 requires:

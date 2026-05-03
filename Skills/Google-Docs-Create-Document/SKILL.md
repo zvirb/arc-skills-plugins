@@ -1,30 +1,15 @@
 ---
-name: Google Docs Create Document
-description: Atomic node skill to create a Google Doc using the gog CLI.
-os: all
-requires:
-  bins:
-    - gog
+name: google-docs-create-document
+description: "Hardened script-based execution for google-docs-create-document."
+allowed-tools: [exec]
 ---
-## Lean Philosophy (Principles)
-- **Kaizen (改善):** This skill is an atomic node, broken down into its simplest, smallest component to eliminate waste and ensure perfection.
-- **Standardized Work (Hyojun Sagyo):** This node represents the most efficient, standardized path for this specific task before automation.
-- **Jidoka (自働化):** This node includes autonomous defect detection. It relies on the CLI's self-healing loop and will report errors if the creation fails.
 
-# Google Docs Create Document
+# Google Docs Create Document Directive
 
-This skill allows the agent to create a new Google Document using the native CLI.
+You MUST use the deterministic script for this action.
 
-## Cognitive Directives
-WHEN [A new Google Doc needs to be created]
-THEN [Execute the native terminal command `gog docs create <title> --json`]
-
-## Schema Example
-```json
-{
-  "command": "gog docs create \"My New Document\" --json"
-}
-```
-
-## Expected Output
-A JSON object with the new document ID and details.
+## Execution Directives
+1. Execute Script:
+   - Command: `bash /home/marku/.openclaw/workspace/skills/google-docs-create-document/scripts/run.sh` followed by required arguments in double quotes.
+   - Tool: `exec`
+   - Details: Pass arguments sequentially. Example: `bash /home/marku/.openclaw/workspace/skills/google-docs-create-document/scripts/run.sh "arg1" "arg2"`

@@ -1,30 +1,15 @@
 ---
-name: Google Drive Share File
-description: Atomic node skill to share a file in Google Drive using the gog CLI.
-os: all
-requires:
-  bins:
-    - gog
+name: google-drive-share-file
+description: "Hardened script-based execution for google-drive-share-file."
+allowed-tools: [exec]
 ---
-## Lean Philosophy (Principles)
-- **Kaizen (改善):** This skill is an atomic node, broken down into its simplest, smallest component to eliminate waste and ensure perfection.
-- **Standardized Work (Hyojun Sagyo):** This node represents the most efficient, standardized path for this specific task before automation.
-- **Jidoka (自働化):** This node includes autonomous defect detection. It relies on the CLI's self-healing loop and will report errors if sharing fails.
 
-# Google Drive Share File
+# Google Drive Share File Directive
 
-This skill allows the agent to share a file or folder in Google Drive using the native CLI.
+You MUST use the deterministic script for this action.
 
-## Cognitive Directives
-WHEN [A file or folder needs to be shared with a user or made public]
-THEN [Execute the native terminal command `gog drive share <fileId> --role reader --type user --email <email>`]
-
-## Schema Example
-```json
-{
-  "command": "gog drive share file_id_123 --role writer --type user --email example@gmail.com --json"
-}
-```
-
-## Expected Output
-A JSON object confirming the permission creation.
+## Execution Directives
+1. Execute Script:
+   - Command: `bash /home/marku/.openclaw/workspace/skills/google-drive-share-file/scripts/run.sh` followed by required arguments in double quotes.
+   - Tool: `exec`
+   - Details: Pass arguments sequentially. Example: `bash /home/marku/.openclaw/workspace/skills/google-drive-share-file/scripts/run.sh "arg1" "arg2"`

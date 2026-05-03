@@ -1,32 +1,20 @@
 ---
-name: CRM Entity Extraction
-description: Standard Operating Procedure (SOP) that bridges extraction logic to CRM append operations via atomic nodes.
+name: kebab-case-auto-fix
+description: Atomic node skill to extract CRM data from text and append to Google Sheets.
 os: all
 requires:
   bins: [gog]
 ---
-## Lean Philosophy (Principles)
-- **Kaizen (改善):** This workflow relies entirely on discrete, single-responsibility atomic nodes rather than a monolithic loop.
-- **Standardized Work (Hyojun Sagyo):** This node represents a strict, step-by-step Standard Operating Procedure (SOP) for data extraction and persistence.
-- **Jidoka (自働化):** Includes autonomous self-healing loops with hard verification stops between every step.
 
-# CRM Entity Extraction SOP
+# CRM Entity Extraction
 
-This procedure guides the agent to extract structured data and append it to a CRM spreadsheet using explicitly defined atomic nodes.
+This skill directs the agent to extract structured business entities and log them to a central CRM spreadsheet.
 
-## Cognitive Directives
-WHEN [A business-related email or note containing CRM data is received]
-THEN [
-  Follow this strict Standard Operating Procedure:
-
-  **Step 1: Entity Extraction**
-  - Execute the `LLM-Extract-JSON` atomic skill to extract structured entities (name, org, date).
-  - **Jidoka Stop:** Check if the sub-agent returns a valid JSON object matching the requested schema. IF it returns unstructured text, instruct the skill to format correctly and retry. Do NOT proceed until valid JSON is acquired.
-
-  **Step 2: Append to CRM**
-  - Execute the `Google Sheets Append Row` (or equivalent) atomic node, passing the extracted JSON row.
-  - **Jidoka Stop:** Verify the atomic node returns a successful JSON confirmation. IF the API request fails, retry up to 3 times with the exact error output. IF it still fails, report the error and STOP.
-]
+## Execution Directives
+1. **Extract Data:** Execute `llm_extract_json` on the source text using a schema for `name`, `organization`, and `contact_date`.
+2. **Verify Extraction:** Inspect the resulting JSON. If empty or malformed, re-attempt extraction with a more specific prompt.
+3. **Append to CRM:** Execute `gog sheets append <spreadsheetId> "Sheet1!A1" --values-json '[["$name", "$org", "$date"]]'` to commit the data.
+4. **Confirm Commit:** Report the successful row insertion and the extracted values to the user.
 
 ## Expected Output
-A JSON summary of the extracted data and the successful append confirmation.
+A JSON object confirming the extracted entities and the spreadsheet append status.

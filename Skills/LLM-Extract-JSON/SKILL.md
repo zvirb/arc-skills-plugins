@@ -1,31 +1,17 @@
 ---
-name: LLM Extract JSON
-description: Atomic transformation node to extract strictly formatted JSON from raw text using the LLMTransformations plugin.
-os: all
-requires:
-  plugins:
-    - llm-transformations-plugin
+name: kebab-case-auto-fix
+description: Atomic node to extract strictly formatted JSON from raw text.
 ---
-## Lean Philosophy (Principles)
-- **Kaizen (改善):** This skill is an atomic node, broken down into its simplest, smallest component to eliminate waste and ensure perfection.
-- **Standardized Work (Hyojun Sagyo):** This node represents the most efficient, standardized path for this specific task before automation.
-- **Jidoka (自働化):** This node includes autonomous defect detection. It relies on the plugin's self-healing loop and will report errors if JSON extraction fails.
 
 # LLM Extract JSON
 
-This skill allows the agent to extract structured JSON data from unstructured text.
+This skill directs the agent to extract structured data from unstructured text using a provided schema.
 
-## Cognitive Directives
-WHEN [Raw text contains structured data that needs to be converted to JSON]
-THEN [Execute the `llm_extract_json` plugin tool]
-
-## Schema Example
-```json
-{
-  "text": "The user is John Doe and he is 30 years old.",
-  "schema": "{ 'name': 'string', 'age': 'number' }"
-}
-```
+## Execution Directives
+1. **Define Schema:** Establish the target JSON schema (e.g., `{ "name": "string", "date": "string" }`).
+2. **Execute Extraction:** Run the `llm_extract_json` tool with the raw text and schema.
+3. **Verify Validity:** Parse the resulting JSON. If it is invalid or does not match the schema, re-prompt the tool with the error message.
+4. **Finalize Output:** Return the verified JSON object.
 
 ## Expected Output
 A strictly formatted JSON object matching the requested schema.
