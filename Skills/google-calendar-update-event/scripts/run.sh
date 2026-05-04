@@ -1,4 +1,10 @@
 ﻿#!/bin/bash
+# Automatically load credentials from git-ignored Secrets directory
+SECRET_FILE="$(dirname "$0")/../../../Secrets/gog.env"
+if [ -f "$SECRET_FILE" ]; then
+  source "$SECRET_FILE"
+fi
+
 BINARY=${GOG_BIN_PATH:-/home/marku/.local/bin/gog}
 
 OUTPUT=$($BINARY "$@" 2>&1)
