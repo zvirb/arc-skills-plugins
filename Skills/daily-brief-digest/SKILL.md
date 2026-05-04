@@ -1,5 +1,5 @@
 ---
-name: kebab-case-auto-fix
+name: daily-brief-digest
 description: Generates a morning synthesis of emails, calendar, and news.
 ---
 

@@ -1,5 +1,5 @@
 ---
-name: kebab-case-auto-fix
+name: process-schematics
 description: "Triggers for processing design changes, measurements, and diagrams. Preserves original design state."
 allowed-tools: [read, write, llm-extract-json]
 triggers: [process measurements, ingest schematic, design update, diagram notes]

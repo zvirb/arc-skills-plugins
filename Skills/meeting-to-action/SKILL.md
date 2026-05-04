@@ -1,5 +1,5 @@
 ---
-name: kebab-case-auto-fix
+name: meeting-to-action
 description: Convert meeting notes or transcripts into clear summaries, decisions, and action items with owners and due dates. Use when a user asks to turn a meeting recording, transcript, or notes into a follow-up plan.
 ---
 

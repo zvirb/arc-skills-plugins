@@ -1,5 +1,5 @@
 ---
-name: kebab-case-auto-fix
+name: llm-extract-json
 description: Atomic node to extract strictly formatted JSON from raw text.
 ---
 

@@ -1,5 +1,5 @@
 ---
-name: kebab-case-auto-fix
+name: calendar-guard
 description: Atomic node skill to defend the schedule by injecting recovery blocks.
 os: all
 requires:

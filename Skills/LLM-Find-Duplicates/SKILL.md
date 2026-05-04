@@ -1,5 +1,5 @@
 ---
-name: kebab-case-auto-fix
+name: llm-find-duplicates
 description: Atomic transformation node to identify duplicates in a dataset and return a list. Loops internally until successful.
 os: all
 requires:

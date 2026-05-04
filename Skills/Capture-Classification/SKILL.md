@@ -1,5 +1,5 @@
 ---
-name: kebab-case-auto-fix
+name: capture-classification
 description: Semantic router for unstructured audio transcripts or notes.
 os: all
 requires:

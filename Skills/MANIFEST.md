@@ -65,7 +65,6 @@
 | process-schematics | Triggers for processing design changes, measurements, and diagrams. Preserves original design state. |
 | process-tasks | Triggers for processing handwritten todo lists. Performs delta-check and non-destructive appends. |
 | redis-store | Use Redis effectively for caching, queues, and data structures with proper expiration and persistence. |
-| root-router | Master routing skill for the OpenClaw high-fidelity library. Directs intent to specific sub-skills using dynamic loading. |
 | vague-task-decomposition | Atomic node to break complex tasks into actionable subtasks. |
 | vector-store-upsert-memory | Atomic node skill to upsert text/metadata into the local vector store (LanceDB). Loops internally until successful. |
 | workflow-document-triage | High-fidelity chained workflow for document search, reading, task creation, and email notification. |

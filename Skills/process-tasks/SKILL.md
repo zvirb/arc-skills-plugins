@@ -1,5 +1,5 @@
 ---
-name: kebab-case-auto-fix
+name: process-tasks
 description: "Triggers for processing handwritten todo lists. Performs delta-check and non-destructive appends."
 allowed-tools: [read, write, llm-extract-json]
 triggers: [process handwritten tasks, ingest todo list, sync handwritten notes]

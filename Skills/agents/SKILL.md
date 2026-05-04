@@ -1,5 +1,5 @@
 ---
-name: kebab-case-auto-fix
+name: agents
 description: Design, build, and deploy AI agents with architecture patterns, framework selection, memory systems, and production safety.
 ---
 

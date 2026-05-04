@@ -1,5 +1,5 @@
 ---
-name: kebab-case-auto-fix
+name: llm-summarize-text
 description: Atomic node to generate concise summaries of text.
 ---
 

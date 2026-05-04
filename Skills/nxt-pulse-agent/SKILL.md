@@ -1,5 +1,5 @@
 ---
-name: kebab-case-auto-fix
+name: nxt-pulse-agent
 description: Proactive productivity skill with ADHD micro-stepping support.
 ---
 

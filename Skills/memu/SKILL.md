@@ -1,5 +1,5 @@
 ---
-name: kebab-case-auto-fix
+name: memu
 description: >
   Persistent memory infrastructure for 24/7 agents (Local-First). Replaces flat-file memory
   with a three-layer architecture (Resource → Memory Item → Memory Category)

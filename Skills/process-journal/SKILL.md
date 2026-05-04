@@ -1,5 +1,5 @@
 ---
-name: kebab-case-auto-fix
+name: process-journal
 description: "Triggers for processing handwritten meeting notes or journal entries. Performs timestamped appends."
 allowed-tools: [read, write]
 triggers: [process handwritten journal, ingest meeting notes, append to journal]

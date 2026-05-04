@@ -1,5 +1,5 @@
 ---
-name: kebab-case-auto-fix
+name: composio-integration
 description: Unified API skill for 600+ apps. Currently enabled for Gmail and Google Tasks.
 metadata:
   openclaw: {"requires": {"env": ["COMPOSIO_API_KEY"]}}

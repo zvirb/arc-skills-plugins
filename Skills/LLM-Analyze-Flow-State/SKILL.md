@@ -1,5 +1,5 @@
 ---
-name: kebab-case-auto-fix
+name: llm-analyze-flow-state
 description: Atomic transformation node to analyze telemetry and infer if the user is in a deep focus flow state. Loops internally until successful.
 os: all
 requires:

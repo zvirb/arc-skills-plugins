@@ -236,8 +236,6 @@
   "skills": {
     "allowBundled": [
       "healthcheck",
-      "summarize",
-      "weather",
       "diffs",
       "gog",
       "session-logs",

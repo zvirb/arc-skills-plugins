@@ -1,5 +1,5 @@
 ---
-name: kebab-case-auto-fix
+name: gemini-web-search
 description: Use Gemini CLI to perform web searches and fact-finding.
 ---
 

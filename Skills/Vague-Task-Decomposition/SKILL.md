@@ -1,5 +1,5 @@
 ---
-name: kebab-case-auto-fix
+name: vague-task-decomposition
 description: Atomic node to break complex tasks into actionable subtasks.
 os: all
 requires:

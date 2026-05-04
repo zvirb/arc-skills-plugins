@@ -1,5 +1,5 @@
 ---
-name: kebab-case-auto-fix
+name: flow-state-monitoring
 description: Workflow-driven skill that infers deep focus and autonomously mutes interruptions.
 os: all
 requires:

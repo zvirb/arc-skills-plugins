@@ -1,5 +1,5 @@
 ---
-name: kebab-case-auto-fix
+name: llm-identify-conflicts
 description: Atomic transformation node to identify time conflicts in a calendar dataset and return a list. Loops internally until successful.
 os: all
 requires:

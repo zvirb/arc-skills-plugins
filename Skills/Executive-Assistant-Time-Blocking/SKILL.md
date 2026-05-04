@@ -1,5 +1,5 @@
 ---
-name: kebab-case-auto-fix
+name: executive-assistant-time-blocking
 description: High-level orchestration skill to block out time for tasks.
 os: all
 requires:

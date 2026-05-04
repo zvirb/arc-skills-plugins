@@ -1,5 +1,5 @@
 ---
-name: kebab-case-auto-fix
+name: llm-classify-intent
 description: Atomic node to classify the intent and urgency of text.
 ---
 

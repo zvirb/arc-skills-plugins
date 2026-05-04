@@ -1,5 +1,5 @@
 ---
-name: kebab-case-auto-fix
+name: process-braindump
 description: "Triggers for processing unstructured thoughts. Prioritizes, decomposes, and routes content."
 allowed-tools: [write, sessions_spawn, gog]
 triggers: [process brain dump, ingest chaotic notes, unstructured thought sync]

@@ -1,5 +1,5 @@
 ---
-name: kebab-case-auto-fix
+name: clawcoach-core
 description: Data-driven AI health coach execution skill.
 os: all
 requires:

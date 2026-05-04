@@ -1,5 +1,5 @@
 ---
-name: kebab-case-auto-fix
+name: crm-entity-extraction
 description: Atomic node skill to extract CRM data from text and append to Google Sheets.
 os: all
 requires:

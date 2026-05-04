@@ -1,5 +1,5 @@
 ---
-name: kebab-case-auto-fix
+name: gog
 description: "Triggers for generic Google Workspace queries (Drive, Sheets, Docs, Contacts). Enforces third-person imperative logic."
 allowed-tools: [gog, exec]
 triggers: [google sheets, spreadsheet, drive search, file search, list contacts]

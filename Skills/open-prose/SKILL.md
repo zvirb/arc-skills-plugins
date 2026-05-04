@@ -1,5 +1,5 @@
 ---
-name: kebab-case-auto-fix
+name: open-prose
 description: OpenProse VM orchestrator for multi-agent workflows.
 metadata:
   openclaw:

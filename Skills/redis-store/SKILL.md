@@ -1,5 +1,5 @@
 ---
-name: kebab-case-auto-fix
+name: redis-store
 description: Use Redis effectively for caching, queues, and data structures with proper expiration and persistence.
 metadata: {"clawdbot":{"emoji":"🔴","requires":{"anyBins":["redis-cli"]},"os":["linux","darwin","win32"]}}
 ---

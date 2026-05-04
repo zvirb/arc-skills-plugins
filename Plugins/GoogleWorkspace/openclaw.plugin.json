@@ -1,0 +1,9 @@
+{
+  "name": "google-workspace-plugin",
+  "version": "1.0.0",
+  "kind": "utility",
+  "description": "Native integration for Google Workspace (Tasks, Docs, Calendar) using robust Jidoka fallbacks.",
+  "contracts": {
+    "tools": ["gog", "workspace_bridge_status"]
+  }
+}

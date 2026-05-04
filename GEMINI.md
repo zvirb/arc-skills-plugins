@@ -73,11 +73,30 @@ When responding to a request to build a capability:
 ## 6. Required Reading (Anti-Patterns)
 * **CRITICAL CONTEXT:** Before generating any new OpenClaw Extension (Skill or Plugin), you MUST cross-reference the known anti-patterns documented in `Docs/OpenClaw_Best_Practices_and_Common_Issues.md`. This contains critical architectural rules to prevent Context Bloat, Silent Validation Failures, Zombie Subshells, Manifest Dependency Collisions, Cognitive Drift, and Unsafe Path Traversal.
 
-## 7. Progressive Disclosure (The KV Cache Defense)
-* **The Monolithic Binding Trap:** NEVER bind all 50+ skills to a single agent profile in `openclaw.json`. This exhausts the KV cache (context window) before the agent even begins reasoning.
-* **The Root-Router Pattern:** Use the `root-router` skill as the primary entry point for all agents. 
-* **Methodology Loading:** Instruct agents to use `load_skill("skill-name")` to retrieve specific Markdown instructions ONLY when the reasoning process identifies a need for that specific capability.
-* **Dynamic Execution:** Once a skill's methodology is loaded, the agent MUST use the `execute_skill(name, args)` tool provided by the `skill-loader` plugin to perform the action. This ensures native tool schemas are not cluttering the system prompt.
+## 7. Lean Architecture & JIT Discovery (The 2026.5.x Standard)
+* **The Monolithic Binding Trap:** NEVER bind all 50+ skills to a single agent profile. This exhausts the KV cache.
+* **Native Tool Search (JIT):** Use the built-in `tool_search` mechanism instead of manual routers. The system prompt is initialized with a lightweight search tool; agents must invoke it to dynamically retrieve tool definitions only when a need is identified (Just-In-Time Retrieval).
+* **Anti-Pattern Warning:** Manual **"root-routers"** and custom **`load_skill`** plugins are now officially discouraged. They introduce redundant latency and bypass native configuration repairs (doctor --fix).
+* **Concentric Circles Model:** Manage capabilities in layers:
+    * **Layer 1 (Core):** `read`, `write`, `exec`, `web_search` (Reactive foundation).
+    * **Layer 2 (Advanced):** `browser`, `memory`, `cron` (Proactive assistant).
+    * **Layer 3 (Knowledge):** Specialized skills (`gog`, `slack`, `github`) managed via `skills.allowBundled`.
 
-## 8. Network & Infrastructure Notes
+## 8. Plugin Lifecycle & Discovery
+* **Precedence Hierarchy:**
+    1. `plugins.load.paths` (Explicit overrides)
+    2. Workspace Plugins (`<workspace>/.openclaw/`)
+    3. Global Plugins (`~/.openclaw/`)
+    4. Bundled Plugins (`dist/extensions/`)
+* **Manifest Contracts:** Every plugin MUST include a `contracts` block in `openclaw.plugin.json` declaring its tools (e.g., `"tools": ["tool_name"]`). This prevents the "non-capability" classification in the registry and allows "descriptor-only" setup without stalling gateway boot.
+* **Exclusive Slots:** For plugins that provide core architectural capabilities (like a custom skill management engine), set `kind: "context-engine"` in the manifest to assign it to the exclusive `contextEngine` slot.
+
+## 9. Specialized Architect Roles
+* **Skill-Architect:** Focuses on procedural workflows and standardizing SOPs in Markdown. Ensures host dependencies are caught by `openclaw.requires`. Must adhere to the hierarchical skill precedence (Workspace > Project > Personal > Managed > Bundled).
+* **Plugin-Runtime-Expert:** Handles TypeScript (ESM) environments. Adheres strictly to the `IPlugin` interface and manifest validation. Must utilize the `api.runtime.taskFlow` interface for long-running operations to ensure state persistence.
+* **Extension-Security-Auditor:** Enforces **Zero Standing Privileges (ZSP)**. Ensures secrets are placed in the `Secrets/` directory and injected at request-time. Validates POSIX containment to prevent path traversal in dynamic tools.
+
+## 10. Network & Infrastructure Notes
 * **Ollama Configuration:** Ollama for access from WSL is on port `11450`. Ollama on Alienware (SSH) is on port `11434`.
+
+

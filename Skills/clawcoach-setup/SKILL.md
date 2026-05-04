@@ -1,5 +1,5 @@
 ---
-name: kebab-case-auto-fix
+name: clawcoach-setup
 description: One-time setup for ClawCoach AI health coaching.
 os: all
 requires:
