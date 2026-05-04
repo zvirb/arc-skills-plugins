@@ -1,10 +1,13 @@
 ---
 name: gog
-description: "Triggers for generic Google Workspace queries (Drive, Sheets, Docs, Contacts). Enforces third-person imperative logic."
+description: "Workspace core (Drive, Sheets, Docs, Contacts). Note: Tasks and Calendar are handled by the bundled gog skill."
 allowed-tools: [gog, exec]
 triggers: [google sheets, spreadsheet, drive search, file search, list contacts]
 negative-triggers: [create event, find event, schedule meeting, delete event, list calendar, send email, search email]
 ---
+
+> [!NOTE]
+> This workspace override explicitly excludes **Tasks** and **Calendar** to prevent shadowing the optimized bundled `gog` logic.
 
 # Generic GOG Directive
 
