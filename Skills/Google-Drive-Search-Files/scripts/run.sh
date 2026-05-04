@@ -1,3 +1,20 @@
-#!/bin/bash
-# Fixed: Use provided query and parent from lobster pipeline
-/home/marku/.local/bin/gog drive ls --query "$1" --json
+﻿#!/bin/bash
+BINARY=${GOG_BIN_PATH:-/home/marku/.local/bin/gog}
+
+OUTPUT=$($BINARY "$@" 2>&1)
+EXIT_CODE=$?
+
+if [ $EXIT_CODE -ne 0 ]; then
+  CLEAN_OUTPUT=$(echo "$OUTPUT" | sed 's/"/\\"/g' | tr -d '\n' | tr -d '\r')
+  cat <<EOF
+{
+  "STATUS": "ERROR",
+  "EXIT_CODE": $EXIT_CODE,
+  "ERROR_MSG": "$CLEAN_OUTPUT",
+  "ACTION": "Please check flags and syntax (e.g. @default)."
+}
+EOF
+  exit 0
+else
+  echo "$OUTPUT"
+fi
