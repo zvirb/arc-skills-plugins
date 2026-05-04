@@ -73,5 +73,11 @@ When responding to a request to build a capability:
 ## 6. Required Reading (Anti-Patterns)
 * **CRITICAL CONTEXT:** Before generating any new OpenClaw Extension (Skill or Plugin), you MUST cross-reference the known anti-patterns documented in `Docs/OpenClaw_Best_Practices_and_Common_Issues.md`. This contains critical architectural rules to prevent Context Bloat, Silent Validation Failures, Zombie Subshells, Manifest Dependency Collisions, Cognitive Drift, and Unsafe Path Traversal.
 
-## 7. Network & Infrastructure Notes
+## 7. Progressive Disclosure (The KV Cache Defense)
+* **The Monolithic Binding Trap:** NEVER bind all 50+ skills to a single agent profile in `openclaw.json`. This exhausts the KV cache (context window) before the agent even begins reasoning.
+* **The Root-Router Pattern:** Use the `root-router` skill as the primary entry point for all agents. 
+* **Methodology Loading:** Instruct agents to use `load_skill("skill-name")` to retrieve specific Markdown instructions ONLY when the reasoning process identifies a need for that specific capability.
+* **Dynamic Execution:** Once a skill's methodology is loaded, the agent MUST use the `execute_skill(name, args)` tool provided by the `skill-loader` plugin to perform the action. This ensures native tool schemas are not cluttering the system prompt.
+
+## 8. Network & Infrastructure Notes
 * **Ollama Configuration:** Ollama for access from WSL is on port `11450`. Ollama on Alienware (SSH) is on port `11434`.

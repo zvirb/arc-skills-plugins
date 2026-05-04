@@ -77,3 +77,38 @@ Relying solely on CLI return codes or "Success" text from an LLM. Tools may retu
 Assuming an API's schema or a tool's flags based on outdated training data.
 **The Solution (Extensive Research):**
 - Before implementing any tool interaction, you MUST perform a mandatory online research step to retrieve the latest documentation, schemas, and required parameters for the target service.
+## 11. The Monolithic Binding Trap (KV Cache Exhaustion)
+**The Issue:**
+Binding all 50+ available skills to a single agent profile in `openclaw.json`. This forces the OpenClaw gateway to inject the JSON schemas for every single tool into every prompt, exhausting the KV cache (context window) and causing "context runout" before the agent can finish its task.
+**The Solution (Progressive Disclosure):**
+- **Master Routing:** Use the `root-router` skill as the only bound skill for high-level agents.
+- **On-Demand Loading:** The agent must use `load_skill("specific-skill")` to fetch instructions only when relevant.
+- **Dynamic Execution:** Use the `execute_skill` tool from the `skill-loader` plugin to run the skill's script. This keeps the agent's "active toolset" extremely lean and preserves the context window for reasoning.
+
+## 12. The Routing Index Bottleneck (Discovery Failure)
+**The Issue:**
+In a progressive disclosure model, the `root-router` can fail if it doesn't know what a sub-skill is called or what it does. Hardcoding the list of skills into the router's prompt is brittle and leads to maintenance debt.
+**The Solution (Dynamic Manifests):**
+- Maintain a `MANIFEST.md` in the `skills/` directory that is automatically generated from skill frontmatter (name and description).
+- Instruct the `root-router` to call `read("skills/MANIFEST.md")` as its first step if it cannot find a matching skill for the user's intent. This ensures the router has an up-to-date "map" of the entire library without bloating its system prompt.
+
+## 13. Jidoka Shell Wrappers (Failure Masking)
+**The Issue:**
+Calling CLI tools directly from a skill (e.g., `bash run.sh`) often results in raw shell errors (exit code 1, stderr) that the agent interprets as a tool-use failure rather than a domain-level error. This prevents the agent from analyzing the failure and correcting itself.
+**The Solution (Structured JSON Results):**
+- Wrap all CLI calls in a hardened script (e.g., `scripts/run.sh`) that captures errors and returns a deterministic, structured JSON payload: `{ "STATUS": "ERROR", "EXIT_CODE": 1, "ERROR_MSG": "..." }`.
+- This transforms "Shell Failures" into "Data Results" that the agent can reason about, enabling autonomous self-healing and smarter retries.
+
+## 14. Remote Config Corruption (Service Overwrites)
+**The Issue:**
+When manually editing `openclaw.json` on a remote node while the `openclaw-gateway` service is running. On exit or restart, the service may flush its in-memory state back to the disk, overwriting manual edits and causing "config reversion".
+**The Solution (Safe Persistence):**
+- **STOP FIRST:** Always stop the `openclaw-gateway` service (e.g., `systemctl --user stop openclaw-gateway`) BEFORE attempting to modify the `openclaw.json` or `.env` files.
+- **UPLOAD & START:** Push the updated files and then start the service. This ensures the engine loads the new state cleanly without a collision during the shutdown phase.
+
+## 15. The SSH One-Liner Trap (Cross-Platform Escaping)
+**The Issue:**
+Attempting to execute complex multi-line scripts (especially Python or Bash with nested quotes) directly inside an `ssh` command string from a Windows host (PowerShell) to a Linux target. PowerShell's quote parsing often mangles the string before it reaches the Linux shell, leading to syntax errors that are difficult to debug.
+**The Solution (Script Transfer):**
+- **FILE OVER STRING:** Instead of writing complex one-liners, always write the logic to a local temporary file first.
+- **UPLOAD & RUN:** Use `scp` to move the script to the remote node (e.g., `/tmp/script.py`) and then use `ssh` to execute the file directly. This guarantees that the script content remains identical and avoids all shell-escaping hallucinations.

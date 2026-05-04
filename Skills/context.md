@@ -16,4 +16,5 @@ This folder contains Skills for Open Claw.
    - **The One-Liner:** Run `echo "Your task here" | openclaw chat`.
    - **Send and Tail Logs:** Send via `openclaw message send` and verify via `openclaw logs --follow`.
    - **Physical Verification:** Use the `browser` tool to navigate to the relevant Google Workspace URL and confirm the expected change.
-8. **Extensive Research & Documentation Review:** Before implementation, you MUST research extensively online for up-to-date information regarding how tools and their underlying APIs work. You must have a full understanding of schemas, necessary commands, and database structures to ensure success.
+8. **Progressive Disclosure & Skill Routing:** To prevent KV cache exhaustion, do NOT bind every skill to the agent's profile. Instead, use the `root-router` skill to determine intent, `load_skill` to retrieve the `SKILL.md` methodology, and `execute_skill` to run the underlying `scripts/run.sh`.
+9. **Extensive Research & Documentation Review:** Before implementation, you MUST research extensively online for up-to-date information regarding how tools and their underlying APIs work. You must have a full understanding of schemas, necessary commands, and database structures to ensure success.
