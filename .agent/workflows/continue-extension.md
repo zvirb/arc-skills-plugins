@@ -108,4 +108,4 @@ Maintain adherence to the following Lean principles during execution:
 
 
 ## 8. Required Reading (Anti-Patterns)
-* **CRITICAL CONTEXT:** Before generating any new OpenClaw Extension (Skill or Plugin), you MUST cross-reference the known anti-patterns documented in Docs/OpenClaw_Best_Practices_and_Common_Issues.md.
+* **CRITICAL CONTEXT:** Before generating any new OpenClaw Extension (Skill or Plugin), you MUST cross-reference the known anti-patterns documented in `Docs/20260503 and earlier/OpenClaw_Best_Practices_and_Common_Issues.md`. Pay special attention to anti-patterns #20–23 which cover the Double-Dash Protocol, Alienware Config Drift Trap, HITL Approval Gate Omission, and `gog` Whitespace Trap.

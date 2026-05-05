@@ -131,3 +131,37 @@ Attempting to pass large binary or text artifacts (>10KB) as string parameters i
 Loading large models across multiple GPUs on legacy boards (Pascal/Maxwell), forcing heavy data transfer over slow PCIe 3.0 lanes.
 **The Solution:**
 - **GPU Pinning:** Pin specific roles to specific GPUs (e.g., Orchestrator on Pascal, Vision/Workers on Maxwell) to keep inference local to the VRAM. Disable Tensor Parallelism on legacy hardware.
+
+## 20. The Double-Dash Protocol Violation (CLI Hyphen Injection)
+**The Issue:**
+When constructing `gog` CLI commands from LLM-generated text, user input containing leading hyphens (e.g., a task title starting with `--fix...`) is misinterpreted as a flag, causing silent execution failures or flag-injection attacks. Similarly, agent-generated bullet points (e.g., `"• Fix the bug"`) become unparseable CLI tokens.
+**The Solution (Mandatory `--` Separator):**
+- **ALL** `gog` commands that accept text arguments (titles, bodies, queries) MUST use the **Double-Dash Protocol**: place `--` immediately before any positional argument to signal end-of-flags. Example: `gog tasks create -- "Task Title"`.
+- Strip bullet characters (`•`, `-`, `*`) from all agent-generated titles before passing to any CLI tool.
+- Wrap all `gog` command construction in a Schema-Based Parameter Builder that maps structured JSON inputs to rigid, sanitized CLI argument positions.
+
+## 21. The Alienware Config Drift Trap (Pre-Task Sync Omission)
+**The Issue:**
+Starting development using local `openclaw.json` or workflow files without first checking the live Alienware state. Because OpenClaw on Alienware self-corrects (auto-doctor, gateway-flush, manual SSH edits), the local copy is almost always stale. Overwriting Alienware's config with a local copy introduces breaking changes and undoes production fixes.
+**The Solution (Alienware First Protocol):**
+- **ALWAYS** SSH into Alienware and `cat ~/.openclaw/openclaw.json` (or diff against local) BEFORE starting any task.
+- **NEVER** copy a full local `openclaw.json` to Alienware. Apply only **targeted, surgical JSON patches** using a dedicated script (e.g., `patch_config.py`).
+- **ALWAYS** pull the latest state from Alienware to local after any remote change, so documentation and code files remain in sync.
+- Failure to follow this protocol results in "Config Reversion" (Issue #14) and "Ghost Skill" failures (Issue #7).
+
+## 22. The HITL Approval Gate Omission (Runaway Agentic Execution)
+**The Issue:**
+Lobster workflows and `.lobster` pipelines that perform state-mutating actions (creating tasks, sending emails, modifying calendar events) without a mandatory Human-In-The-Loop (HITL) approval step. The agent proceeds autonomously, and errors are irreversible without a rollback mechanism.
+**The Solution (Jidoka Approval Gates):**
+- Every Lobster workflow step that mutates external state MUST include an `approval_required: true` gate in its YAML definition before the execution step.
+- The pre-execution step must display a **dry-run summary** (what will be created/modified/deleted) to the operator.
+- Design for **idempotency**: every mutation tool must be callable twice without doubling the effect (use unique `--idempotency-key` flags where supported).
+- Document the rollback command in the workflow's `README.md`.
+
+## 23. The `gog` CLI Whitespace Trap (Argument Splitting)
+**The Issue:**
+Multi-word arguments passed to `gog` without proper quoting are interpreted as separate positional arguments. For example, `gog tasks create Fix the bug` creates a task called `Fix` and ignores `the bug`. This silent failure produces incorrect results with no error output.
+**The Solution:**
+- Always wrap all text arguments for `gog` in double quotes. Example: `gog tasks create -- "Fix the bug"`.
+- In Lobster pipelines, use `exec --json --shell` and construct the command string as a single quoted variable before expansion to prevent word-splitting by the shell.
+- Validate the output of every `gog` command against the expected schema: if the returned `title` field does not exactly match the intended input string, trigger the Andon retry loop.

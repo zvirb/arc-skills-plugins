@@ -54,6 +54,7 @@ To prevent "hallucination by assumption" and skipped workflow steps, you MUST ad
 1. **The Research Gate:** You are strictly forbidden from writing or editing any code or SKILL.md files until you have explicitly executed `search_web` (or equivalent documentation lookups) to verify the current API schemas, CLI flags, and package dependencies. 
 2. **The Verification Gate:** You are strictly forbidden from declaring the task complete until you have explicitly executed the new tool using **`openclaw chat` via SSH on Alienware** OR the TUI, AND independently verified the state change using a separate tool (e.g., `browser_subagent`). **CRITICAL VERIFICATION RULE:** Your verification tool must ONLY check the state. You must NOT use the verification tool to actively complete the task (e.g., do not create missing tasks via the browser if they are not found). Doing so creates a false positive and ruins the verification process. Ensure you check that the verification tool did not just fix the issue for you.
 3. **The Audit Checklist:** Your responses must explicitly reference these gates. If you have not passed a gate, state what you are doing to pass it before proceeding.
+4. **The GOG Defensive Engineering Gate:** Any extension that invokes `gog` MUST apply the **Double-Dash Protocol** (`gog <cmd> -- "<arg>"`), schema-based parameter building (no raw LLM string concatenation), bullet-character stripping, and `--json` output validation before submitting. See `Docs/20260505/Agentic Workflow Defensive Engineering Guide.md`.
 
 
 ## Steps
@@ -119,4 +120,4 @@ To prevent "hallucination by assumption" and skipped workflow steps, you MUST ad
 
 
 ## 8. Required Reading (Anti-Patterns)
-* **CRITICAL CONTEXT:** Before generating any new OpenClaw Extension (Skill or Plugin), you MUST cross-reference the known anti-patterns documented in Docs/OpenClaw_Best_Practices_and_Common_Issues.md.
+* **CRITICAL CONTEXT:** Before generating any new OpenClaw Extension (Skill or Plugin), you MUST cross-reference the known anti-patterns documented in `Docs/20260503 and earlier/OpenClaw_Best_Practices_and_Common_Issues.md`. Pay special attention to anti-patterns #20–23 which cover the Double-Dash Protocol, Alienware Config Drift Trap, HITL Approval Gate Omission, and `gog` Whitespace Trap.

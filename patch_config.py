@@ -1,14 +1,19 @@
 import json
 import os
 
-path = os.path.expanduser('~/.openclaw/openclaw.json')
-with open(path, 'r') as f:
-    data = json.load(f)
+config_path = os.path.expanduser('~/.openclaw/openclaw.json')
+with open(config_path, 'r') as f:
+    config = json.load(f)
 
-data['skills']['allowBundled'] = ["healthcheck", "diffs", "gog", "session-logs", "github", "weather", "wacli"]
-for agent in data['agents']['list']:
+# Update allowBundled
+new_bundled = ["healthcheck", "diffs", "gog", "session-logs", "github", "weather", "wacli"]
+config['skills']['allowBundled'] = list(set(config['skills'].get('allowBundled', []) + new_bundled))
+
+# Update main agent skills
+for agent in config['agents']['list']:
     if agent['id'] == 'main':
-        agent['skills'] = list(set(agent['skills'] + ["weather", "wacli"]))
+        new_skills = ["weather", "wacli"]
+        agent['skills'] = list(set(agent.get('skills', []) + new_skills))
 
-with open(path, 'w') as f:
-    json.dump(data, f, indent=2)
+with open(config_path, 'w') as f:
+    json.dump(config, f, indent=2)

@@ -33,3 +33,13 @@ To maintain a resilient swarm on the Pascal/Maxwell cluster, plugins must target
 
 ## 6. Integration Status
 * **GOG Integration:** Re-authorized via SSH-tunneled OAuth. `gog calendar` and `gog tasks` are confirmed operational. If `invalid_grant` errors recur, repeat the SSH-tunneled OAuth flow.
+
+## 7. GOG CLI Defensive Engineering (May 2026 Standard)
+All plugins that invoke the `gog` CLI via `child_process` (or via `exec` wrapper tools) MUST follow these hardened patterns:
+*   **Double-Dash Protocol:** Every `gog` command MUST use `--` before any positional text argument: `gog tasks create -- "Title"`. This prevents leading hyphens in LLM output from being parsed as flags.
+*   **Schema-Based Parameter Builder:** NEVER concatenate raw LLM text into a CLI string. Build a sanitized argument map from structured JSON fields, then assemble the CLI call programmatically.
+*   **Bullet/Unicode Stripping:** Strip `•`, `-`, `*`, `·` from all LLM-generated text values before CLI construction.
+*   **Whitespace Quoting:** Always double-quote multi-word args. Unquoted whitespace causes silent argument-splitting failures.
+*   **JSON Validation Gate:** Use `gog ... --json` and parse the result. Validate that `title`, `id`, and status fields match expected values. On mismatch, throw a structured error to trigger the Andon retry loop.
+*   **`--force` / `--no-input`:** Append to all non-interactive invocations to prevent headless execution hangs.
+*   **Reference:** `Docs/20260505/Agentic Workflow Defensive Engineering Guide.md` and `Docs/20260505/Google Workspace CLI Workflow Integration.md`.
