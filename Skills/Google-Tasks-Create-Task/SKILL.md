@@ -6,15 +6,13 @@ allowed-tools: [exec]
 
 # Google Tasks Create Task
 
-This skill directs the agent to add a new task to a specified list using the `gog` CLI.
+This skill directs the agent to add a new task to a specified list using the `gog` CLI directly.
 
 ## Execution Directives
-1. **Prepare Command:** Construct the `gog` command using the following schema:
-   - `gog tasks add @default --title "<Task_Title>" [--notes "<Notes>"] [--due "<ISO_DATE>"]`
-2. **Execute Script:** Wrap the command in the hardened script.
-   - Command: `bash /home/marku/.openclaw/workspace/skills/google-tasks-create-task/scripts/run.sh tasks add @default --title "..."`
-3. **Verify Jidoka:** Confirm the task was created by checking for a success message or ID.
-4. **Handle Failure:** If status is ERROR, report the specific reason (e.g., list not found).
+1. **Execute Command:** Construct and run the `gog` command directly.
+   - Command: `gog tasks add @default --title "<Task_Title>" [--notes "<Notes>"] [--due "<ISO_DATE>"] --json`
+2. **Verify Output:** Ensure the command returns a valid JSON response containing the new task ID.
+3. **Handle Failure:** If the command fails, report the error output from `gog`.
 
 ## Input Schema (JSON)
 ```json
