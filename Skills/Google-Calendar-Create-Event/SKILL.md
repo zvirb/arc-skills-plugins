@@ -6,15 +6,13 @@ allowed-tools: [exec]
 
 # Google Calendar Create Event
 
-This skill directs the agent to schedule a new event on the primary calendar using the `gog` CLI.
+This skill directs the agent to schedule a new event on the primary calendar using the `gog` CLI directly.
 
 ## Execution Directives
-1. **Prepare Command:** Construct the `gog` command using the following schema:
-   - `gog calendar create primary --summary "<Title>" --from "<ISO_START>" --to "<ISO_END>"`
-2. **Execute Script:** Wrap the command in the hardened script to capture errors.
-   - Command: `bash /home/marku/.openclaw/workspace/skills/google-calendar-create-event/scripts/run.sh calendar create primary --summary "..." --from "..." --to "..."`
-3. **Verify Jidoka:** Inspect the output. A successful result MUST return a JSON object containing the `id` of the new event.
-4. **Handle Failure:** If the script returns `{"STATUS": "ERROR"}`, analyze the `ERROR_MSG` and retry with corrected parameters (Max 3 retries).
+1. **Execute Command**: Run the `gog` command directly.
+   - Command: `gog calendar create primary --summary "<Title>" --from "<ISO_START>" --to "<ISO_END>" --json`
+2. **Verify Output**: Ensure the response is a JSON object containing the new event `id`.
+3. **Handle Failure**: If the command fails, report the error output from `gog`.
 
 ## Input Schema (JSON)
 ```json
