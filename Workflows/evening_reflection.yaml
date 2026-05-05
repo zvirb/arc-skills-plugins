@@ -1,17 +1,17 @@
 name: evening-reflection
 steps:
   - id: get_reflection
-    command: >-
-      lobster 'exec --shell \"gemini \\\"Ask the user for an evening reflection on their day via WhatsApp and wait for a reply.\\\"\"'
+    command: |
+      gemini "Ask the user for an evening reflection on their day via WhatsApp and wait for a reply."
 
   - id: extract_preferences
-    command: >-
-      lobster 'exec --shell \"gemini \\\"Extract any new preferences or learnings from this reflection: $get_reflection.stdout\\\"\"'
+    command: |
+      gemini "Extract any new preferences or learnings from this reflection: $get_reflection.stdout"
 
   - id: update_memory
-    command: >-
-      lobster 'exec --shell \"gemini \\\"Integrate these new preferences into MEMORY.md: $extract_preferences.stdout\\\"\"'
+    command: |
+      gemini "Integrate these new preferences into MEMORY.md: $extract_preferences.stdout"
 
   - id: calibrate_wellness
-    command: >-
-      lobster 'exec --shell \"lobster run /home/marku/.openclaw/workspace/wellness_orchestrator.yaml\"'
+    command: |
+      lobster run /home/marku/.openclaw/workspace/wellness_orchestrator.yaml

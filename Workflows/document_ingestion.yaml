@@ -1,0 +1,23 @@
+name: document-ingestion
+description: "Orchestrates the classification and processing of handwritten PDFs from Google Drive using local LLMs."
+steps:
+  - id: check_new_docs
+    command: |
+      gog drive ls --json | jq -c '.[] | select(.mimeType == "application/pdf")'
+
+  - id: download_and_process
+    command: |
+      gog drive download "$item.id" --path "/tmp/openclaw/ingest-$item.id.pdf"
+      openclaw pdf parse --path "/tmp/openclaw/ingest-$item.id.pdf" --json
+    stdin: $check_new_docs.stdout
+    each: true
+
+  - id: classify_and_route
+    pipeline: |
+      llm_task.invoke --prompt "Classify this document content into one of: [Tasks, Journal, Schematic, BrainDump]. Output ONLY the category name. Content: $item.text"
+    stdin: $download_and_process.stdout
+    each: true
+
+  - id: update_state
+    command: |
+      date -Is > /home/marku/.openclaw/workspace/state/last_ingest.txt

@@ -1,15 +1,31 @@
-name: vague-task-decomposition
+name: vague-task-decomposition-refactor
+description: "Hardened, deterministic task decomposition using specialist nodes."
 args:
   task:
     description: "The broad task to decompose"
 steps:
-  - id: decompose
-    command: >-
-      lobster 'exec --shell "gemini \"Break down the following broad task into a sequence of actionable items for Google Tasks. Output ONLY a JSON array of strings.\n\nTask: $task\""'
+  - id: extraction
+    agent: Operator # Maxwell 7B
+    pipeline: |
+      openclaw.invoke --tool llm-extract-action-items --args-json "{\"text\": \"$task\"}"
+
+  - id: validation
+    pipeline: |
+      # Jidoka Gate: Ensure it's a non-empty array
+      exec --shell "echo '$extraction.stdout' | jq -e '. | length > 0'"
+
   - id: review
-    command: >-
-      lobster 'approve --prompt "Decomposed subtasks:\n\n$decompose.stdout\n\nApprove and add to Google Tasks?"'
-  - id: commit
-    command: >-
-      lobster 'exec --shell \"gog tasks add @default --title \\\"$item\\\"\" --each'
-    stdin: $decompose.stdout
+    pipeline: |
+      approve --prompt "Decomposed subtasks identified:\n\n$extraction.stdout\n\nAdd these to Google Tasks?"
+
+  - id: execution
+    condition: "$review.approved == true"
+    agent: Main # Pascal
+    pipeline: |
+      openclaw.invoke --tool google-tasks-create-task --args-json "{\"title\": \"$item\"}"
+    stdin: $extraction.stdout
+    each: true
+
+  - id: summary
+    pipeline: |
+      echo "Successfully created $(echo '$extraction.stdout' | jq '. | length') subtasks."

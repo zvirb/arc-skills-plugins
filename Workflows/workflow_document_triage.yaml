@@ -1,26 +1,22 @@
 name: workflow-document-triage
 steps:
   - id: search_doc
-    command: >-
-      lobster 'exec --json --shell "gog drive ls --json" | where "name=Triage.md" | head --n 1'
+    command: |
+      gog drive ls --json | jq -r '.[] | select(.name == "Triage.md")' | head -n 1
   
   - id: handle_missing
-    condition: "$search_doc.stdout == '[]' || $search_doc.stdout == ''"
-    command: >-
-      lobster 'exec --json --shell \"gog docs create \"Triage.md\" --json\"'
-
-  - id: get_file_id
-    command: >-
-      lobster 'exec --json --shell \"if [ -n \\\"$search_doc.json[0].id\\\" ]; then echo \\\"$search_doc.json[0].id\\\"; else echo \\\"$handle_missing.json.file.id\\\"; fi\"'
+    condition: "$search_doc.stdout == ''"
+    command: |
+      gog docs create "Triage.md" --json
 
   - id: extract_items
-    command: >-
-      lobster 'exec --shell \"gemini \\\"Read the following document content (mocked for triage) and extract the primary action item for Markus. Output ONLY the action item text.\n\nContent: TEST ACTION ITEM: Prepare report for Markus.\\\"\"'
+    command: |
+      gemini "Read the following document content (mocked for triage) and extract the primary action item for Markus. Output ONLY the action item text. Content: TEST ACTION ITEM: Prepare report for Markus."
 
   - id: create_task
-    command: >-
-      lobster 'exec --shell \"gog tasks add @default --title \\\"TRIAGE: $extract_items.stdout\\\"\"'
+    command: |
+      gog tasks add @default --title "TRIAGE: $extract_items.stdout"
 
   - id: send_email
-    command: >-
-      lobster 'exec --shell \"gog gmail send --to \\\"markuszvirbulis@gmail.com\\\" --subject \\\"Triage Workflow Complete\\\" --body \\\"Orchestrated successful triage. Task ID: $create_task.stdout\\\"\"'
+    command: |
+      gog gmail send --to "markuszvirbulis@gmail.com" --subject "Triage Workflow Complete" --body "Orchestrated successful triage. Task ID: $create_task.stdout"

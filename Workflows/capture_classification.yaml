@@ -1,0 +1,22 @@
+name: capture-classification
+args:
+  input_text:
+    description: "The text or transcript to classify and route"
+steps:
+  - id: classify
+    command: |
+      gemini "Classify this text as Actionable or Informational. Output ONLY the category name. Text: $input_text"
+  
+  - id: route_actionable
+    condition: "$classify.stdout == 'Actionable'"
+    command: |
+      gog tasks add @default --title "$input_text"
+
+  - id: route_informational
+    condition: "$classify.stdout == 'Informational'"
+    pipeline: |
+      clawd.invoke --tool vector-store-upsert-memory --args-json "{\"text\": \"$input_text\", \"metadata\": {\"source\": \"capture_classification\"}}"
+
+  - id: report
+    pipeline: |
+      clawd.invoke --tool message --action send --args-json "{\"provider\":\"webchat\",\"to\":\"owner\",\"content\": \"Routed to $classify.stdout\"}"

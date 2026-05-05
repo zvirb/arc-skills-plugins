@@ -1,0 +1,19 @@
+name: wellness-orchestrator
+description: "Ensures wellness blocks are protected and supported with environment triggers via local Ollama."
+steps:
+  - id: read_user_prefs
+    command: |
+      cat /home/marku/.openclaw/workspace/USER.md
+
+  - id: plan_wellness
+    pipeline: |
+      llm_task.invoke --prompt "Based on these preferences and today's schedule, determine the optimal 1-hour workout time. User Prefs: $stdin"
+    stdin: $read_user_prefs.stdout
+
+  - id: lock_calendar
+    command: |
+      gog calendar create --title "Wellness Block (Protected)" --from "today 5pm" --to "today 6pm"
+
+  - id: trigger_environment
+    command: |
+      echo "Queuing 'Focus/Workout' playlist for $plan_wellness.stdout"

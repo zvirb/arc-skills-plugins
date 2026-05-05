@@ -1,20 +1,25 @@
 name: self-healing
 steps:
   - id: health_check
-    command: >-
-      lobster 'exec --json --shell \"openclaw health --json\"'
+    command: |
+      openclaw health --json
   
   - id: analyze_faults
     condition: "$health_check.json.status == 'error'"
-    command: >-
-      lobster 'exec --shell \"gemini \\\"Analyze these system health faults and propose a one-line bash fix.\n\nFaults: $health_check.stdout\\\"\"'
+    pipeline: |
+      llm_task.invoke --prompt "Analyze these system health faults. If you detect a SessionWriteLockTimeoutError or stale lock, return SIG_UNLOCK. Otherwise, propose a one-line bash fix. Faults: $health_check.stdout"
+
+  - id: resolution
+    condition: "$health_check.json.status == 'error' && $analyze_faults.stdout == 'SIG_UNLOCK'"
+    command: |
+      openclaw tasks maintenance --apply --stale-locks
 
   - id: wait_for_approval
-    condition: "$health_check.json.status == 'error'"
-    command: >-
-      lobster 'approve --prompt \"Critical fix proposed: $analyze_faults.stdout\n\nDeploy patch?\"'
+    condition: "$health_check.json.status == 'error' && $analyze_faults.stdout != 'SIG_UNLOCK'"
+    pipeline: |
+      approve --prompt "Critical fix proposed: $analyze_faults.stdout\n\nDeploy patch?"
 
   - id: deploy_fix
-    condition: "$health_check.json.status == 'error' && $wait_for_approval.approved == true"
-    command: >-
-      lobster 'exec --shell \"$analyze_faults.stdout\"'
+    condition: "$health_check.json.status == 'error' && $analyze_faults.stdout != 'SIG_UNLOCK' && $wait_for_approval.approved == true"
+    command: |
+      $analyze_faults.stdout

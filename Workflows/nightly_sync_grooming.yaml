@@ -1,0 +1,23 @@
+name: nightly-sync-grooming
+description: "Syncs completed items and grooms backlogs across Linear, Notion, and Google Tasks using local Ollama."
+steps:
+  - id: collect_activity
+    command: |
+      openclaw session-logs summary --period "24h" --json
+
+  - id: groom_backlogs
+    pipeline: |
+      llm_task.invoke --prompt "Analyze these logs and identify stale items in the Google Tasks backlog. Logs: $stdin"
+    stdin: $collect_activity.stdout
+
+  - id: apply_grooming
+    pipeline: |
+      approve --prompt "Apply the following grooming actions to Google Tasks?\n\n$groom_backlogs.stdout"
+
+  - id: finalize
+    command: |
+      echo "$groom_backlogs.stdout" > /home/marku/.openclaw/workspace/state/daily_sync_summary.txt
+    
+  - id: final_report
+    pipeline: |
+      llm_task.invoke --prompt "Create a final concise report of today's sync: $groom_backlogs.stdout"

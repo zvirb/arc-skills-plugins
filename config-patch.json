@@ -1,18 +1,34 @@
-[
-  {
-    "op": "set",
-    "path": "agents.list[0].skills",
-    "value": [
-      "lobster",
-      "github",
+{
+  "skills": {
+    "allowBundled": [
+      "healthcheck",
+      "diffs",
       "gog",
-      "llm-summarize-text",
-      "llm-classify-intent",
-      "llm-extract-action-items",
-      "llm-extract-json",
-      "llm-task",
-      "google-tasks-create-task",
-      "llm-plan-time-blocks"
+      "session-logs",
+      "github",
+      "weather",
+      "wacli"
+    ]
+  },
+  "agents": {
+    "list": [
+      {
+        "id": "main",
+        "skills": [
+          "lobster",
+          "github",
+          "gog",
+          "llm-summarize-text",
+          "llm-classify-intent",
+          "llm-extract-action-items",
+          "llm-extract-json",
+          "llm-task",
+          "google-tasks-create-task",
+          "llm-plan-time-blocks",
+          "weather",
+          "wacli"
+        ]
+      }
     ]
   }
-]
+}

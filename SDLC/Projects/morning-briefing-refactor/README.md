@@ -17,7 +17,7 @@
 | **Design** | 2.1 Technical Spec | ✅ DONE | [2.1](./Design/2.1_Technical_Specification.md) |
 | **Implementation**| 3.1 Atomic Nodes | ✅ DONE | Skills: `gcal-find`, `gtask-find`, `gcal-create`, `llm-plan` |
 | | 3.2 Lobster Pipeline | ✅ DONE | [Workflow](../../../Workflows/morning_briefing.lobster) |
-| **Verification** | 4.1 Evaluation | ⏳ TODO | |
+| **Verification** | 4.1 Evaluation | 🚀 IN PROGRESS | [4.1](./Verification/4.1_Deterministic_Evaluation.md) |
 | **Delivery** | 5.1 Deployment | ⏳ TODO | |
 
 ## Project Narrative
