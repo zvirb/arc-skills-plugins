@@ -55,7 +55,7 @@ When responding to a request to build a capability:
 ## 4. Continuous Learning & Workflow Evolution
 * **Plugin Compilation:** Plugins must be compiled from TypeScript to JavaScript (`npm run build`) prior to installation, ensuring entry points map to the output directory (e.g., `dist/`).
 * **Extension Injection & Configuration Update:** You MUST NEVER assume that simply copying an extension folder to `~/.openclaw/workspace/skills/` and restarting the gateway is sufficient. Copying the files alone leaves them looking at an unreachable location unless `openclaw.json` is updated. **CRITICAL:** You MUST use the OpenClaw CLI (`openclaw skills install <path>`) for EACH extension to automatically copy the files AND update the `openclaw.json` configuration with their new location. **CRITICAL ADDITION:** Furthermore, OpenClaw agents do *not* automatically inherit new skills. You MUST explicitly bind the skill's slug to the target agent's profile in `openclaw.json` (e.g., adding it to the `agents.list[0].skills` array) before the agent can see or use it!
-* Whenever a lesson is learned, a bug is fixed, or a new pattern is established during attempted work, you MUST immediately update the relevant skills, agent context files (`context.md`, `AGENTS.md`), or workflow steps to encode this new knowledge. 
+* Whenever a lesson is learned, a bug is fixed, or a new pattern is established during attempted work, you MUST immediately update the relevant skills, agent context files (`Secrets/context.md`, `Secrets/AGENTS.md`), or workflow steps to encode this new knowledge. 
 * **Mandatory Testing (The "Trust But Verify" Protocol):** You MUST physically test the extension. Testing MUST NOT occur locally on WSL. All testing must occur via SSH on alienware. Test that the skill or plugin built and deployed to alienware actually functions as it should. Reiterate until you can confirm that the tool works as expected. **CRITICAL:** You must retrieve confirmation that the tool worked. Use another tool to independently verify that the tool did what was expected. For Google Workspace tools (Gmail, Calendar, Tasks, Drive), you MUST use the `browser` tool to physically verify the state change in the user's workspace. **CRITICAL VERIFICATION RULE:** Your verification tool must ONLY check the state. You must NOT use the verification tool to actively complete the task (e.g., do not create missing tasks via the browser if they are not found). Doing so creates a false positive and ruins the verification process. Ensure you check that the verification tool did not just fix the issue for you.
   1. **The TUI (Best for Observing Execution):** Run `openclaw tui` (press `[L]` to toggle log viewer) to watch step-by-step execution.
   2. **The One-Liner (Best for Quick Terminal Execution):** Run `echo "Your task here" | openclaw chat` for quick execution without staying in a session.
@@ -76,6 +76,8 @@ When responding to a request to build a capability:
 ## 7. Lean Architecture & JIT Discovery (The 2026.5.x Standard)
 * **The Monolithic Binding Trap:** NEVER bind all 50+ skills to a single agent profile. This exhausts the KV cache.
 * **Native Tool Search (JIT):** Use the built-in `tool_search` mechanism instead of manual routers. The system prompt is initialized with a lightweight search tool; agents must invoke it to dynamically retrieve tool definitions only when a need is identified (Just-In-Time Retrieval).
+* **Quantization Standard:** Exclusively use **INT4 quantization** (GGUF/AWQ) for all models on legacy hardware. Force **Q8_0 KV Cache quantization** to prevent 15%+ VRAM thrashing.
+* **Context Capping:** Enforce a strict **4k context limit** for specialized micro-agents and **32k** for orchestrators. 
 * **Anti-Pattern Warning:** Manual **"root-routers"** and custom **`load_skill`** plugins are now officially discouraged. They introduce redundant latency and bypass native configuration repairs (doctor --fix).
 * **Concentric Circles Model:** Manage capabilities in layers:
     * **Layer 1 (Core):** `read`, `write`, `exec`, `web_search` (Reactive foundation).
@@ -98,5 +100,24 @@ When responding to a request to build a capability:
 
 ## 10. Network & Infrastructure Notes
 * **Ollama Configuration:** Ollama for access from WSL is on port `11450`. Ollama on Alienware (SSH) is on port `11434`.
+
+## 11. Lobster Engine & Workflow Standards (v2026.5.x)
+* **CRITICAL PATH RESOLUTION:** Due to Lobster Bug #68101, all workflow triggers MUST use **absolute paths** (e.g., `lobster run /home/marku/openClaw/Workflows/task.yaml`). Relative paths are unreliable and trigger "Unknown command" errors.
+* **Tool Invocation:** Standardize on `exec --json --shell` for all tool calls within Lobster pipelines. 
+* **Static Deterministic Binding:** For .lobster workflows, bypass JIT discovery by statically binding Layer 3 skills via `tools.alsoAllow` in `openclaw.json`. This eliminates probabilistic tool-calling latency.
+* **Artifact Handoff Pattern:** Large payloads (>10KB) MUST be passed via the **PluginArtifact Schema** and `lobster://` protocol to bypass JSON-RPC serialization limits and prevent context overflow.
+* **Session Isolation:** Use **strictly distinct sessions** for each specialist agent in a pipeline to avoid `SessionWriteLockTimeoutError` (Lock Contention).
+* **VRAM Safety:** Maintain `imageMaxDimensionPx: 800` in `openclaw.json` to prevent GPU OOM on local inference.
+
+## 12. Operational Configuration & Significance
+* **Core Integrity:** The files stored in `Secrets/` (e.g., `openclaw.json`, `SOUL.md`, `MEMORY.md`) are essential for OpenClaw's bootstrap injection process. They define the agent's identity, memory, and operational limits.
+* **Performance Offloading:** Always enable `heavy_task_offload_enabled: true` in `openclaw.json` to prevent event loop stalls during heavy tool initialization (e.g., PDF or Browser plugins).
+* **Isolation Policy:** PII and sensitive operational logic must remain in `Secrets/` to prevent exposure in source control while remaining accessible to the OpenClaw runtime.
+
+## 13. GPU Resource Allocation (Specialization)
+* **Pascal (24GB) Role:** Orchestrator/Generalist (e.g., Qwen 35B). High context, state maintenance.
+* **Maxwell (12GB) Role:** Vision (DeepSeek-OCR) and Micro-agent Swarm (Qwen 7B). Low-context, high-frequency isolated tasks.
+* **Model Distribution:** All models MUST be pinned to specific GPU endpoints (Ollama/SGLang) in the configuration to prevent PCIe 3.0 bottlenecking and VRAM fragmentation.
+
 
 

@@ -1,0 +1,19 @@
+name: daily-brief-digest
+args:
+  user_phone:
+    default: "USER_PHONE"
+steps:
+  - id: fetch_emails
+    command: lobster 'exec --json --shell "gog gmail threads --query \"newer_than:1d\" --limit 10 --json"'
+  - id: fetch_calendar
+    command: >-
+      lobster 'exec --json --shell "gog calendar events primary --from \"today\" --to \"today\" --json"'
+  - id: fetch_news
+    command: >-
+      lobster 'exec --shell "gemini \"Find the top 3 news headlines today.\""'
+  - id: summarize
+    command: >-
+      lobster 'exec --shell "gemini \"Summarize the following into a daily brief:\n\nEmails: $fetch_emails.stdout\n\nCalendar: $fetch_calendar.stdout\n\nNews: $fetch_news.stdout\n\nFormat: Markdown digest with emojis.\""'
+  - id: deliver
+    command: >-
+      lobster 'clawd.invoke --tool message --action send --args-json "{\"provider\":\"whatsapp\",\"to\":\"${user_phone}\",\"message\":\"Daily Brief Digest:\n$summarize.stdout\"}"'

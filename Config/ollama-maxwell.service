@@ -1,0 +1,17 @@
+[Unit]
+Description=Ollama Service (Maxwell GPU)
+After=network-online.target
+
+[Service]
+ExecStart=/usr/local/bin/ollama serve
+User=marku
+Group=marku
+Restart=always
+RestartSec=3
+Environment="CUDA_VISIBLE_DEVICES=GPU-2535932f-a313-3678-1ee5-d6b683f587ce"
+Environment="OLLAMA_HOST=0.0.0.0:11435"
+Environment="OLLAMA_FLASH_ATTENTION=0"
+Environment="OLLAMA_KV_CACHE_TYPE=q8_0"
+
+[Install]
+WantedBy=default.target

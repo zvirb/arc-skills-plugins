@@ -1,35 +1,35 @@
 # Open Claw Plugins Context
 
-This folder contains Plugins for Open Claw.
+This folder contains Plugins for Open Claw. All development must adhere to the **May 2026 Infrastructure Standards (v2026.5.x)** to ensure stability on heterogeneous legacy hardware.
 
-## Development Rules & Structure
+## 1. Hardware-Aware Model Specialization
+To maintain a resilient swarm on the Pascal/Maxwell cluster, plugins must target specific models based on their role:
+*   **Orchestrator (Pascal 24GB):** `Qwen 3.6 35B-A3B (INT4)`. Use for multi-turn reasoning and supervisor routing.
+*   **Vision Specialist (Maxwell 12GB):** `DeepSeek-OCR 2`. Mandatory for layout analysis and technical drawings.
+*   **Micro-Agent Swarm (Maxwell 12GB):** `Qwen 2.5 Coder (7B)`. High-speed, isolated data extraction.
 
-1. **Sub-Folder Isolation:** Every new plugin MUST be created in its own dedicated sub-folder within this directory.
-   - Example: `Plugins/MyNewPlugin/`
-2. **Self-Containment:** Each plugin sub-folder should contain all its necessary source code, configuration files, manifests, and specific documentation.
-3. **Naming Convention:** Use clear, descriptive names for your plugin sub-folders.
-4. **Progress Tracking:** When planning, starting, or completing a plugin, you MUST update the central progress tracker located at `Docs/TODO.md`.
-5. **Compilation Requirement:** Since plugins are written in TypeScript, you MUST compile them (`npm run build`) before attempting to install or load them. Ensure the entry point in `package.json` points to the compiled JavaScript (`dist/`), not the raw TypeScript.
-6. **Extension Injection & Configuration Update:** Whenever copying or injecting unmanaged local skills or plugins into the global OpenClaw runtime environments (e.g., WSL or Alienware), you MUST also update the OpenClaw configuration so the engine recognizes them. A simple folder copy is insufficient. **CRITICAL:** You must follow the exact installation and registration procedures defined in [`Docs/Local_Extension_Installation.md`](../Docs/Local_Extension_Installation.md).
-7. **Continuous Learning:** Whenever a lesson is learned or a workaround is discovered during attempted work, you MUST immediately update this context file, the specific plugin's documentation, or the relevant workflow steps to ensure the new knowledge is explicitly preserved.
-8. **Mandatory Testing (The "Trust But Verify" Protocol):** You MUST physically test the extension. Testing MUST NOT occur locally on WSL. All testing must occur via SSH on alienware. Test that the skill or plugin built and deployed to alienware actually functions as it should. Reiterate until you can confirm that the tool works as expected. **CRITICAL:** You must retrieve confirmation that the tool worked. Use another tool to independently verify that the tool did what was expected. For Google Workspace tools (Gmail, Calendar, Tasks, Drive), you MUST use the `browser` tool to physically verify the state change in the user's workspace. **CRITICAL VERIFICATION RULE:** Your verification tool must ONLY check the state. You must NOT use the verification tool to actively complete the task (e.g., do not create missing tasks via the browser if they are not found). Doing so creates a false positive and ruins the verification process. Ensure you check that the verification tool did not just fix the issue for you.
-   - **The TUI:** Run `openclaw tui` (press `[L]` to toggle log viewer).
-   - **The One-Liner:** Run `echo "Your task here" | openclaw chat`.
-   - **Send and Tail Logs:** Send via `openclaw message send` and verify via `openclaw logs --follow`.
-   - **Physical Verification:** Use the `browser` tool to navigate to the relevant Google Workspace URL and confirm the expected change.
-9. **Extensive Research & Documentation Review:** Before implementation, you MUST research extensively online for up-to-date information regarding how tools and their underlying APIs work. You must have a full understanding of schemas, necessary commands, and database structures to ensure success.
-## Plugin Antipatterns & SDK Best Practices (The Native TS Pivot)
-Based on OpenClaw's Lean architecture and strict isolation requirements, the following antipatterns are explicitly forbidden in all Plugins:
+## 2. Infrastructure & VRAM Protection
+*   **KV Cache Management:** All local models MUST use `OLLAMA_KV_CACHE_TYPE=q8_0` and be restricted to `OLLAMA_NUM_CTX=4096` to prevent OOM and PCIe bottlenecks.
+*   **Payload Scaling:** Set `imageMaxDimensionPx: 800` in `openclaw.json` as a VRAM circuit breaker.
+*   **Complete Instance Isolation:** Pin models to specific GPUs via `CUDA_VISIBLE_DEVICES`. Do NOT attempt Tensor Parallelism across PCIe 3.0.
 
-1. **The Sub-Shell Orchestration Anti-pattern (The Shell Escape):**
-   - **Forbidden:** Using `child_process.exec` to call `wsl openclaw infer` or native bash tools (e.g., `gog`).
-   - **Required:** Use native OpenClaw SDK bindings (e.g., `api.infer(prompt)`) and actual Node.js HTTP/API clients (like the native `composio-core` SDK) instead of subshelling CLI tools.
-2. **Unvalidated Environment Variables (Silent Failures):**
-   - **Forbidden:** Reading `process.env.API_KEY` dynamically during tool execution.
-   - **Required:** Adhere to the `IPlugin` interface by exporting a `configSchema` (e.g., Zod object). The OpenClaw loader will enforce validation at startup and pass config securely.
-3. **Path Traversal & Unsafe State Persistence:**
-   - **Forbidden:** Hardcoding relative escape paths (e.g., `../../../../Memory/state.json`) or creating arbitrary local files.
-   - **Required:** Use the native SDK storage handlers (`api.storage.get()` / `api.storage.set()`) to manage state, allowing the host engine to route persistence securely.
-4. **Monolithic Plugins & Dynamic Cross-Tooling:**
-   - **Forbidden:** Blindly calling `api.executeTool('other_plugin_tool')` without type safety or manifest dependency declarations.
-   - **Required:** Cross-plugin dependencies must be declared in the manifest so the engine resolves the DAG at boot.
+## 3. Concurrency & State Standards
+*   **Lean Architecture:** Specialists must operate in **Isolated Sessions** (`--session isolated`). Avoid sharing session IDs to prevent `SessionWriteLockTimeoutError`.
+*   **Bypassing 10KB Limits:** For heavy payload handoffs, use the `lobster://` blob protocol and `PluginArtifact` metadata schema instead of raw JSON-RPC string passing.
+*   **Persistent State:** Use the native SDK storage handlers (`api.storage.get()` / `api.storage.set()`) to manage state. Do NOT use the LLM context window as a database.
+
+## 4. Development Rules & Structure
+1. **Sub-Folder Isolation:** Every new plugin MUST be created in its own dedicated sub-folder.
+2. **Compilation Requirement:** Since plugins are written in TypeScript, you MUST compile them (`npm run build`) before installation. Ensure the entry point in `package.json` points to the compiled JavaScript (`dist/`).
+3. **Plugin Manifests:** Every plugin MUST include a `contracts` block in `openclaw.plugin.json` declaring its tools. This prevents "non-capability" classification.
+4. **Mandatory Testing:** All testing MUST occur via SSH on **alienware**. Local WSL testing is strictly forbidden. 
+5. **Physical Verification:** For state-mutating actions, use the `browser` tool to verify the change in the user's workspace.
+
+## 5. Plugin Antipatterns & SDK Best Practices
+1. **The Sub-Shell Orchestration Anti-pattern:** Forbidden to use `child_process.exec` to call `openclaw` or `gog`. Use native SDK bindings (e.g., `api.infer(prompt)`).
+2. **Unvalidated Environment Variables:** Forbidden to read `process.env` dynamically. Export a `configSchema` (Zod) in `IPlugin`.
+3. **Path Traversal & Unsafe State Persistence:** Forbidden to hardcode relative escape paths (e.g., `../../../../Memory/`). Use `api.storage`.
+4. **Redaction Lockout:** Never allow an agent to read/write `openclaw.json` directly. Overwriting functional keys with `***` redaction strings is a terminal failure.
+
+## 6. Integration Status
+* **GOG Integration:** Re-authorized via SSH-tunneled OAuth. `gog calendar` and `gog tasks` are confirmed operational. If `invalid_grant` errors recur, repeat the SSH-tunneled OAuth flow.

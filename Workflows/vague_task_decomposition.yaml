@@ -1,0 +1,15 @@
+name: vague-task-decomposition
+args:
+  task:
+    description: "The broad task to decompose"
+steps:
+  - id: decompose
+    command: >-
+      lobster 'exec --shell "gemini \"Break down the following broad task into a sequence of actionable items for Google Tasks. Output ONLY a JSON array of strings.\n\nTask: $task\""'
+  - id: review
+    command: >-
+      lobster 'approve --prompt "Decomposed subtasks:\n\n$decompose.stdout\n\nApprove and add to Google Tasks?"'
+  - id: commit
+    command: >-
+      lobster 'exec --shell \"gog tasks add @default --title \\\"$item\\\"\" --each'
+    stdin: $decompose.stdout

@@ -12,6 +12,7 @@ This repository contains Skills and Plugins for Open Claw.
 - `Scripts/`: Contains globally useful utility scripts and repository automation.
 - `Secrets/`: Contains sensitive data, credentials, and API keys. **This folder is strictly ignored by Git.**
 - `Skills/`: Contains OpenClaw skills. Skills are **strictly Markdown (`SKILL.md`)** cognitive modifiers teaching the agent how to use tools. NO Python `.py` orchestrators are allowed here.
+- `SDLC/`: Contains the **SDLC Architecture Framework**. Deterministic, modular domains for the OpenClaw multi-agent ecosystem.
 - `Tests/`: Contains test suites and testing infrastructure.
 
 ## Project Tidiness & Root Folder Rules

@@ -1,0 +1,27 @@
+name: morning-briefing
+steps:
+  - id: fetch_calendar
+    command: >-
+      lobster 'exec --json --shell "gog calendar events primary --from \"$(date +%Y-%m-%dT00:00:00Z)\" --to \"$(date +%Y-%m-%dT23:59:59Z)\" --json"'
+
+  - id: fetch_tasks
+    command: >-
+      lobster 'exec --json --shell "gog tasks ls @default --json"'
+
+  - id: fetch_emails
+    command: >-
+      lobster 'exec --json --shell "gog gmail search \"newer_than:1d\" --json"'
+
+  - id: summarize
+    command: >-
+      lobster 'exec --shell "gemini \"Summarize the following calendar, tasks, and emails into a concise morning briefing with top 3 priorities. Formatting: Markdown with emojis.\n\nContext: $stdin\""'
+    stdin: |
+      {
+        "calendar": $fetch_calendar.stdout,
+        "tasks": $fetch_tasks.stdout,
+        "emails": $fetch_emails.stdout
+      }
+
+  - id: final_briefing
+    command: >-
+      lobster 'clawd.invoke --tool message --action send --args-json "{\"provider\":\"webchat\",\"to\":\"owner\",\"content\": \"$summarize.stdout\"}"'

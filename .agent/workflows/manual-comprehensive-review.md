@@ -38,17 +38,19 @@ You do not write monolithic scripts. You design highly testable, single-responsi
 5. **Extensive Research & Environment Verification (MANDATORY PHASE 0):**
    - **CRITICAL:** You must always research extensively online for any up-to-date information regarding how tools work and how the APIs they rely on work.
    - **EXECUTION REQUIREMENT:** You MUST execute a `search_web` tool call to verify syntax before writing code. Do not rely on internal memory for API parameters.
+   - **HARDWARE AUDIT:** Verify model/role distribution. Confirm that micro-agents are pinned to **Maxwell (12GB)** with **INT4 quantization** and **4k context limits**. Confirm that orchestrators are pinned to **Pascal (24GB)**.
    - **BINARY & PATH VERIFICATION:** If the extension relies on a local CLI tool or binary (e.g., `gog`, `aws`, `kubectl`), you MUST physically execute `which <tool>`, `<tool> --help`, or search local `bin` directories (like `~/.local/bin`) using terminal commands to confirm the binary's exact location, actual name, and syntax. Do not hallucinate flags or paths.
-   - **ENVIRONMENT VERIFICATION:** Explicitly check `openclaw.json` (specifically `env.vars` and `tools.exec.pathPrepend`) or environment config files to ensure any required credentials (e.g., accounts, passwords, API keys) and paths are properly scoped and available to the OpenClaw runtime before writing code.
+   - **ENVIRONMENT VERIFICATION:** Explicitly check `openclaw.json` (specifically `env.vars`, `tools.exec.pathPrepend`, and `heavy_task_offload_enabled`) or environment config files to ensure any required credentials and performance toggles are active before writing code.
 
 6. **Review against Best Practices and Common Issues.**
    - Open and read `Docs\OpenClaw_Best_Practices_and_Common_Issues.md`. 
-   - Manually evaluate the skill/plugin against these standards, explicitly checking for anti-patterns such as Context Bloat, Silent Validation Failures, Zombie Subshells, Manifest Dependency Collisions, Cognitive Drift, and Unsafe Path Traversal.
+   - Manually evaluate the skill/plugin against these standards, explicitly checking for anti-patterns such as Context Bloat, Silent Validation Failures, Zombie Subshells, Manifest Dependency Collisions, Cognitive Drift, Unsafe Path Traversal, **the GitOps Symlink Trap**, and **KV Cache Thrashing (Q8_0 violation)**.
 
 7. **Make manual code changes to the skill or plugin.**
    - Apply necessary modifications to enforce Lean principles.
    - Ensure Jidoka validation loops (Try -> Evaluate -> Correct/Fail -> Proceed) are intact.
    - Verify strict variable separation and that no legacy monolithic `.py` wrapper scripts exist.
+   - Enforce **4k context caps** for specialized worker nodes.
 
 8. **Run type checks and validations.**
    - Verify execution and dependency requirements manually.

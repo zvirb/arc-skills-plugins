@@ -1,0 +1,4 @@
+name: test-env
+steps:
+  - id: test
+    command: openclaw.invoke --tool diagnostics --action health

@@ -79,11 +79,11 @@ Assuming an API's schema or a tool's flags based on outdated training data.
 - Before implementing any tool interaction, you MUST perform a mandatory online research step to retrieve the latest documentation, schemas, and required parameters for the target service.
 ## 11. The Monolithic Binding Trap (KV Cache Exhaustion)
 **The Issue:**
-Binding all 50+ available skills to a single agent profile in `openclaw.json`. This forces the OpenClaw gateway to inject the JSON schemas for every single tool into every prompt, exhausting the KV cache (context window) and causing "context runout" before the agent can finish its task.
-**The Solution (Progressive Disclosure):**
-- **Master Routing:** Use the `root-router` skill as the only bound skill for high-level agents.
-- **On-Demand Loading:** The agent must use `load_skill("specific-skill")` to fetch instructions only when relevant.
-- **Dynamic Execution:** Use the `execute_skill` tool from the `skill-loader` plugin to run the skill's script. This keeps the agent's "active toolset" extremely lean and preserves the context window for reasoning.
+Binding all 50+ available skills to a single agent profile in `openclaw.json`. This forces the OpenClaw gateway to inject the JSON schemas for every single tool into every prompt, exhausting the KV cache (context window) and causing "context runout" on legacy hardware (Pascal/Maxwell).
+**The Solution (Standardized Lean Architecture):**
+- **Quantization:** Enforce **INT4 models** and **Q8_0 KV Cache** to reduce VRAM pressure.
+- **Context Limits:** Capped at **4k tokens** for worker nodes to prevent reasoning degradation.
+- **Deterministic Workflows:** Instead of probabilistic `load_skill` loops, use **.lobster macros** with **Static Deterministic Binding** (`tools.alsoAllow`). This ensures tools are available exactly when needed without bloating the persistent agent context.
 
 ## 12. The Routing Index Bottleneck (Discovery Failure)
 **The Issue:**
@@ -106,9 +106,28 @@ When manually editing `openclaw.json` on a remote node while the `openclaw-gatew
 - **STOP FIRST:** Always stop the `openclaw-gateway` service (e.g., `systemctl --user stop openclaw-gateway`) BEFORE attempting to modify the `openclaw.json` or `.env` files.
 - **UPLOAD & START:** Push the updated files and then start the service. This ensures the engine loads the new state cleanly without a collision during the shutdown phase.
 
-## 15. The SSH One-Liner Trap (Cross-Platform Escaping)
+## 16. The GitOps Symlink Trap (Atomic Write Failure)
 **The Issue:**
-Attempting to execute complex multi-line scripts (especially Python or Bash with nested quotes) directly inside an `ssh` command string from a Windows host (PowerShell) to a Linux target. PowerShell's quote parsing often mangles the string before it reaches the Linux shell, leading to syntax errors that are difficult to debug.
-**The Solution (Script Transfer):**
-- **FILE OVER STRING:** Instead of writing complex one-liners, always write the logic to a local temporary file first.
-- **UPLOAD & RUN:** Use `scp` to move the script to the remote node (e.g., `/tmp/script.py`) and then use `ssh` to execute the file directly. This guarantees that the script content remains identical and avoids all shell-escaping hallucinations.
+In GitOps environments, configuration files are often symlinks to a versioned directory. Atomic writes (like those from `openclaw skills install`) will break the symlink and fail to propagate to the real config, or the engine will continue reading the stale symlink.
+**The Solution:**
+- **Explicit Paths:** Always use `OPENCLAW_CONFIG_PATH` to point directly to the physical file.
+- **Atomic Preflights:** Forbid configuration mutation during the "Warmup" phase of the gateway.
+
+## 17. Session Lock Contention (State Deadlock)
+**The Issue:**
+Multiple specialist agents attempting to write to the same session simultaneously, triggering `SessionWriteLockTimeoutError`.
+**The Solution:**
+- **Isolated Sessions:** Every specialist in a `.lobster` pipeline MUST execute in its own **strictly distinct session ID**.
+- **Lease-based Locking:** Implement short TTL leases for shared state files.
+
+## 18. JSON-RPC Payload Limits (Context Overflow)
+**The Issue:**
+Attempting to pass large binary or text artifacts (>10KB) as string parameters in tool calls. This causes JSON-RPC serialization errors and context saturation.
+**The Solution:**
+- **Artifact Handoff:** Use the **PluginArtifact Schema** and the **lobster://** protocol to pass data by reference (blob storage) rather than by value.
+
+## 19. PCIe 3.0 Bottlenecks (Latency Fragmentation)
+**The Issue:**
+Loading large models across multiple GPUs on legacy boards (Pascal/Maxwell), forcing heavy data transfer over slow PCIe 3.0 lanes.
+**The Solution:**
+- **GPU Pinning:** Pin specific roles to specific GPUs (e.g., Orchestrator on Pascal, Vision/Workers on Maxwell) to keep inference local to the VRAM. Disable Tensor Parallelism on legacy hardware.
