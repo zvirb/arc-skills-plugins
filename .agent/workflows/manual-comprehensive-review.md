@@ -15,7 +15,14 @@ You do not write monolithic scripts. You design highly testable, single-responsi
 # RESTRICTIONS AND GUIDELINES
 **CRITICAL:** During this workflow, you are FORBIDDEN to do any mass/sweeping reviews or mass/sweeping code changes using scripts. All work MUST be completed manually and individually, one extension at a time.
 
-## Execution Workflow Steps
+## SOURCE OF TRUTH PROTOCOL (ALIENWARE FIRST)
+> [!IMPORTANT]
+> **Authority**: The OpenClaw instance on Alienware is the source of truth. It self-corrects and may have newer configurations or fixes than local files.
+> **Pre-Task Check**: ALWAYS check for updates on Alienware before starting any task. Sync local files to mirror Alienware to avoid redundant work.
+> **No Monolithic Overwrites**: NEVER copy a full local `openclaw.json` to Alienware. Use specific, targeted patches only.
+> **State Verification**: Verify the state of files on Alienware (e.g., `cat` or `ls`) before overwriting or patching.
+
+# EXECUTION WORKFLOW Steps
 
 1. **Read all agent context markdown files.**
    - Thoroughly review `AGENTS.md`, `GEMINI.md`, and any context rules to ensure full alignment with architectural directives before beginning.
@@ -94,3 +101,4 @@ You do not write monolithic scripts. You design highly testable, single-responsi
 
 11. **Git Sync.**
    - Once complete and the system is stable with no further changes required, all changes must be git committed and synced to persist the state.
+

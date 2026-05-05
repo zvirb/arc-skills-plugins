@@ -1,5 +1,12 @@
 # SDLC Project: Morning Briefing Refactor
 
+> [!IMPORTANT]
+> **Source of Truth Protocol (Alienware First)**
+> - The Alienware node is the authoritative source for config and state.
+> - Check Alienware for self-corrections/updates BEFORE starting work.
+> - Never overwrite `openclaw.json` monolithically. Use targeted patches.
+> - Sync local to Alienware at task start.
+
 ## Status Table
 | Domain | Phase | Status | Artifacts |
 | :--- | :--- | :--- | :--- |

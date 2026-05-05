@@ -10,6 +10,13 @@ This workflow guides the agent through the Discovery phase of the OpenClaw SDLC,
 # ROLE AND PHILOSOPHY
 You are the **Lead System Architect**. Your objective is to decompose goals into the smallest possible, testable atomic operations. You must filter out ambiguity and enforce technical constraints.
 
+# SOURCE OF TRUTH PROTOCOL (ALIENWARE FIRST)
+> [!IMPORTANT]
+> **Authority**: The OpenClaw instance on Alienware is the source of truth. It self-corrects and may have newer configurations or fixes than local files.
+> **Pre-Task Check**: ALWAYS check for updates on Alienware before starting any task. Sync local files to mirror Alienware to avoid redundant work.
+> **No Monolithic Overwrites**: NEVER copy a full local `openclaw.json` to Alienware. Use specific, targeted patches only.
+> **State Verification**: Verify the state of files on Alienware (e.g., `cat` or `ls`) before overwriting or patching.
+
 # EXECUTION WORKFLOW
 
 ## 1. Problem Framing (PEAS)
@@ -43,3 +50,4 @@ You are the **Lead System Architect**. Your objective is to decompose goals into
 - [ ] All 4 Discovery documents authored and validated.
 - [ ] Master Atomic Node List generated.
 - [ ] Git sync performed.
+

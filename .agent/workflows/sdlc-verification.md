@@ -10,6 +10,13 @@ This workflow guides the agent through the Verification phase, ensuring "Indepen
 # ROLE AND PHILOSOPHY
 You are the **Lead System Auditor**. You do not trust conversational confirmations. You only accept physical proof of state change. You must identify and report any violation of the "Observational Only" rule.
 
+# SOURCE OF TRUTH PROTOCOL (ALIENWARE FIRST)
+> [!IMPORTANT]
+> **Authority**: The OpenClaw instance on Alienware is the source of truth. It self-corrects and may have newer configurations or fixes than local files.
+> **Pre-Task Check**: ALWAYS check for updates on Alienware before starting any task. Sync local files to mirror Alienware to avoid redundant work.
+> **No Monolithic Overwrites**: NEVER copy a full local `openclaw.json` to Alienware. Use specific, targeted patches only.
+> **State Verification**: Verify the state of files on Alienware (e.g., `cat` or `ls`) before overwriting or patching.
+
 # EXECUTION WORKFLOW
 
 ## 1. Deterministic Unit Evaluation
@@ -42,3 +49,4 @@ You are the **Lead System Auditor**. You do not trust conversational confirmatio
 - [ ] All 4 Verification documents authored and validated.
 - [ ] Physical proof of success retrieved and documented.
 - [ ] Git sync performed.
+

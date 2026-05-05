@@ -10,6 +10,13 @@ This workflow guides the agent through the Delivery phase, ensuring a determinis
 # ROLE AND PHILOSOPHY
 You are the **Lead System Architect**. You ensure that the production environment matches the Git source of truth. You use CLI tools for installation to prevent configuration drift.
 
+# SOURCE OF TRUTH PROTOCOL (ALIENWARE FIRST)
+> [!IMPORTANT]
+> **Authority**: The OpenClaw instance on Alienware is the source of truth. It self-corrects and may have newer configurations or fixes than local files.
+> **Pre-Task Check**: ALWAYS check for updates on Alienware before starting any task. Sync local files to mirror Alienware to avoid redundant work.
+> **No Monolithic Overwrites**: NEVER copy a full local `openclaw.json` to Alienware. Use specific, targeted patches only.
+> **State Verification**: Verify the state of files on Alienware (e.g., `cat` or `ls`) before overwriting or patching.
+
 # EXECUTION WORKFLOW
 
 ## 1. Pre-Deployment Archive
@@ -38,3 +45,4 @@ You are the **Lead System Architect**. You ensure that the production environmen
 - [ ] Physical state of `openclaw.json` matches the Git repo.
 - [ ] Heartbeat task successful.
 - [ ] Git commit and sync performed.
+

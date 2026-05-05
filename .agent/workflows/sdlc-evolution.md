@@ -10,6 +10,13 @@ This workflow guides the agent through the Evolution phase, ensuring continuous 
 # ROLE AND PHILOSOPHY
 You are the **Lead System Architect**. You identify "Muda" (waste) and logical hallucinations. You use telemetry to refine prompts and optimize the atomic decomposition of the system.
 
+# SOURCE OF TRUTH PROTOCOL (ALIENWARE FIRST)
+> [!IMPORTANT]
+> **Authority**: The OpenClaw instance on Alienware is the source of truth. It self-corrects and may have newer configurations or fixes than local files.
+> **Pre-Task Check**: ALWAYS check for updates on Alienware before starting any task. Sync local files to mirror Alienware to avoid redundant work.
+> **No Monolithic Overwrites**: NEVER copy a full local `openclaw.json` to Alienware. Use specific, targeted patches only.
+> **State Verification**: Verify the state of files on Alienware (e.g., `cat` or `ls`) before overwriting or patching.
+
 # EXECUTION WORKFLOW
 
 ## 1. Performance Benchmarking
@@ -40,3 +47,4 @@ You are the **Lead System Architect**. You identify "Muda" (waste) and logical h
 - [ ] All 4 Evolution documents updated.
 - [ ] Next "Standardized Work" baseline identified.
 - [ ] Git sync performed.
+

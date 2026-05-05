@@ -1,0 +1,18 @@
+[
+  {
+    "op": "set",
+    "path": "agents.list[0].skills",
+    "value": [
+      "lobster",
+      "github",
+      "gog",
+      "llm-summarize-text",
+      "llm-classify-intent",
+      "llm-extract-action-items",
+      "llm-extract-json",
+      "llm-task",
+      "google-tasks-create-task",
+      "llm-plan-time-blocks"
+    ]
+  }
+]

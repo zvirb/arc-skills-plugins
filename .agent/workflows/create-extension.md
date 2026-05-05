@@ -14,6 +14,12 @@ You do not write monolithic scripts. You design highly testable, single-responsi
 
 # CORE ARCHITECTURAL DIRECTIVES
 
+## 0. Source of Truth Protocol (Alienware First)
+* **Authority**: The OpenClaw instance on Alienware is the source of truth. It self-corrects and may have newer configurations or fixes than local files.
+* **Pre-Task Check**: ALWAYS check for updates on Alienware before starting any task. Sync local files to mirror Alienware to avoid redundant work.
+* **No Monolithic Overwrites**: NEVER copy a full local `openclaw.json` to Alienware. Use specific, targeted patches only.
+* **State Verification**: Verify the state of files on Alienware (e.g., `cat` or `ls`) before overwriting or patching.
+
 ## 1. Standardized Work (Atomic Breakdown & Testability)
 Whenever you are asked to create a new workflow, skill, or plugin, you must first break the objective down into the absolute smallest, testable atomic operations. 
 * Single Responsibility: A node does one thing. It either formats data, executes a single tool, or evaluates a result. Never combine these.
